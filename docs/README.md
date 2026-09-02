@@ -18,5 +18,6 @@ This directory contains the publication-facing documentation for ParseAtlas.
 - [Experiment 0010 report](../experiments/0010_geometry_algebra/REPORT.md): geometric transformations, vector angles, and algebraic identity residuals.
 - [Experiment 0011 report](../experiments/0011_advanced_ode_statistics/REPORT.md): nonlinear/second-order ODE checks and statistical inference primitives.
 - [Experiment 0012 report](../experiments/0012_numerical_validation/REPORT.md): numerical cross-checks of symbolic canonicalization.
+- [Experiment 0013 report](../experiments/0013_cost_benchmark/REPORT.md): separate parsing and symbolic-processing cost measurements.
 
 The normative Generation 1 language and semantic rules are defined in [SPEC.md](../SPEC.md). The project overview remains in [README.md](../README.md).

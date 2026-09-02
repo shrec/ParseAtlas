@@ -39,6 +39,8 @@ Completed extension: logistic and harmonic ODE residuals, Normal CDF, z-confiden
 
 Completed extension: safe-point numerical validation of raw versus canonical expressions is recorded in [experiments/0012_numerical_validation/REPORT.md](experiments/0012_numerical_validation/REPORT.md).
 
+Completed extension: separate raw parsing and symbolic canonicalization benchmark measurements are recorded in [experiments/0013_cost_benchmark/REPORT.md](experiments/0013_cost_benchmark/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
