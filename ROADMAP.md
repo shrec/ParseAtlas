@@ -162,9 +162,45 @@ Two things make this more than a local win. The cost model **predicted 82.4 ns**
 
 *AUTHOR-MEASURED, source-verified by ParseAtlas from the public branch; NOT re-run here — the figures are specific to that machine. Intake at [case_studies/ultrafast_secp256k1/](case_studies/ultrafast_secp256k1/).* Promotion to BENCHMARKED requires an independent run on declared hardware, not merely a readable source.
 
-**T17a. Negative results are the more valuable half, and they exist.** The co-Z transformation is recorded as **exhausted**: the pattern it needs — a chain accumulating P, 3P, 5P by repeatedly adding a constant 2P — occurs in exactly four places on the x86-64 FE52 build, all four are converted, and *"there is no fifth"*, with every caller enumerated and each rejected site refuted by mechanism rather than by silence. The co-Z Montgomery ladder is refuted decisively: 4110 heavy operations against 1690, i.e. 2.43× more field work, and the gap survives the most generous framing available. An automatic search over point formulas kept 1494 distinct equivalent programs from 5894 rewrites with 0 unsound, and found nothing better than −0.34%, inside noise — the production formulas are a local optimum in that rewrite space.
+**T17a. The axis ledger is now complete, and the negative results are most of it.** The x86-64 search is closed: **two axes confirmed, five refuted, one still open.** This is the denominator T18 needs — a corpus of wins alone yields a survivorship-biased `P(speedup | transformation)`.
 
-This matters for T18: a corpus of wins alone yields a survivorship-biased `P(speedup | transformation)`. These refutations are the denominator. *OBSERVED — same source.*
+Confirmed, both end-to-end with interleaved A/B and warm-up discarded:
+
+```text
+co-Z coordinate change (all 4 live sites)
+    dual_scalar_mul_gen_point  -7.19%      ecdsa_verify  -1.96%
+    0 regressions; controls inconclusive at -0.15% to -0.67%
+CT SafeGCD inverse (both call sites)
+    ElligatorSwift XDH  -8.23%             Session handshake  -4.35%
+    predicted 7.87% from the primitive, measured 8.23%
+    ecdh_compute correctly did NOT move (+0.18%) -- it does not use ecmult_const_xonly
+```
+
+Refuted, each by mechanism rather than by silence: **AVX2** — refuted at the multiply port, since a field multiply needs 25 limb-products in both the 5×52 scalar and the 10×26 AVX2 layouts, so the lane count is exactly cancelled by limb-count growth, and this part has no IFMA. **Strauss versus Pippenger** — already optimal at every `n` the engine reaches. **GLV decomposition** — 84.92 ns, 0.34% of a verify even if deleted outright. **sqrt/jacobi** — one jacobi per cold `lift_x` only, and the 1024-slot cache makes it 0.0% of `schnorr_verify`. **normalize_weak** — 0.60% of a BIP-352 scan and exactly 0.00% of `ecdsa_verify`, `schnorr_verify`, `dual_scalar_mul_gen_point`, `batch_verify` and ConnectBlock.
+
+Earlier and equally load-bearing: co-Z is **exhausted** — the pattern it needs occurs in exactly four places, all four converted, *"there is no fifth"*, every caller enumerated. The co-Z Montgomery ladder is refuted at 4110 heavy operations against 1690, 2.43× more field work, surviving the most generous framing available.
+
+Still open: the dual-mul G-table window width, 15 (1280 KB of a 2048 KB L2) against 13 and 12. All three builds exist and pass. **The decision needs ConnectBlock, not the micro-benchmark** — an isolated benchmark keeps the whole table resident and systematically flatters the large window. *OBSERVED — Ultrafast `b265ec2`, `e99ed29`.*
+
+**T17b. The measured statement of this project's founding principle.** From the same source, as the recorded transferable result:
+
+> Searching **within** a fixed representation found nothing: 5 894 generated equivalent programs moved 0.34%. **Changing** the representation found 7–8%.
+
+That is roughly a twentyfold gap between rearranging inside a representation and changing it, measured on production cryptographic code by a search that tried both. It is the strongest evidence the project has for the principle it was founded on, and it did not come from ParseAtlas — ParseAtlas supplies the framework and the vocabulary. *OBSERVED — Ultrafast `b265ec2`.*
+
+**T17c. A benchmark harness is part of the claim, not a detail beneath it.** The runner that produced these figures is worth adopting as the project standard, and the case-study schema should require its properties:
+
+- **Six build variants from one source tree**, differing only in `-D` flags, so the tree is never a confounder.
+- **Correctness gates the measurement**: the runner refuses to report a single timing until the audit is ALL PASSED on every variant.
+- **One discarded warm-up per variant** — every arm's first invocation ran 30–70% slow, which alone turned real effects into "inconclusive".
+- **Verdict by range separation**; overlapping ranges are inconclusive, and inconclusive is never a win.
+- **Control metrics reported separately** — unmodified libsecp, OpenSSL, SHA-256, HKDF, AEAD. If a control separates, the run is untrustworthy and nothing below it means anything.
+
+That control check earned itself immediately: it caught a **+12% cluster** across five hashing and AEAD operations containing no field inverse at all, landing within 0.16 points of each other — a loaded-machine artefact correctly named rather than published as a regression. *OBSERVED — Ultrafast `e99ed29`.*
+
+**T17d. Representation search surfaced a P0 cryptographic vulnerability as a side effect.** While examining the batch-verification path, the search found that `schnorr_batch_verify` accepted batches containing individually-invalid signatures: a captured SHA-256 midstate discarded the 32 seed bytes still sitting in its buffer while the length counter kept counting them, so every randomiser weight collapsed to a public constant of the index alone, identical on every machine. With the weights fixed and public, defeating the check costs one modular inversion. Reproduced end to end on a 97-signature batch, fixed, and pinned with an exploit proof-of-concept that fails 6/8 before and passes 8/8 after.
+
+The relevance here is methodological, not cryptographic: a systematic representation search reads code paths with a question no ordinary review asks — *what is this actually computing, and could it compute the same thing differently* — and that question found a soundness bug that the path's own dedicated audit module had passed through unchanged for the entire broken window. *OBSERVED — Ultrafast `3596a24`.*
 
 **T18. Some transformation classes yield speedups far more often than others.** Once roughly 20 to 30 recorded optimizations exist, `P(speedup | transformation)` becomes estimable per transformation label — factorization, reassociation, sign relocation, projective rescaling, lazy reduction, addition chains, limb layout, operation scheduling. Below that sample size only raw counts may be reported. *HYPOTHESIS — case study intake.*
 
