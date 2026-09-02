@@ -3,3 +3,12 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+
+# Local AI/workspace tooling
+.aiworkhub/
+.claude/
+.vscode/
+.mcp.json
+AGENTS.md
+CLAUDE.md
+.github/copilot-instructions.md
