@@ -4,6 +4,14 @@
 
 ParseAtlas is an experimental mathematics and computational research project.
 
+## Research status
+
+ParseAtlas is currently at the formal-specification and reproducibility-baseline stage. The executable parser and analysis engine have not been implemented yet.
+
+The first-generation rules are defined in [SPEC.md](SPEC.md). The initial observations are recorded in [INITIAL_FINDINGS.md](INITIAL_FINDINGS.md), the planned implementation path is in [ROADMAP.md](ROADMAP.md), and the publication-facing documentation is indexed in [docs/README.md](docs/README.md).
+
+The experiment contains one conventional control grammar, `G0`, plus 24 strict precedence permutations, `G01` through `G24`. The control grammar is separate because conventional arithmetic gives `*` and `/` the same precedence, and `+` and `-` the same lower precedence; no single strict four-operator ordering represents that rule for general expressions.
+
 The starting question is simple:
 
 > What changes when the same symbolic token sequence is interpreted under different operator-precedence rules?

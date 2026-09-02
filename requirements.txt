@@ -1,0 +1,9 @@
+colorama==0.4.6
+iniconfig==2.3.0
+mpmath==1.3.0
+packaging==26.3
+-e git+https://github.com/shrec/ParseAtlas@2ad2d0cc5e86f474bb871e32ec5ca6a43e55cbd7#egg=parseatlas
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==8.4.2
+sympy==1.14.0

@@ -929,7 +929,7 @@ The experiments introduced two distinct concepts.
 
 ## 18.1 Grammar equivalence for a fixed token sequence
 
-Two grammars are equivalent when they produce the same canonical function:
+The initial grouping used canonical-expression equality as a provisional shorthand. The formal semantic definition is stricter: two grammars are equivalent only when they produce the same function, declared domain, and undefined or singularity set under the experiment's analysis contract.
 
 ```text
 Gi ~ Gj
@@ -938,12 +938,14 @@ Gi ~ Gj
 if:
 
 ```text
-canonical(E(Gi)) = canonical(E(Gj))
+Fi = Fj, Di = Dj, and Ui = Uj
 ```
+
+Canonical text equality alone is not sufficient. For example, `x/x` may simplify symbolically to `1`, but it remains undefined at `x = 0`; it is not equivalent to unrestricted `1`.
 
 ## 18.2 Structural equivalence across function families
 
-If several grammars collapse the inner expression to the same form, then any deterministic unary outer function preserves that grouping.
+If several grammars collapse the inner expression to the same form, then a unary outer function may preserve that grouping when its domain and branch conventions preserve the same validity information.
 
 For example:
 

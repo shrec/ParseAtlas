@@ -2,6 +2,20 @@
 
 This roadmap defines the initial research path for ParseAtlas.
 
+## Current implementation status
+
+The first executable vertical slice is now available under `src/parseatlas/`. It implements the Generation 1 grammar registry, custom binary-expression parser, SymPy-backed canonical analysis, domain-aware undefined metadata, JSON/Markdown CLI output, and tests for the initial `24 -> 8` finding. The generated result is recorded in [experiments/0001_affine_functions/REPORT.md](experiments/0001_affine_functions/REPORT.md).
+
+Completed: formal specification, `G0` control grammar, `G01..G24` strict registry, baseline parser, golden reproduction, and first experiment report.
+
+Completed next: outer-function analysis for trigonometric, exponential, logarithmic, root, absolute-value, inverse-trigonometric, reciprocal, square, and cube families. Results are recorded in [experiments/0002_outer_function_atlas/REPORT.md](experiments/0002_outer_function_atlas/REPORT.md).
+
+Completed next: quadratic property extraction and the degree-collapse experiment. Results are recorded in [experiments/0003_quadratic_properties/REPORT.md](experiments/0003_quadratic_properties/REPORT.md).
+
+Completed next: controlled corpus generation and initial rational-function pole/removable-restriction analysis. Results are recorded in [experiments/0004_controlled_corpus/REPORT.md](experiments/0004_controlled_corpus/REPORT.md).
+
+Next: sweep coefficient families, expand singularity analysis, and benchmark raw parsing versus symbolic processing versus canonical evaluation cost.
+
 The project begins with operator-precedence permutations and then expands toward a broader search over mathematical representations, equivalence classes, invariants, and computational cost.
 
 The roadmap is intentionally empirical:
