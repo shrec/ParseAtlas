@@ -35,6 +35,8 @@ Completed extension: Normal and Exponential distributions plus extended calculus
 
 Completed extension: circle metrics, planar rotations, vector angles, and algebraic identity residual checks are recorded in [experiments/0010_geometry_algebra/REPORT.md](experiments/0010_geometry_algebra/REPORT.md).
 
+Completed extension: logistic and harmonic ODE residuals, Normal CDF, z-confidence intervals, and sample statistics are recorded in [experiments/0011_advanced_ode_statistics/REPORT.md](experiments/0011_advanced_ode_statistics/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.

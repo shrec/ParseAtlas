@@ -5,7 +5,7 @@ from typing import Any
 
 from sympy import (
     E, Matrix, Rational, Symbol, acos, binomial, diff, expand, factor, integrate, limit, log,
-    cos, lcm, oo, pi, simplify, sin, solve, sqrt, sympify,
+    cos, erf, lcm, oo, pi, simplify, sin, solve, sqrt, sympify,
 )
 from sympy.ntheory import factorint, isprime
 
@@ -139,6 +139,35 @@ def analyze_exponential_ode(rate: int, initial_value: Any = 1) -> dict[str, Any]
     }
 
 
+def analyze_logistic_ode(growth_rate: Any, carrying_capacity: Any, initial_value: Any) -> dict[str, Any]:
+    """Analyze y'=r*y*(1-y/K) using its closed-form solution."""
+    rate, capacity, initial = map(sympify, (growth_rate, carrying_capacity, initial_value))
+    time = Symbol("t", real=True)
+    solution = simplify(capacity / (1 + ((capacity - initial) / initial) * E ** (-rate * time)))
+    residual = simplify(diff(solution, time) - rate * solution * (1 - solution / capacity))
+    return {
+        "domain": "differential_equations",
+        "equation": f"y' = {rate}*y*(1-y/{capacity})",
+        "initial_condition": f"y(0) = {initial}",
+        "solution": str(solution),
+        "residual": str(residual),
+    }
+
+
+def analyze_harmonic_ode(frequency: Any, amplitude: Any = 1) -> dict[str, Any]:
+    """Validate y'' + w^2*y = 0 for y=A*cos(w*t)."""
+    omega, amplitude = map(sympify, (frequency, amplitude))
+    time = Symbol("t", real=True)
+    solution = amplitude * cos(omega * time)
+    residual = simplify(diff(solution, time, 2) + omega**2 * solution)
+    return {
+        "domain": "differential_equations",
+        "equation": f"y'' + ({omega})**2*y = 0",
+        "solution": str(solution),
+        "residual": str(residual),
+    }
+
+
 def analyze_binomial_probability(trials: int, successes: int, probability: Any) -> dict[str, Any]:
     """Analyze one outcome and moments of Binomial(n, p)."""
     if trials < 0 or successes < 0 or successes > trials:
@@ -189,6 +218,56 @@ def analyze_exponential_distribution(rate: Any, point: Any) -> dict[str, Any]:
         "survival": str(simplify(E ** (-lam * value))),
         "expected_value": str(simplify(1 / lam)),
         "variance": str(simplify(1 / lam**2)),
+    }
+
+
+def analyze_normal_cdf(mean_value: Any, standard_deviation: Any, point: Any) -> dict[str, Any]:
+    """Compute the exact symbolic Normal CDF at one point."""
+    mu, sigma, value = map(sympify, (mean_value, standard_deviation, point))
+    if sigma <= 0:
+        raise ValueError("standard_deviation must be positive")
+    z_score = simplify((value - mu) / sigma)
+    cdf = simplify((1 + erf(z_score / sqrt(2))) / 2)
+    return {
+        "domain": "probability_statistics",
+        "distribution": f"Normal({mu}, {sigma})",
+        "point": str(value),
+        "z_score": str(z_score),
+        "cdf": str(cdf),
+    }
+
+
+def analyze_z_confidence_interval(sample_mean: Any, known_sigma: Any, sample_size: int, z_value: Any = "1.96") -> dict[str, Any]:
+    """Return a two-sided known-sigma z confidence interval."""
+    if sample_size < 1:
+        raise ValueError("sample_size must be positive")
+    def exact(value: Any) -> Any:
+        return Rational(value) if isinstance(value, str) and value.replace(".", "", 1).isdigit() else sympify(value)
+
+    center, sigma, z = map(exact, (sample_mean, known_sigma, z_value))
+    margin = simplify(z * sigma / sqrt(sample_size))
+    return {
+        "domain": "probability_statistics",
+        "confidence_level": "approximately 95% for z=1.96",
+        "sample_mean": str(center),
+        "margin": str(margin),
+        "interval": [str(simplify(center - margin)), str(simplify(center + margin))],
+    }
+
+
+def analyze_sample_statistics(values: tuple[Any, ...]) -> dict[str, Any]:
+    """Compute deterministic sample mean and unbiased sample variance."""
+    if len(values) < 2:
+        raise ValueError("at least two values are required")
+    numbers = [sympify(value) for value in values]
+    sample_mean = simplify(sum(numbers) / len(numbers))
+    variance = simplify(sum((value - sample_mean) ** 2 for value in numbers) / (len(numbers) - 1))
+    return {
+        "domain": "probability_statistics",
+        "sample_size": len(numbers),
+        "mean": str(sample_mean),
+        "sample_variance": str(variance),
+        "sample_standard_deviation": str(sqrt(variance)),
     }
 
 

@@ -9,7 +9,12 @@ from parseatlas.domain_analysis import (
     analyze_binomial_probability,
     analyze_calculus_extended,
     analyze_exponential_distribution,
+    analyze_harmonic_ode,
+    analyze_logistic_ode,
     analyze_normal_distribution,
+    analyze_normal_cdf,
+    analyze_sample_statistics,
+    analyze_z_confidence_interval,
     analyze_number_theory,
     analyze_quadratic,
     analyze_trigonometry,
@@ -75,6 +80,11 @@ def test_exponential_ode_has_zero_residual():
     assert result["derivative_check"] == "0"
 
 
+def test_logistic_and_harmonic_odes_have_zero_residuals():
+    assert analyze_logistic_ode(1, 10, 2)["residual"] == "0"
+    assert analyze_harmonic_ode(2, 3)["residual"] == "0"
+
+
 def test_binomial_probability_reports_pmf_and_moments():
     result = analyze_binomial_probability(4, 2, "1/2")
     assert result["pmf"] == "3/8"
@@ -91,6 +101,19 @@ def test_continuous_distributions_report_density_and_moments():
     assert exponential["pdf"] == "2*exp(-2)"
     assert exponential["survival"] == "exp(-2)"
     assert exponential["expected_value"] == "1/2"
+
+
+def test_normal_cdf_and_confidence_interval_are_reproducible():
+    cdf = analyze_normal_cdf(0, 1, 0)
+    assert cdf["cdf"] == "1/2"
+    interval = analyze_z_confidence_interval(10, 2, 4, "1.96")
+    assert interval["interval"] == ["201/25", "299/25"]
+
+
+def test_sample_statistics_use_unbiased_variance():
+    result = analyze_sample_statistics((1, 2, 3, 4))
+    assert result["mean"] == "5/2"
+    assert result["sample_variance"] == "5/3"
 
 
 def test_extended_calculus_reports_limit_integral_series_and_extrema():
