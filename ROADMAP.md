@@ -41,6 +41,8 @@ Completed extension: safe-point numerical validation of raw versus canonical exp
 
 Completed extension: separate raw parsing and symbolic canonicalization benchmark measurements are recorded in [experiments/0013_cost_benchmark/REPORT.md](experiments/0013_cost_benchmark/REPORT.md).
 
+Completed extension: cross-family cost comparison and calibration identity residual mining are recorded in [experiments/0014_cross_family_invariants/REPORT.md](experiments/0014_cross_family_invariants/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
