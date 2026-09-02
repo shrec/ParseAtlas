@@ -1,6 +1,8 @@
 from parseatlas.advanced_analysis import (
     analyze_complex_identity,
+    analyze_complex_branches,
     analyze_complex_trigonometry,
+    classify_hessian,
     analyze_multivariable,
     rank_conjectures,
 )
@@ -13,11 +15,20 @@ def test_multivariable_analysis_reports_gradient_and_hessian():
     assert result["hessian_determinant"] == "3"
 
 
+def test_hessian_classification_distinguishes_minimum_maximum_and_saddle():
+    assert classify_hessian("x**2 + y**2")["classification"] == "positive_definite"
+    assert classify_hessian("-x**2 - y**2")["classification"] == "negative_definite"
+    assert classify_hessian("x**2 - y**2")["classification"] == "indefinite"
+
+
 def test_complex_identities_include_branch_metadata():
     assert analyze_complex_identity()["is_identity"] is True
     result = analyze_complex_trigonometry()
     assert result["residual"] == "0"
     assert "entire complex" in result["branch_convention"]
+    branches = analyze_complex_branches()
+    assert branches["sqrt_negative_one"] == "I"
+    assert "principal branch" in branches["branch_convention"]
 
 
 def test_conjecture_ranking_separates_supported_and_rejected_candidates():

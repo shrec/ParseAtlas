@@ -18,4 +18,4 @@ def test_control_grammar_uses_conventional_shared_levels():
 def test_division_restriction_is_retained():
     result = canonicalize(parse("x/x", control_grammar()))
     assert result["expression"] == "1"
-    assert result["undefined"] == ["x"]
+    assert result["excluded_points"] == ["0"]

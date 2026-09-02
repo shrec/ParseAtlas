@@ -3,7 +3,7 @@
 from collections.abc import Iterable
 from typing import Any
 
-from sympy import I, Matrix, Symbol, cos, diff, exp, expand, pi, simplify, sin, sqrt, sympify
+from sympy import I, Matrix, Symbol, cos, diff, exp, expand, log, pi, simplify, sin, sqrt, sympify
 from sympy.parsing.sympy_parser import parse_expr
 
 
@@ -20,6 +20,25 @@ def analyze_multivariable(expression: str, variables: tuple[str, ...] = ("x", "y
         "hessian": [[str(item) for item in row] for row in hessian.tolist()],
         "hessian_determinant": str(simplify(hessian.det())),
     }
+
+
+def classify_hessian(expression: str, point: tuple[Any, Any] = (0, 0)) -> dict[str, Any]:
+    """Classify a two-variable Hessian at a point using its eigenvalues."""
+    variables = ("x", "y")
+    symbols = tuple(Symbol(name, real=True) for name in variables)
+    parsed = parse_expr(expression, local_dict=dict(zip(variables, symbols)), evaluate=False)
+    hessian = Matrix([[diff(parsed, first, second) for second in symbols] for first in symbols])
+    evaluated = hessian.subs(dict(zip(symbols, map(sympify, point))))
+    eigenvalues = [simplify(value) for value in evaluated.eigenvals().keys()]
+    if all(value.is_positive for value in eigenvalues):
+        classification = "positive_definite"
+    elif all(value.is_negative for value in eigenvalues):
+        classification = "negative_definite"
+    elif any(value.is_positive for value in eigenvalues) and any(value.is_negative for value in eigenvalues):
+        classification = "indefinite"
+    else:
+        classification = "inconclusive"
+    return {"expression": str(parsed), "point": list(point), "eigenvalues": [str(value) for value in eigenvalues], "classification": classification}
 
 
 def analyze_complex_identity() -> dict[str, Any]:
@@ -46,6 +65,19 @@ def analyze_complex_trigonometry() -> dict[str, Any]:
         "residual": str(residual),
         "is_identity": residual == 0,
         "branch_convention": "entire complex sine and cosine functions",
+    }
+
+
+def analyze_complex_branches() -> dict[str, Any]:
+    """Record principal-branch behavior at the negative real axis."""
+    negative_one = -1
+    return {
+        "domain": "complex",
+        "branch_convention": "principal branch for complex log and sqrt",
+        "log_negative_one": str(log(negative_one).rewrite(exp)),
+        "sqrt_negative_one": str(sqrt(negative_one)),
+        "log_branch_cut_reference": "negative real axis",
+        "sqrt_branch_cut_reference": "negative real axis",
     }
 
 

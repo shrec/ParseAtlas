@@ -32,7 +32,7 @@ def _affine_properties(expression: Any, variable: Symbol, function_name: str) ->
     result: dict[str, str | bool] = {"constant_argument": derivative == 0}
     if function_name in {"sin", "cos", "tan"} and derivative.free_symbols.isdisjoint({variable}):
         result["frequency"] = str(Abs(derivative))
-        result["period"] = "undefined (constant argument)" if derivative == 0 else str(2 * pi / Abs(derivative))
+        result["period"] = "undefined (constant argument)" if derivative == 0 else str((pi if function_name == "tan" else 2 * pi) / Abs(derivative))
     return result
 
 
@@ -69,7 +69,7 @@ def analyze_outer_functions(source: str, function_names: Iterable[str] | None = 
                     "grammar": grammar.id,
                     "function": function_name,
                     "inner": str(simplify(inner)),
-                    "inner_undefined": list(undefined_terms(inner_node)),
+                    "inner_excluded_points": list(undefined_terms(inner_node)),
                     "canonical": str(outer),
                     "properties": _property_summary(inner, variable, function_name),
                 }

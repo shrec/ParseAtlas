@@ -34,7 +34,9 @@ asin, acos, atan, reciprocal, square, cube
 | `1` | `1` | `2*pi` |
 | `3/2` | `3/2` | `4*pi/3` |
 
-The same frequency and period classes appeared for `sin`, `cos`, and `tan`. The non-trigonometric families were analyzed for canonical form and real-domain behavior but do not have a period metric in this experiment.
+For `tan(a*t+b)`, the corresponding periods are `pi/abs(a)`: `2*pi`, `pi`, and `2*pi/3` for `a = 1/2`, `1`, and `3/2`.
+
+`sin` and `cos` use period `2*pi/abs(a)`, while `tan` uses the mathematically different period `pi/abs(a)`. The non-trigonometric families were analyzed for canonical form and real-domain behavior but do not have a period metric in this experiment.
 
 ## Domain-ზე დაკვირვება
 

@@ -19,7 +19,7 @@ def analyze_expression(source: str, grammars: tuple[Grammar, ...] | None = None)
         canonical = canonicalize(ast)
         symbolic = canonical["sympy_expression"]
         variables = sorted(symbolic.free_symbols, key=str)
-        key = (canonical["expression"], canonical["domain"], tuple(canonical["undefined"]))
+        key = (canonical["expression"], canonical["domain"], tuple(canonical["excluded_points"]))
         grouped[key].append(grammar.id)
         results.append(
             {
@@ -28,9 +28,8 @@ def analyze_expression(source: str, grammars: tuple[Grammar, ...] | None = None)
                 "ast": ast_to_dict(ast),
                 "canonical": canonical["expression"],
                 "domain": canonical["domain"],
-                "undefined": canonical["undefined"],
+                "excluded_points": canonical["excluded_points"],
                 "raw_cost": operation_cost(ast),
-                "canonical_cost": {"nodes": len(canonical["expression"]), "depth": 1},
                 "properties": {
                     **(polynomial_properties(symbolic, variables[0]) if variables else {"is_polynomial": False}),
                     **(rational_properties(canonical["raw_sympy_expression"], variables[0]) if variables else {"is_rational": False}),
@@ -42,7 +41,7 @@ def analyze_expression(source: str, grammars: tuple[Grammar, ...] | None = None)
             "id": f"C{index:02d}",
             "canonical": expression,
             "domain": domain,
-            "undefined": list(undefined),
+            "excluded_points": list(undefined),
             "grammars": grammar_ids,
         }
         for index, ((expression, domain, undefined), grammar_ids) in enumerate(grouped.items(), start=1)
@@ -58,8 +57,8 @@ def to_json(report: dict[str, Any]) -> str:
 
 
 def to_markdown(report: dict[str, Any]) -> str:
-    lines = [f"# ParseAtlas Experiment: `{report['expression']}`", "", "## Summary", "", f"- Grammars analyzed: {len(report['grammars'])}", f"- Equivalence classes: {len(report['equivalence_classes'])}", "", "## Equivalence Classes", "", "| Class | Canonical | Domain | Undefined | Grammars |", "|---|---|---|---|---|"]
+    lines = [f"# ParseAtlas Experiment: `{report['expression']}`", "", "## Summary", "", f"- Grammars analyzed: {len(report['grammars'])}", f"- Equivalence classes: {len(report['equivalence_classes'])}", "", "## Equivalence Classes", "", "| Class | Canonical | Domain | Excluded points | Grammars |", "|---|---|---|---|---|"]
     for item in report["equivalence_classes"]:
-        lines.append(f"| {item['id']} | `{item['canonical']}` | `{item['domain']}` | `{', '.join(item['undefined']) or 'none'}` | {', '.join(item['grammars'])} |")
+        lines.append(f"| {item['id']} | `{item['canonical']}` | `{item['domain']}` | `{', '.join(item['excluded_points']) or 'none'}` | {', '.join(item['grammars'])} |")
     lines += ["", "## Evidence", "", "This report is generated from the custom parser and domain-aware grouping. It records observed output; it does not claim that the class count generalizes to other expressions."]
     return "\n".join(lines) + "\n"

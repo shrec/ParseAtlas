@@ -20,11 +20,11 @@ def run_catalog(catalog: tuple[FunctionSpec, ...] | None = None) -> dict[str, An
     family_counts: Counter[str] = Counter()
     constant_counts: Counter[str] = Counter()
     total_results = 0
-    inner_undefined_by_grammar = {}
+    inner_excluded_points_by_grammar = {}
     for grammar in all_grammars():
         inner_node = parse(BASELINE, grammar)
         inner = to_sympy(inner_node)
-        inner_undefined_by_grammar[grammar.id] = list(undefined_terms(inner_node))
+        inner_excluded_points_by_grammar[grammar.id] = list(undefined_terms(inner_node))
         for spec in catalog:
             output = simplify(spec.apply(inner))
             family_counts[spec.family] += 1
@@ -39,5 +39,5 @@ def run_catalog(catalog: tuple[FunctionSpec, ...] | None = None) -> dict[str, An
         "families": sorted({spec.family for spec in catalog}),
         "family_result_counts": dict(sorted(family_counts.items())),
         "constant_result_counts": dict(sorted(constant_counts.items())),
-        "inner_undefined_by_grammar": inner_undefined_by_grammar,
+        "inner_excluded_points_by_grammar": inner_excluded_points_by_grammar,
     }

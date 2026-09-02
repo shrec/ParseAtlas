@@ -3,7 +3,7 @@
 from fractions import Fraction
 from typing import Any
 
-from sympy import Add, Integer, Mul, Rational, Symbol, simplify
+from sympy import Add, Integer, Mul, Rational, Symbol, simplify, solve
 
 from .parser import Binary, Node, Number, Variable
 
@@ -41,7 +41,12 @@ def undefined_terms(node: Node) -> tuple[str, ...]:
         return ()
     terms = undefined_terms(node.left) + undefined_terms(node.right)
     if node.operator == "/" and (not isinstance(node.right, Number) or node.right.value == 0):
-        terms += (_display(node.right),)
+        denominator = to_sympy(node.right)
+        variables = sorted(denominator.free_symbols, key=str)
+        if variables:
+            terms += tuple(str(point) for point in solve(denominator, variables[0]))
+        elif denominator == 0:
+            terms += ("all",)
     return tuple(dict.fromkeys(terms))
 
 
@@ -52,7 +57,7 @@ def canonicalize(node: Node) -> dict[str, Any]:
     return {
         "expression": str(simplified),
         "domain": "R",
-        "undefined": list(undefined),
+        "excluded_points": list(undefined),
         "raw_sympy_expression": expression,
         "sympy_expression": simplified,
         "sympy_srepr": simplified.func.__name__ + "(" + ", ".join(str(arg) for arg in simplified.args) + ")",
