@@ -252,7 +252,11 @@ A second finding from the same analysis is immediately actionable: the co-Z copy
 Staged replacement:
 
 - **T20.0 — golden case.** Preserve the baseline and candidate forms verbatim with their equivalence argument. *Attemptable now; near-done via the vendored snapshot.*
-- **T20.1 — reachability negative control.** Prove what a given axis set cannot reach, before searching with it. *Attemptable now — 0027 is an instance.*
+- **T20.1 — reachability negative control. DONE, and it is now a tested capability rather than a prose argument.** `src/parseatlas/reachability_control.py` decides reachability against a declared, closed set of structural commitments — `preserve_inputs`, `preserve_outputs`, `map_equality`, and a weaker `projective_equality` — and reports *which* commitment blocks a target, since "unreachable" alone is not actionable. It also reports the **agreement slice**: the constraint under which two unequal maps do coincide. That is what turned 0027's negative into the positive T20b finding, and it generalises — the structure is reproduced in ordinary polynomial algebra with no elliptic curves involved, so it is not a secp256k1 peculiarity.
+
+Two properties matter more than the feature list. The control is **not sample-credulous**: review constructed an adversarial pair whose difference is a product vanishing on the entire sample pool, so all 11 samples agree, and the module still returns unequal via symbolic cancellation with an explicit sample-conflict flag. And it **classifies pairs it has never seen** — six independently constructed pairs, six correct verdicts, each naming exactly the blocking commitment.
+
+Its own limit, stated: deciding these commitments is a **necessary** condition, not a sufficient one. A target passing all of them is not thereby reachable by any particular finite axis set. *OBSERVED — 0028.*
 - **T20.2 — axis existence.** Define a coordinate-change axis **without naming Meloni, ZADDU or co-Z anywhere in its specification**, or the gate is circular. *Needs new machinery; specification in 0027 section C.*
 - **T20.3 — rediscovery, split into generation and SELECTION.** Selection is the harder half: the wrong operand order yields a **correct** table that delivers 10–18% instead of 34.7%, and neither a correctness oracle nor a per-formula cost model can see the difference. A search that generates the right candidate and cannot rank it has not rediscovered anything.
 - **T20.4 — transfer.** The same axis finds something on an unrelated target. *Needs a second case study.*
