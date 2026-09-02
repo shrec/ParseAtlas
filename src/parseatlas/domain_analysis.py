@@ -5,7 +5,7 @@ from typing import Any
 
 from sympy import (
     E, Rational, Symbol, acos, binomial, diff, expand, factor, integrate, limit, log, lcm, pi,
-    simplify, sin, solve, sqrt, sympify,
+    oo, simplify, sin, solve, sqrt, sympify,
 )
 from sympy.ntheory import factorint, isprime
 
@@ -112,4 +112,55 @@ def analyze_binomial_probability(trials: int, successes: int, probability: Any) 
         "pmf": str(pmf),
         "expected_value": str(simplify(trials * p)),
         "variance": str(simplify(trials * p * q)),
+    }
+
+
+def analyze_normal_distribution(mean: Any, standard_deviation: Any, point: Any) -> dict[str, Any]:
+    """Analyze the Normal(mu, sigma) PDF and standardized point."""
+    mu, sigma, value = map(sympify, (mean, standard_deviation, point))
+    if sigma <= 0:
+        raise ValueError("standard_deviation must be positive")
+    z_score = simplify((value - mu) / sigma)
+    density = simplify(1 / (sigma * sqrt(2 * pi)) * E ** (-z_score**2 / 2))
+    return {
+        "domain": "probability_statistics",
+        "distribution": f"Normal({mu}, {sigma})",
+        "point": str(value),
+        "z_score": str(z_score),
+        "pdf": str(density),
+        "expected_value": str(mu),
+        "variance": str(sigma**2),
+    }
+
+
+def analyze_exponential_distribution(rate: Any, point: Any) -> dict[str, Any]:
+    """Analyze the Exponential(lambda) PDF and survival function."""
+    lam, value = map(sympify, (rate, point))
+    if lam <= 0 or value < 0:
+        raise ValueError("rate must be positive and point must be nonnegative")
+    return {
+        "domain": "probability_statistics",
+        "distribution": f"Exponential({lam})",
+        "point": str(value),
+        "pdf": str(simplify(lam * E ** (-lam * value))),
+        "survival": str(simplify(E ** (-lam * value))),
+        "expected_value": str(simplify(1 / lam)),
+        "variance": str(simplify(1 / lam**2)),
+    }
+
+
+def analyze_calculus_extended(expression: str, variable: str = "x", point: Any = 0, order: int = 4) -> dict[str, Any]:
+    """Compute limit, definite integral, Taylor polynomial, and extrema candidates."""
+    symbol = Symbol(variable)
+    parsed = sympify(expression)
+    derivative = diff(parsed, symbol)
+    critical_points = solve(derivative, symbol)
+    return {
+        "domain": "calculus",
+        "expression": str(parsed),
+        "limit_at_infinity": str(limit(parsed, symbol, oo)),
+        "definite_integral_0_to_1": str(integrate(parsed, (symbol, 0, 1))),
+        "taylor_at_point": str(parsed.series(symbol, point, order).removeO()),
+        "critical_points": [str(item) for item in critical_points],
+        "critical_values": [str(simplify(parsed.subs(symbol, item))) for item in critical_points],
     }

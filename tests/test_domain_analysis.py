@@ -4,6 +4,9 @@ from parseatlas.domain_analysis import (
     analyze_geometry,
     analyze_exponential_ode,
     analyze_binomial_probability,
+    analyze_calculus_extended,
+    analyze_exponential_distribution,
+    analyze_normal_distribution,
     analyze_number_theory,
     analyze_quadratic,
     analyze_trigonometry,
@@ -51,3 +54,23 @@ def test_binomial_probability_reports_pmf_and_moments():
     assert result["pmf"] == "3/8"
     assert result["expected_value"] == "2"
     assert result["variance"] == "1"
+
+
+def test_continuous_distributions_report_density_and_moments():
+    normal = analyze_normal_distribution(0, 1, 0)
+    assert normal["z_score"] == "0"
+    assert normal["expected_value"] == "0"
+    assert normal["variance"] == "1"
+    exponential = analyze_exponential_distribution(2, 1)
+    assert exponential["pdf"] == "2*exp(-2)"
+    assert exponential["survival"] == "exp(-2)"
+    assert exponential["expected_value"] == "1/2"
+
+
+def test_extended_calculus_reports_limit_integral_series_and_extrema():
+    result = analyze_calculus_extended("x**2", order=4)
+    assert result["limit_at_infinity"] == "oo"
+    assert result["definite_integral_0_to_1"] == "1/3"
+    assert result["taylor_at_point"] == "x**2"
+    assert result["critical_points"] == ["0"]
+    assert result["critical_values"] == ["0"]

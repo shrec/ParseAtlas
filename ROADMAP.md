@@ -31,6 +31,8 @@ Completed extension: first specialized analyzers for quadratic equations, geomet
 
 Completed extension: exponential differential-equation residual checks and Binomial PMF/moment analysis are recorded in [experiments/0008_ode_probability/REPORT.md](experiments/0008_ode_probability/REPORT.md).
 
+Completed extension: Normal and Exponential distributions plus extended calculus properties are recorded in [experiments/0009_continuous_probability_calculus/REPORT.md](experiments/0009_continuous_probability_calculus/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
