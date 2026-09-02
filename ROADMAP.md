@@ -37,6 +37,8 @@ Completed extension: circle metrics, planar rotations, vector angles, and algebr
 
 Completed extension: logistic and harmonic ODE residuals, Normal CDF, z-confidence intervals, and sample statistics are recorded in [experiments/0011_advanced_ode_statistics/REPORT.md](experiments/0011_advanced_ode_statistics/REPORT.md).
 
+Completed extension: safe-point numerical validation of raw versus canonical expressions is recorded in [experiments/0012_numerical_validation/REPORT.md](experiments/0012_numerical_validation/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.

@@ -17,5 +17,6 @@ This directory contains the publication-facing documentation for ParseAtlas.
 - [Experiment 0009 report](../experiments/0009_continuous_probability_calculus/REPORT.md): continuous distributions and extended calculus properties.
 - [Experiment 0010 report](../experiments/0010_geometry_algebra/REPORT.md): geometric transformations, vector angles, and algebraic identity residuals.
 - [Experiment 0011 report](../experiments/0011_advanced_ode_statistics/REPORT.md): nonlinear/second-order ODE checks and statistical inference primitives.
+- [Experiment 0012 report](../experiments/0012_numerical_validation/REPORT.md): numerical cross-checks of symbolic canonicalization.
 
 The normative Generation 1 language and semantic rules are defined in [SPEC.md](../SPEC.md). The project overview remains in [README.md](../README.md).
