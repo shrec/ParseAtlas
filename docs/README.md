@@ -24,5 +24,33 @@ This directory contains the publication-facing documentation for ParseAtlas.
 - [Experiment 0016 report](../experiments/0016_multivariable_complex_conjectures/REPORT.md): multivariable derivatives, complex identities, and conjecture evidence.
 - [Experiment 0017 report](../experiments/0017_grammar_equivalence_matrix/REPORT.md): grammar-space agreement matrix and representation sensitivity.
 - [Experiment 0018 report](../experiments/0018_precedence_graph/REPORT.md): adjacent-swap precedence graph and semantic transitions.
+- [Experiment 0019 report](../experiments/0019_operator_support_reduction/REPORT.md): operator-support reduction and the exact redundancy of grammar enumeration.
+- [Experiment 0020 report](../experiments/0020_ast_space_coverage/REPORT.md): precedence-reachable fraction of the parenthesization space, and the non-redundancy of the tied control grammar.
+- [Experiment 0021 report](../experiments/0021_critical_path_cost/REPORT.md): invariant raw operation multiset versus variable critical-path depth.
+- [Experiment 0022 report](../experiments/0022_modular_collapse/REPORT.md): domain-dependent equivalence, grammar classes over Q versus modulo p.
+- [Experiment 0023 report](../experiments/0023_reachability_theorem/REPORT.md): order-feasibility characterization of precedence-reachable parse trees.
+
+## Structural theory
+
+- [Structure of the Generation 1 precedence space](grammar-space-structure.md): the consolidated structural results with their prior art, and an explicit statement of which are restatements, which are trivial, and which are measurements.
+
+## Case studies
+
+Case studies record the **equivalence-preserving** mode, where `R1(x) == R2(x)` on the declared domain but the representations cost differently. Experiments record the **semantic-exploration** mode, where a different grammar yields a different function. The two are never mixed.
+
+- [Case study index and the two-mode distinction](../case_studies/README.md)
+- [Record schema and admission gate](../case_studies/RECORD_SCHEMA.md)
+- [UltrafastSecp256k1 intake](../case_studies/ultrafast_secp256k1/README.md)
+
+## Reading order
+
+For an external reader, the shortest honest path through this repository is:
+
+1. [README.md](../README.md) for the research object and the two modes;
+2. the **Working Theses** section of [ROADMAP.md](../ROADMAP.md), which states what each result is worth and names the prior art — several striking-looking results are marked there as folklore, tautology, or trivial-by-counting;
+3. [grammar-space-structure.md](grammar-space-structure.md) for the structural picture in one place;
+4. the individual experiment reports for the measurements.
+
+Experiment reports are written in Georgian for project communication; the methodology, structural theory, publication, and case-study documents are in English. That split is deliberate and is recorded in ROADMAP Phase 13.
 
 The normative Generation 1 language and semantic rules are defined in [SPEC.md](../SPEC.md). The project overview remains in [README.md](../README.md).
