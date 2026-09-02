@@ -128,11 +128,47 @@ study roots, domain, singularities  study cost: C(R2) < C(R1)
 
 Experiments 0001 through 0024 are all semantic exploration. Group E is the second mode, and it is where the project acquires engineering value rather than only structural interest.
 
-**T17. Equivalence-preserving representation change produces measurable engineering wins.** The owner reports, from the external Ultrafast secp256k1 project, roughly 34 percent on table construction and repeated 7 to 10 percent gains on field primitives and hot paths. If those hold under an imported harness, this is the first evidence that representation-first search has practical value rather than only descriptive value. *OWNER-REPORTED, NOT YET VERIFIED BY ParseAtlas — intake at [case_studies/ultrafast_secp256k1/](case_studies/ultrafast_secp256k1/).* No figure may be promoted to BENCHMARKED until the primary artifacts — harness, machine and compiler versions, repetition counts, variance, before/after sources, and differential-test results — are imported.
+**T17. Equivalence-preserving representation change produces measurable engineering wins.** From the external UltrafastSecp256k1 project, branch [`experiment/representation-search`](https://github.com/shrec/UltrafastSecp256k1/tree/experiment/representation-search), now public.
+
+The headline is the Meloni co-Z addition (`ZADDU`, 5M+2S) replacing the mixed addition (8M+3S) in odd-multiples table construction:
+
+```text
+zaddu   90.50 / 90.51 / 90.71 ns   [range 90.17 - 90.77]
+madd   139.05 / 138.56 / 138.57 ns [range 131.81 - 139.05]
+delta  -34.91% / -34.68% / -34.54%
+i5-14400F, GCC 14.2.0, -O3 -march=native, P-core pinned, 11 passes, minimum taken
+```
+
+Two things make this more than a local win. The cost model **predicted 82.4 ns** from measured per-operation throughput and measured 90.5 ns, within 10 percent — a cost model that prices a formula before it is compiled. And the transformation came from the `coordinate_change` axis, which the project's own first assessment had ranked last: *point formulas at fixed coordinates are a local optimum, but changing the coordinate system is not.* That is this project's founding principle, confirmed against production code.
+
+**End-to-end is far more modest, and the source says so plainly:** `build_glv52_table_zr` measured −7.19% on `dual_scalar_mul_gen_point` and −1.96% on `ecdsa_verify`, with zero regressions. A separate result, the constant-time SafeGCD inverse replacing the Fermat chain, measured 3847.5 ns → 1555.0 ns, a 2.47× improvement at equal timing guarantee.
+
+*AUTHOR-MEASURED, source-verified by ParseAtlas from the public branch; NOT re-run here — the figures are specific to that machine. Intake at [case_studies/ultrafast_secp256k1/](case_studies/ultrafast_secp256k1/).* Promotion to BENCHMARKED requires an independent run on declared hardware, not merely a readable source.
+
+**T17a. Negative results are the more valuable half, and they exist.** The co-Z transformation is recorded as **exhausted**: the pattern it needs — a chain accumulating P, 3P, 5P by repeatedly adding a constant 2P — occurs in exactly four places on the x86-64 FE52 build, all four are converted, and *"there is no fifth"*, with every caller enumerated and each rejected site refuted by mechanism rather than by silence. The co-Z Montgomery ladder is refuted decisively: 4110 heavy operations against 1690, i.e. 2.43× more field work, and the gap survives the most generous framing available. An automatic search over point formulas kept 1494 distinct equivalent programs from 5894 rewrites with 0 unsound, and found nothing better than −0.34%, inside noise — the production formulas are a local optimum in that rewrite space.
+
+This matters for T18: a corpus of wins alone yields a survivorship-biased `P(speedup | transformation)`. These refutations are the denominator. *OBSERVED — same source.*
 
 **T18. Some transformation classes yield speedups far more often than others.** Once roughly 20 to 30 recorded optimizations exist, `P(speedup | transformation)` becomes estimable per transformation label — factorization, reassociation, sign relocation, projective rescaling, lazy reduction, addition chains, limb layout, operation scheduling. Below that sample size only raw counts may be reported. *HYPOTHESIS — case study intake.*
 
 **T19. Operation count may be a poor predictor of measured speedup; dependency depth and register pressure may be better.** This is directly testable and connects to T11: experiment 0021 established that raw operation count is *invariant* under grammar change while dependency depth is not, so a cost model built on operation count alone cannot even express the difference that grammar makes. If the case-study records show speedup correlating with depth and register pressure rather than with operation-count delta, the project's cost model must be rebuilt around the dependency graph. *HYPOTHESIS — case study intake, 0021.*
+
+**T19a. Sharpened by disassembly: the cost model can be answering the wrong question, not merely answering it imprecisely.** Ultrafast commit `fa14fcd` disassembled the hottest kernel, `fe52_mul_inner`, at GCC 14.2 `-O3 -march=native`: 228 instructions, of which 31 are multiplies (13.6%) and 98 are `mov`/`push`/`pop` (43.0%). The kernel is dominated by **data movement, not arithmetic**. 31 MULX at one per cycle is a 31-cycle floor; the measured 12.43 ns is about 58 cycles at 4.7 GHz, so roughly 27 cycles sit above the multiply floor and they are the **serial carry and fold chain**, not instruction count — at 228 instructions in 58 cycles the machine already retires near 4 IPC.
+
+Two consequences, both recorded there:
+
+- **Limb-level Karatsuba was refuted without being built.** It would remove 3 of 31 multiplies, about 1.3% of the kernel, while adding roughly 20 ALU operations and more live values — worsening the register pressure that already dominates. A structural argument closed an axis that an operation-count model would have ranked as promising.
+- The weighted cost model prefers the production schedule 40.98 to 52.06, **but that model counts instructions and this kernel is not instruction-bound**, so the model is answering the wrong question and only a measurement settles it.
+
+This is stronger than T19 as originally written. It is not that operation count is a noisy predictor; it is that for a kernel which is not instruction-bound, operation count is measuring a quantity that does not govern the outcome. *OBSERVED — Ultrafast `fa14fcd`; see [case_studies/ultrafast_secp256k1/](case_studies/ultrafast_secp256k1/).*
+
+**T21. Representation search needs three test classes that ordinary correctness testing does not provide.** Each was found the hard way in the Ultrafast work, and each is now a standing requirement for any ParseAtlas equivalence-preserving experiment.
+
+1. **Cost-regression tests.** The first co-Z chain passed every correctness check and delivered 10–18% instead of the measured 34.7%, because the operand order was wrong: `ZADDU` returns the sum together with its *first* operand on the new Z, so passing `(acc, d)` leaves the constant on the old Z and forces a 3M+1S rescale every step. That bug produces a **correct table, just a slower one** — no correctness test can ever find it. Pinned as `test_operand_order_is_load_bearing`.
+2. **Uniform-error tests.** A windowed table stores pseudo-affine entries on one implied global Z. A build that lands on the wrong Z is **wrong in every entry by the same factor**, so spot-checking one entry proves nothing. This is exactly the failure mode a co-Z chain with drifting operands produces, and it requires walking all entries against an independent construction.
+3. **Representation-invariant tests.** Assertions must be written against the canonical serialised form, never against internal coordinates — because changing the internals is precisely what the search does. A test pinned to internal representation breaks on every candidate and therefore gets deleted or weakened.
+
+A fourth, from the same source: a **silent-wrong-answer window**. Changing a table-width constant while a separately written literal stayed at 15 gave a segfault at window 12 but, at window 13, **no crash and five silently wrong `dual_mul` results out of 89 checks**. A `static_assert` only helps while someone keeps the two constants syntactically linked; the behaviour itself must be asserted. *OBSERVED — Ultrafast `03245d99`, `422555c2`, `6f18bc1f`.*
 
 **T20. The rediscovery gate.** The first real test of an automated representation-search engine is not a new optimization but an old one: *can ParseAtlas independently rediscover the 34 percent Ultrafast rewrite that was found by hand?* Until a search finds, without being told the transformation, a representation a human already found, the system is a description of intuition rather than a search procedure. This is the acceptance gate for Phase 11 and it requires the baseline and candidate forms of that rewrite to be preserved verbatim as a golden case. *OPEN — Phase 11 exit gate.*
 
