@@ -29,6 +29,9 @@ This directory contains the publication-facing documentation for ParseAtlas.
 - [Experiment 0021 report](../experiments/0021_critical_path_cost/REPORT.md): invariant raw operation multiset versus variable critical-path depth.
 - [Experiment 0022 report](../experiments/0022_modular_collapse/REPORT.md): domain-dependent equivalence, grammar classes over Q versus modulo p.
 - [Experiment 0023 report](../experiments/0023_reachability_theorem/REPORT.md): order-feasibility characterization of precedence-reachable parse trees.
+- [Experiment 0024 report](../experiments/0024_corpus_grammar_clusters/REPORT.md): corpus-scale agreement matrix against the support-reduction null model — a measured negative result on grammar-space cluster structure, and the AST/semantic decoupling that survives it.
+- [Experiment 0025 report](../experiments/0025_independent_oracle_crossvalidation/REPORT.md): cross-validation against an independent implementation with a different equivalence oracle, and the 38-case asymmetry showing domain tracking is load-bearing.
+- [Experiment 0026 report](../experiments/0026_transformation_axes/REPORT.md): equivalence-preserving transformation axes across eight mathematical domains — measured negative transfer from the field-arithmetic result.
 
 ## Structural theory
 
