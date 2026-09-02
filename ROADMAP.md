@@ -33,6 +33,8 @@ Completed extension: exponential differential-equation residual checks and Binom
 
 Completed extension: Normal and Exponential distributions plus extended calculus properties are recorded in [experiments/0009_continuous_probability_calculus/REPORT.md](experiments/0009_continuous_probability_calculus/REPORT.md).
 
+Completed extension: circle metrics, planar rotations, vector angles, and algebraic identity residual checks are recorded in [experiments/0010_geometry_algebra/REPORT.md](experiments/0010_geometry_algebra/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.

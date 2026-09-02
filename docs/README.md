@@ -15,5 +15,6 @@ This directory contains the publication-facing documentation for ParseAtlas.
 - [Experiment 0007 report](../experiments/0007_specialized_domain_analyzers/REPORT.md): specialized symbolic analyzers for the first mathematical domains.
 - [Experiment 0008 report](../experiments/0008_ode_probability/REPORT.md): exponential differential equations and binomial probability moments.
 - [Experiment 0009 report](../experiments/0009_continuous_probability_calculus/REPORT.md): continuous distributions and extended calculus properties.
+- [Experiment 0010 report](../experiments/0010_geometry_algebra/REPORT.md): geometric transformations, vector angles, and algebraic identity residuals.
 
 The normative Generation 1 language and semantic rules are defined in [SPEC.md](../SPEC.md). The project overview remains in [README.md](../README.md).

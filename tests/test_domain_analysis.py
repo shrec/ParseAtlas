@@ -2,6 +2,9 @@ from parseatlas.domain_analysis import (
     analyze_algebra,
     analyze_calculus,
     analyze_geometry,
+    analyze_geometry_extended,
+    analyze_identity,
+    analyze_vector_angle,
     analyze_exponential_ode,
     analyze_binomial_probability,
     analyze_calculus_extended,
@@ -28,11 +31,34 @@ def test_geometry_analysis_reports_area_distance_and_midpoint():
     assert result["midpoint"] == ["3/2", "2"]
 
 
+def test_extended_geometry_reports_circle_and_rotation_invariants():
+    result = analyze_geometry_extended(2, "pi/2")
+    assert result["circle_area"] == "4*pi"
+    assert result["circle_circumference"] == "4*pi"
+    assert result["rotated_point"] == ["0", "1"]
+    assert result["rotation_preserves_distance"] == "0"
+
+
+def test_vector_angle_reports_right_angle():
+    result = analyze_vector_angle((1, 0), (0, 1))
+    assert result["dot_product"] == "0"
+    assert result["determinant"] == "1"
+    assert result["angle"] == "pi/2"
+
+
 def test_algebra_and_calculus_analysis_are_symbolic():
     assert analyze_algebra("x**2 - 1")["factored"] == "(x - 1)*(x + 1)"
     calculus = analyze_calculus("x**2")
     assert calculus["derivative"] == "2*x"
     assert calculus["integral"] == "x**3/3"
+
+
+def test_identity_checker_returns_zero_residual_only_for_identities():
+    identity = analyze_identity("(x + 1)**2", "x**2 + 2*x + 1")
+    non_identity = analyze_identity("x**2", "x + 1")
+    assert identity["is_identity"] is True
+    assert identity["residual"] == "0"
+    assert non_identity["is_identity"] is False
 
 
 def test_trigonometry_and_number_theory_properties():

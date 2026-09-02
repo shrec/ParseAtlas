@@ -4,8 +4,8 @@ from math import gcd
 from typing import Any
 
 from sympy import (
-    E, Rational, Symbol, acos, binomial, diff, expand, factor, integrate, limit, log, lcm, pi,
-    oo, simplify, sin, solve, sqrt, sympify,
+    E, Matrix, Rational, Symbol, acos, binomial, diff, expand, factor, integrate, limit, log,
+    cos, lcm, oo, pi, simplify, sin, solve, sqrt, sympify,
 )
 from sympy.ntheory import factorint, isprime
 
@@ -35,6 +35,35 @@ def analyze_geometry(base: Any, height: Any, x1: Any, y1: Any, x2: Any, y2: Any)
     }
 
 
+def analyze_geometry_extended(radius: Any, angle: Any, point: tuple[Any, Any] = (1, 0)) -> dict[str, Any]:
+    """Analyze circle metrics and a planar rotation of one point."""
+    radius, angle = sympify(radius), sympify(angle)
+    x, y = map(sympify, point)
+    rotation = Matrix([[sympify(cos(angle)), -sympify(sin(angle))], [sympify(sin(angle)), sympify(cos(angle))]])
+    rotated = rotation * Matrix([x, y])
+    return {
+        "domain": "geometry",
+        "circle_area": str(simplify(pi * radius**2)),
+        "circle_circumference": str(simplify(2 * pi * radius)),
+        "rotated_point": [str(simplify(value)) for value in rotated],
+        "rotation_preserves_distance": str(simplify(rotated.dot(rotated) - (x**2 + y**2))),
+    }
+
+
+def analyze_vector_angle(first: tuple[Any, Any], second: tuple[Any, Any]) -> dict[str, Any]:
+    """Analyze dot product, determinant, and angle between two planar vectors."""
+    vector_a = Matrix([sympify(value) for value in first])
+    vector_b = Matrix([sympify(value) for value in second])
+    dot_product = simplify(vector_a.dot(vector_b))
+    determinant = simplify(vector_a[0] * vector_b[1] - vector_a[1] * vector_b[0])
+    return {
+        "domain": "geometry",
+        "dot_product": str(dot_product),
+        "determinant": str(determinant),
+        "angle": str(simplify(acos(dot_product / sqrt(vector_a.dot(vector_a) * vector_b.dot(vector_b))))),
+    }
+
+
 def analyze_algebra(expression: str, variable: str = "x") -> dict[str, Any]:
     symbol = Symbol(variable)
     parsed = sympify(expression)
@@ -44,6 +73,20 @@ def analyze_algebra(expression: str, variable: str = "x") -> dict[str, Any]:
         "factored": str(factor(parsed)),
         "simplified": str(simplify(parsed)),
         "zeros": [str(root) for root in solve(parsed, symbol)],
+    }
+
+
+def analyze_identity(left: str, right: str, variable: str = "x") -> dict[str, Any]:
+    """Check an algebraic identity through a symbolic residual."""
+    symbol = Symbol(variable)
+    residual = simplify(sympify(left) - sympify(right))
+    return {
+        "domain": "algebra",
+        "left": left,
+        "right": right,
+        "residual": str(residual),
+        "is_identity": residual == 0,
+        "variables": sorted(str(item) for item in residual.free_symbols if item != symbol) or [variable],
     }
 
 
