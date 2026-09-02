@@ -49,6 +49,8 @@ Completed extension: multivariable gradient/Hessian analysis, complex branch met
 
 Completed extension: pairwise grammar agreement matrix and representation sensitivity metrics are recorded in [experiments/0017_grammar_equivalence_matrix/REPORT.md](experiments/0017_grammar_equivalence_matrix/REPORT.md).
 
+Completed extension: strict precedence permutation graph and adjacent-swap semantic transitions are recorded in [experiments/0018_precedence_graph/REPORT.md](experiments/0018_precedence_graph/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.

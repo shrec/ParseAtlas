@@ -23,5 +23,6 @@ This directory contains the publication-facing documentation for ParseAtlas.
 - [Experiment 0015 report](../experiments/0015_domain_aware_invariant_mining/REPORT.md): domain-aware identity validation and counterexamples.
 - [Experiment 0016 report](../experiments/0016_multivariable_complex_conjectures/REPORT.md): multivariable derivatives, complex identities, and conjecture evidence.
 - [Experiment 0017 report](../experiments/0017_grammar_equivalence_matrix/REPORT.md): grammar-space agreement matrix and representation sensitivity.
+- [Experiment 0018 report](../experiments/0018_precedence_graph/REPORT.md): adjacent-swap precedence graph and semantic transitions.
 
 The normative Generation 1 language and semantic rules are defined in [SPEC.md](../SPEC.md). The project overview remains in [README.md](../README.md).

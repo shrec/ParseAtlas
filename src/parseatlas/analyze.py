@@ -49,7 +49,7 @@ def analyze_expression(source: str, grammars: tuple[Grammar, ...] | None = None)
     class_by_grammar = {grammar_id: item["id"] for item in classes for grammar_id in item["grammars"]}
     for result in results:
         result["equivalence_class"] = class_by_grammar[result["id"]]
-    return {"expression": source, "control": next(item for item in results if item["id"] == "G0"), "grammars": results, "equivalence_classes": classes}
+    return {"expression": source, "control": next((item for item in results if item["id"] == "G0"), None), "grammars": results, "equivalence_classes": classes}
 
 
 def to_json(report: dict[str, Any]) -> str:
