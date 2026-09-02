@@ -47,6 +47,8 @@ Completed extension: domain-aware identity validation, original restriction pres
 
 Completed extension: multivariable gradient/Hessian analysis, complex branch metadata, and symbolic conjecture ranking are recorded in [experiments/0016_multivariable_complex_conjectures/REPORT.md](experiments/0016_multivariable_complex_conjectures/REPORT.md).
 
+Completed extension: pairwise grammar agreement matrix and representation sensitivity metrics are recorded in [experiments/0017_grammar_equivalence_matrix/REPORT.md](experiments/0017_grammar_equivalence_matrix/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
