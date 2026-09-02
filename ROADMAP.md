@@ -1,6 +1,6 @@
-# ParseAtlas Roadmap
+# ParseAtlas Research Roadmap
 
-This roadmap defines the initial research path for ParseAtlas.
+This roadmap defines the staged research program for ParseAtlas. Each phase produces executable artifacts, tests, and a report before the next phase expands the search space.
 
 ## Current implementation status
 
@@ -14,7 +14,159 @@ Completed next: quadratic property extraction and the degree-collapse experiment
 
 Completed next: controlled corpus generation and initial rational-function pole/removable-restriction analysis. Results are recorded in [experiments/0004_controlled_corpus/REPORT.md](experiments/0004_controlled_corpus/REPORT.md).
 
-Next: sweep coefficient families, expand singularity analysis, and benchmark raw parsing versus symbolic processing versus canonical evaluation cost.
+Completed next: deterministic coefficient sweep for a controlled linear template. Results are recorded in [experiments/0005_coefficient_sweep/REPORT.md](experiments/0005_coefficient_sweep/REPORT.md).
+
+Next: expand coefficient families, add zero/rational coefficients, and benchmark raw parsing versus symbolic processing versus canonical evaluation cost.
+
+## Research Principles
+
+- Treat `(token sequence, grammar)` as the research object.
+- Keep `G0` conventional control separate from `G01..G24` strict permutations.
+- Preserve AST, canonical form, domain, undefined set, and cost as separate evidence.
+- Distinguish observation, symbolic justification, numerical validation, hypothesis, and benchmark.
+- Expand one controlled dimension at a time; do not infer general laws from one expression.
+- Preserve an independent reference implementation before introducing a performance engine.
+
+## Phase Gates
+
+Every phase must provide:
+
+1. an implementation or dataset change;
+2. focused regression tests;
+3. a generated report with commands and environment details;
+4. a commit and pushed revision;
+5. a short statement of what remains unproven.
+
+## Phase 1: Grammar and Parsing Foundation [Complete]
+
+- Define the binary Generation 1 language.
+- Register `G0` and all 24 strict precedence permutations.
+- Implement deterministic tokenization and left-associative parsing.
+- Serialize reproducible ASTs.
+- Reproduce the initial strict `24 -> 8` finding.
+
+Exit gate: parser and golden tests pass.
+
+## Phase 2: Domain-Aware Symbolic Analysis [Complete]
+
+- Convert custom ASTs into symbolic objects only after parsing.
+- Keep exact rational constants.
+- Track denominator restrictions.
+- Group by function, domain, and undefined/singularity set.
+- Extract polynomial degree, coefficients, roots, discriminant, vertex, and critical points.
+
+Exit gate: simplification cannot silently erase `x != 0` for `x/x`.
+
+## Phase 3: Outer-Function Atlas [Complete]
+
+- Evaluate trigonometric, exponential, logarithmic, root, absolute-value, inverse-trigonometric, reciprocal, square, and cube families.
+- Measure constant collapse, frequency, period, and real-domain behavior.
+- Propagate inner validity metadata into outer results.
+
+Exit gate: outer-function results are derived from shared inner grammar results and are independently tested.
+
+## Phase 4: Controlled Corpus [Complete]
+
+- Start with linear, polynomial, rational, and removable-restriction families.
+- Record `grammar count -> AST count -> semantic-class count`.
+- Record degree distributions and pole distributions.
+- Avoid uncontrolled random expressions until generation parameters are specified.
+
+Exit gate: every corpus item is reproducible from an explicit expression list.
+
+## Phase 5: Parameter Sweeps and Cost Model [In Progress]
+
+### 5A. Coefficient sweep
+
+- Sweep small integer coefficients over controlled linear and polynomial templates.
+- Add rational coefficients with bounded numerator and denominator.
+- Measure class count, AST diversity, degree collapse, roots, poles, and restrictions.
+- Store aggregate distributions and exceptional cases.
+
+### 5B. Cost model
+
+- Separate raw AST operation count from canonical operation count.
+- Add symbolic simplification time and serialized expression size.
+- Add evaluation benchmarks at declared sample points.
+- Report median, percentile, and variance; do not compare single timings.
+- Record Python, SymPy, CPU, and operating-system versions.
+
+Exit gate: a cost report must identify whether a cheaper representation is cheaper before or after symbolic preprocessing.
+
+## Phase 6: Rational and Function Semantics
+
+- Expand poles, zeros, removable singularities, asymptotes, and connected real-domain components.
+- Add explicit domain conditions for `log`, `sqrt`, inverse functions, and reciprocal outer layers.
+- Introduce branch conventions for complex analysis.
+- Compare symbolic and numerical domain checks.
+
+Exit gate: each semantic property includes its assumptions and failure modes.
+
+## Phase 7: Invariant Mining
+
+- Search for repeated relations across controlled families.
+- Compare coefficient relations, root relations, symmetry, degree, domain topology, and class structure.
+- Generate conjectures only from repeated measurements.
+- Attempt symbolic proofs and adversarial counterexamples.
+
+Exit gate: every claimed invariant has a tested scope and documented counterexample search.
+
+## Phase 8: Precedence-Space Graph
+
+- Represent each strict grammar as a node.
+- Connect grammars differing by one adjacent precedence swap.
+- Measure local changes in AST, degree, roots, domains, singularities, and cost.
+- Search paths toward simpler canonical forms.
+
+Exit gate: graph navigation agrees with exhaustive enumeration on small corpora.
+
+## Phase 9: Associativity and Parenthesization
+
+- Add right associativity and operator-specific associativity.
+- Enumerate explicit parenthesizations independently of precedence.
+- Compare precedence-generated ASTs with the wider binary-tree space.
+- Identify duplicate grammar states and structurally unreachable trees.
+
+Exit gate: associativity is a first-class grammar parameter and remains backward compatible with Generation 1.
+
+## Phase 10: Numerical and Statistical Validation
+
+- Evaluate canonical forms at exact-safe sample points.
+- Exclude or explicitly test singular points.
+- Compare symbolic equality with numerical disagreement detection.
+- Add corpus seeds, parameter manifests, and result hashes.
+- Use confidence intervals for corpus distributions where sampling is introduced.
+
+Exit gate: numerical checks never replace symbolic/domain reasoning.
+
+## Phase 11: Performance Engine
+
+- Keep the Python reference oracle as the correctness authority.
+- Benchmark parsing, canonicalization, property extraction, and evaluation separately.
+- Add a compiled engine only after data-model and semantic contracts stabilize.
+- Cross-check compiled results against the reference oracle.
+
+Exit gate: performance improvements preserve serialized AST and semantic metadata on the validation corpus.
+
+## Phase 12: Finite Fields and Cryptographic Representations
+
+- Introduce finite-field domains only with explicit modulus metadata.
+- Search only equivalence-preserving transformations.
+- Verify `F1(x) == F2(x) mod p` or projective-point equivalence.
+- Add secp256k1 experiments only after independent correctness tests.
+- Never treat semantic reinterpretation as cryptographic optimization.
+
+Exit gate: every optimization has a proof obligation and an adversarial test suite.
+
+## Phase 13: Publication and Release
+
+- Maintain English methodology and publication documents.
+- Maintain Georgian experiment reports for project communication.
+- Include exact commands, dependency versions, report hashes, and limitations.
+- Freeze datasets and generate a reproducibility bundle.
+- Tag releases only after all phase gates and full validation pass.
+
+Exit gate: an external researcher can reproduce the reported tables from a clean checkout.
 
 The project begins with operator-precedence permutations and then expands toward a broader search over mathematical representations, equivalence classes, invariants, and computational cost.
 
