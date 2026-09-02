@@ -109,7 +109,24 @@ A literature check placed this precisely: it is the **Cartesian tree / treap** o
 
 ### Group D — Open
 
-**T14. Does grammar space have stable cluster structure?** If specific grammar pairs or clusters systematically collapse together across thousands of controlled expressions, grammar space has measurable algebraic or statistical structure rather than per-example coincidence. Any such claim must be stated against the T6 null model — agreement forced by operator-support reduction is not a discovery — and must survive a corpus half-split stability check. *HYPOTHESIS — 0024.*
+**T14. Grammar space has no stable cluster structure beyond the null model. REFUTED on this corpus.** The question was whether specific grammar pairs or clusters systematically collapse together across thousands of controlled expressions, which would make grammar space algebraically or statistically structured rather than coincidental per expression.
+
+Measured over a deterministic corpus of 3 125 expressions across five families:
+
+```text
+observed pairwise agreement   0.259307
+support-forced (null model)   0.072000
+AST-identity                  0.167333
+excess over the null model    0.187307
+```
+
+The clustering computed from the excess matrix coincides **exactly** with the support-size-3 blocks: `set(excess clusters) == set(support-forced blocks)` is `True`, re-derived independently from `Grammar.levels` without calling the module under test. Once the parsing artifact of T6 is removed, **nothing remains**. Both halves of a deterministic split reproduce this at stability 1.0, so the null result is not a sampling accident.
+
+The first draft of that experiment promoted the *observed*-matrix clustering as structure beyond the null; review established that two of its four clusters — `(G03,G04,G06,G20)` and `(G09,G10,G12,G22)` — are verbatim support-forced blocks. Half of the claimed discovery was the null model. That correction is the reason this thesis reads as it now does.
+
+Scope: this refutes the hypothesis for controlled templates with small integer coefficients under the current semantic contract. It does not prove the absence of structure for arbitrary expressions. *OBSERVED, REFUTED — 0024.*
+
+**T14a. What survives the null model: AST diversity and semantic diversity are decoupled.** Over the same 3 125 expressions the rank correlation between distinct-AST count and semantic class count is 0.7676, and **2 500 of 3 125 (80%)** hold AST diversity fixed while `C(E)` varies. Syntactic parse diversity is not a proxy for mathematical diversity, and neither may be reported in place of the other. This is the positive result of that experiment and it is independent of T14's refutation. *OBSERVED — 0024, confirming T3 at corpus scale.*
 
 **T15. What makes an expression grammar-sensitive?** The unresolved form of T4. Candidate predictors to test: operator support size, operator repetition pattern, coefficient degeneracy, presence of division, and reachable-AST count.
 
