@@ -2,6 +2,8 @@ from parseatlas.domain_analysis import (
     analyze_algebra,
     analyze_calculus,
     analyze_geometry,
+    analyze_exponential_ode,
+    analyze_binomial_probability,
     analyze_number_theory,
     analyze_quadratic,
     analyze_trigonometry,
@@ -36,3 +38,16 @@ def test_trigonometry_and_number_theory_properties():
     assert number["is_prime"] is False
     assert number["factorization"] == {"2": 2, "3": 1, "5": 1}
     assert number["gcd_with_12"] == 12
+
+
+def test_exponential_ode_has_zero_residual():
+    result = analyze_exponential_ode(2, 3)
+    assert result["solution"] == "3*exp(2*t)"
+    assert result["derivative_check"] == "0"
+
+
+def test_binomial_probability_reports_pmf_and_moments():
+    result = analyze_binomial_probability(4, 2, "1/2")
+    assert result["pmf"] == "3/8"
+    assert result["expected_value"] == "2"
+    assert result["variance"] == "1"

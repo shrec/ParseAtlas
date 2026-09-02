@@ -29,6 +29,8 @@ Completed extension: an initial 1,000-formula catalog across eight mathematical 
 
 Completed extension: first specialized analyzers for quadratic equations, geometry, algebra, calculus, trigonometry, and number theory are recorded in [experiments/0007_specialized_domain_analyzers/REPORT.md](experiments/0007_specialized_domain_analyzers/REPORT.md).
 
+Completed extension: exponential differential-equation residual checks and Binomial PMF/moment analysis are recorded in [experiments/0008_ode_probability/REPORT.md](experiments/0008_ode_probability/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.

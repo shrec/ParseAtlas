@@ -4,8 +4,8 @@ from math import gcd
 from typing import Any
 
 from sympy import (
-    E, Rational, Symbol, acos, diff, expand, factor, integrate, limit, log, lcm, pi, simplify,
-    sin, solve, sqrt, sympify,
+    E, Rational, Symbol, acos, binomial, diff, expand, factor, integrate, limit, log, lcm, pi,
+    simplify, sin, solve, sqrt, sympify,
 )
 from sympy.ntheory import factorint, isprime
 
@@ -79,4 +79,37 @@ def analyze_trigonometry(angle: str = "x") -> dict[str, Any]:
         "sin_derivative": str(diff(sin(symbol), symbol)),
         "cos_at_zero": str(simplify(sin(symbol + pi / 2).subs(symbol, 0))),
         "inverse_check": str(simplify(acos(1))),
+    }
+
+
+def analyze_exponential_ode(rate: int, initial_value: Any = 1) -> dict[str, Any]:
+    """Analyze the closed-form solution of y' = rate*y with y(0)=initial_value."""
+    time = Symbol("t", real=True)
+    initial = sympify(initial_value)
+    solution = simplify(initial * E ** (rate * time))
+    return {
+        "domain": "differential_equations",
+        "equation": f"y' = {rate}*y",
+        "initial_condition": f"y(0) = {initial}",
+        "solution": str(solution),
+        "derivative_check": str(simplify(diff(solution, time) - rate * solution)),
+    }
+
+
+def analyze_binomial_probability(trials: int, successes: int, probability: Any) -> dict[str, Any]:
+    """Analyze one outcome and moments of Binomial(n, p)."""
+    if trials < 0 or successes < 0 or successes > trials:
+        raise ValueError("successes must be between 0 and trials")
+    p = sympify(probability)
+    if not (0 <= p <= 1):
+        raise ValueError("probability must be between 0 and 1")
+    q = 1 - p
+    pmf = simplify(binomial(trials, successes) * p**successes * q ** (trials - successes))
+    return {
+        "domain": "probability_statistics",
+        "distribution": f"Binomial({trials}, {p})",
+        "outcome": successes,
+        "pmf": str(pmf),
+        "expected_value": str(simplify(trials * p)),
+        "variance": str(simplify(trials * p * q)),
     }
