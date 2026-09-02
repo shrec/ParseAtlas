@@ -11,5 +11,6 @@ This directory contains the publication-facing documentation for ParseAtlas.
 - [Experiment 0003 report](../experiments/0003_quadratic_properties/REPORT.md): degree, roots, discriminant, vertex, and critical-point analysis.
 - [Experiment 0004 report](../experiments/0004_controlled_corpus/REPORT.md): controlled linear, polynomial, and rational corpus distributions.
 - [Experiment 0005 report](../experiments/0005_coefficient_sweep/REPORT.md): deterministic coefficient sweep and class-count distribution.
+- [Experiment 0006 report](../experiments/0006_mathematical_domains/REPORT.md): quadratic equations, geometry, algebra, calculus, and related mathematical domains.
 
 The normative Generation 1 language and semantic rules are defined in [SPEC.md](../SPEC.md). The project overview remains in [README.md](../README.md).

@@ -18,6 +18,15 @@ Completed next: deterministic coefficient sweep for a controlled linear template
 
 Next: expand coefficient families, add zero/rational coefficients, and benchmark raw parsing versus symbolic processing versus canonical evaluation cost.
 
+### 5C. Large function and domain catalogs
+
+- Maintain the exact 10,000-function parameterized catalog.
+- Maintain a balanced cross-domain formula catalog.
+- Use structural mode for exhaustive enumeration and symbolic mode for samples and exceptions.
+- Never represent catalog size as proof coverage; report theorem coverage separately.
+
+Completed extension: an initial 1,000-formula catalog across eight mathematical domains is recorded in [experiments/0006_mathematical_domains/REPORT.md](experiments/0006_mathematical_domains/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
