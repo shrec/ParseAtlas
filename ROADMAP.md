@@ -51,6 +51,91 @@ Completed extension: pairwise grammar agreement matrix and representation sensit
 
 Completed extension: strict precedence permutation graph and adjacent-swap semantic transitions are recorded in [experiments/0018_precedence_graph/REPORT.md](experiments/0018_precedence_graph/REPORT.md).
 
+## Working Theses
+
+These are the load-bearing claims the project currently stands on. Each is written to be falsifiable, carries an evidence level from the methodology document, and names the experiment that tests it. A thesis is promoted only by measurement, and is demoted or deleted the moment a controlled run contradicts it.
+
+Evidence levels: **OBSERVED** (produced by a recorded execution), **JUSTIFIED** (observed plus an explicit symbolic argument), **HYPOTHESIS** (a pattern awaiting a controlled test), **OPEN** (a question with no result yet).
+
+### Group A — Representation space has structure
+
+**T1. The grammar space collapses into semantic equivalence classes.** For a fixed token sequence the 25 registered grammars do not produce 25 distinct mathematical objects; they partition into far fewer classes. *OBSERVED — 0001, 0017.*
+
+**T2. The class count is not a universal constant.** `C(E)`, the number of semantic equivalence classes of `E`, depends on coefficient values and not only on the syntactic template. The same template `a*x + b - c*x/2` produced 6 classes for some coefficient triples and 8 for others. *OBSERVED — 0005.*
+
+**T3. AST diversity and semantic diversity move independently.** A corpus slice can hold AST diversity fixed while `C(E)` varies. Syntactic parse diversity is therefore not a proxy for mathematical diversity, and neither quantity may be reported as a stand-in for the other. *OBSERVED — 0005; retested at corpus scale in 0024.*
+
+**T4. Expressions separate into grammar-rigid and grammar-sensitive.** Some token sequences keep all 24 strict grammars in one semantic class; others fragment. *OBSERVED — 0017.* **The question of which structural property decides this is the central open question of the project.** *OPEN — 0024.*
+
+**T5. Precedence acts through the algebraic core, not on the outer function.** The causal chain is `grammar -> canonical algebra -> domain-specific behavior`. Changing precedence does not act on `sin` or `log` directly; it changes the algebraic argument, and the outer domain then translates that change into frequency, phase, poles, growth rate, or a domain boundary. *OBSERVED — 0002.*
+
+### Group B — Exact structure of the Generation 1 precedence space
+
+**T6. Operator-support reduction.** Let `O(E)` be the set of operators actually occurring in `E`. Parsing depends only on the precedence order restricted to `O(E)`, so the 24 strict grammars partition into `|O(E)|!` blocks of size `24/|O(E)|!` that produce byte-identical ASTs. Grammar enumeration is therefore provably redundant by a known factor, and agreement inside a block is a parsing artifact rather than a finding. *JUSTIFIED — 0019.*
+
+**T7. Rightmost-minimum characterization — this is the Cartesian tree, and it is not new.** For every registered grammar, the parse tree equals the tree built by recursively splitting at the rightmost occurrence of the minimum-binding-power operator in each range. This holds for all 24 strict grammars and for the tied control `G0`.
+
+A literature check placed this precisely: it is the **Cartesian tree / treap** of the operator sequence keyed by binding power (Vuillemin, *A unifying look at data structures*, CACM 23(4), 1980), written from the parsing side instead of the data-structure side. Both halves are textbook — the Cartesian tree recursion is "root at the minimum, recurse left and right", and the expression-tree recursion is "root at the lowest-precedence operator, recurse left and right". Linear-time Cartesian tree construction is the monotone-stack algorithm, which *is* shunting-yard. The closest published prior art is LaLonde & des Rivières, *Handling Operator Precedence in Arithmetic Expressions with Tree Transformations*, TOPLAS 3(1), 1981 — local rotations with the Church–Rosser property, i.e. treap insertion by another name.
+
+**Status: RESTATEMENT, not a result.** What appears unstated in the literature is only the explicit identity and the tie-breaking convention (rightmost minimum corresponds to left associativity; the usual Cartesian-tree convention is the opposite). That is a one-paragraph remark. Its real value here is operational: it is why 0023's decision procedure needs no parser. *OBSERVED — 0023; prior art Floyd 1963, Vuillemin 1980, LaLonde & des Rivières 1981.*
+
+**T8. Reachability is decidable from a constraint graph.** A candidate parenthesization is reachable by some strict precedence grammar exactly when its induced order constraints contain no strict self-loop and no cycle between distinct operator types. Representation search over precedence space therefore does not require enumerating grammars.
+
+**The method is textbook.** The Dragon Book's precedence-function construction already builds a digraph and concludes: *"If the constructed graph has a cycle then no precedence functions exist."* The mixed strict/weak refinement is the standard difference-constraint result. Recovering precedence from example trees is also an existing line of work (Aasa, TCS 1995; Afroozeh et al., SLE 2013; Crespi-Reghizzi et al., 1978).
+
+**What appears unclaimed** is narrow: the *typed-priority* framing — Cartesian trees whose priorities are a function of the element's **type** rather than distinct per position — and a clean iff-theorem at the granularity of "one operator word plus one candidate tree, does a total order on the four types exist", including the strict-self-loop case. Nobody was found stating that exact decision problem. It remains a short exercise given the Dragon Book digraph. *OBSERVED — 0023; this is the project's single best novelty candidate, and it is a modest one.*
+
+**T9. Precedence reaches a vanishing fraction of the parenthesization space.** Mean coverage of the Catalan tree space falls as expressions lengthen, and full coverage is possible only for short operator words.
+
+**The headline is trivial by counting** and must not be presented as a theorem: at most `4! = 24` trees are reachable at any length while `Catalan(k) ~ 4^k / (k^1.5 √π)`, so the fraction vanishes by inspection. Qualitatively, "precedence cannot express some groupings" is already the subject of the deep-priority-conflict literature (Souza Amorim, Steindorfer & Visser, SLE 2017; *Programming* 2(3), 2018) and motivates partial-order precedence proposals. The only unclaimed content is the measured average curve, and the metric must be stated explicitly as *mean over operator words of reachable/Catalan*. **Status: OBSERVATION with a trivial explanation.** Its use is practical — it is the quantitative reason Phase 9 needs a parenthesization engine rather than a wider precedence registry. *OBSERVED — 0020, 0023.*
+
+**T10. The tied control grammar is not redundant.** `G0` reaches parse trees that no strict total ordering reaches. Ties are an independent grammar dimension, not a convenience. *OBSERVED — 0020.*
+
+### Group C — Cost and domain
+
+**T11. Raw operation count is grammar-invariant; only dependency structure varies.** Every parse of a fixed token sequence consumes the same operator tokens, so the raw multiset of additions, subtractions, multiplications and divisions is identical across all 25 grammars, while the AST critical-path depth is not.
+
+**Two corrections, both from review, both load-bearing.**
+
+*First, the invariance half is a tautology.* The operator tokens are fixed by construction, so nothing is discovered by observing that they are still there after parsing. It is worth stating only as a **discipline rule**: a cost model built on operation count alone cannot express any difference that grammar makes, so it cannot be the project's cost model. It is not a finding.
+
+*Second, the depth half must not be phrased as a performance claim.* Experiment 0021 measures structure and explicitly disclaims wall-clock results; depth is a structural upper bound on parallel evaluation, not a measured latency. Earlier wording here said depth changes "and therefore latency", which contradicted 0021's own limitations section and has been removed.
+
+*Third, and most restrictive:* the classical tree-height-reduction results (Brent, JACM 21(2), 1974; Baer & Bovet, IFIP 1968; Muchnick ch. 12; LLVM's AArch64 MachineCombiner reassociation) assume **exact associativity and commutativity**. Generation 1 has left-associative `-` and `/`, so changing precedence changes the *function*, not the schedule. "Grammar choice is a latency question" is therefore true only inside the equivalence-preserving mode of Group E, and false in the semantic-exploration mode where every experiment 0001–0024 lives. *TAUTOLOGY plus a structural observation — 0021; prior art Brent 1974, Muchnick 1997.*
+
+**T12. Computational collapse is real but belongs to semantic-variation mode.** Representation change can turn a variable-dependent expression into a constant, or a quadratic into a linear function. This measures the size of the algebraic collapse available in representation space; it is **not** yet a cheaper solution to the same problem, because the collapsed form is usually a different function. Only the equivalence-preserving subset transfers to the finite-field branch. *OBSERVED — 0001, 0003.*
+
+**T13. Semantic equivalence is domain-relative.** Equivalence must be declared over `(F, D, U)` — function, domain, and undefined set — because canonical text equality alone manufactures false classes: `x/x` simplifies to `1` while remaining undefined at `x = 0`. The class structure further depends on the declared arithmetic domain, so it is a property of `(token sequence, grammar, domain)` and not of the first two alone. *JUSTIFIED — SPEC.md, 0015, 0022.*
+
+### Group D — Open
+
+**T14. Does grammar space have stable cluster structure?** If specific grammar pairs or clusters systematically collapse together across thousands of controlled expressions, grammar space has measurable algebraic or statistical structure rather than per-example coincidence. Any such claim must be stated against the T6 null model — agreement forced by operator-support reduction is not a discovery — and must survive a corpus half-split stability check. *HYPOTHESIS — 0024.*
+
+**T15. What makes an expression grammar-sensitive?** The unresolved form of T4. Candidate predictors to test: operator support size, operator repetition pattern, coefficient degeneracy, presence of division, and reachable-AST count.
+
+**T16. Is representation-dependence of difficulty measurable rather than rhetorical?** The project's founding claim is that mathematical difficulty is partly a property of representation. T11 sharpens it into something testable: representation cannot change the operation count, only the dependency structure and the post-simplification form. The claim survives only if a measured, equivalence-preserving representation change reduces a real cost. *OPEN — Phases 11 and 12.*
+
+### Group E — The equivalence-preserving mode
+
+The project runs in two modes that must never be silently mixed. Every result must declare which one it belongs to.
+
+```text
+Semantic exploration                Equivalence-preserving search
+(E, G1) != (E, G2)                  R1(x) == R2(x) on the declared domain
+different function                  same function
+study roots, domain, singularities  study cost: C(R2) < C(R1)
+```
+
+Experiments 0001 through 0024 are all semantic exploration. Group E is the second mode, and it is where the project acquires engineering value rather than only structural interest.
+
+**T17. Equivalence-preserving representation change produces measurable engineering wins.** The owner reports, from the external Ultrafast secp256k1 project, roughly 34 percent on table construction and repeated 7 to 10 percent gains on field primitives and hot paths. If those hold under an imported harness, this is the first evidence that representation-first search has practical value rather than only descriptive value. *OWNER-REPORTED, NOT YET VERIFIED BY ParseAtlas — intake at [case_studies/ultrafast_secp256k1/](case_studies/ultrafast_secp256k1/).* No figure may be promoted to BENCHMARKED until the primary artifacts — harness, machine and compiler versions, repetition counts, variance, before/after sources, and differential-test results — are imported.
+
+**T18. Some transformation classes yield speedups far more often than others.** Once roughly 20 to 30 recorded optimizations exist, `P(speedup | transformation)` becomes estimable per transformation label — factorization, reassociation, sign relocation, projective rescaling, lazy reduction, addition chains, limb layout, operation scheduling. Below that sample size only raw counts may be reported. *HYPOTHESIS — case study intake.*
+
+**T19. Operation count may be a poor predictor of measured speedup; dependency depth and register pressure may be better.** This is directly testable and connects to T11: experiment 0021 established that raw operation count is *invariant* under grammar change while dependency depth is not, so a cost model built on operation count alone cannot even express the difference that grammar makes. If the case-study records show speedup correlating with depth and register pressure rather than with operation-count delta, the project's cost model must be rebuilt around the dependency graph. *HYPOTHESIS — case study intake, 0021.*
+
+**T20. The rediscovery gate.** The first real test of an automated representation-search engine is not a new optimization but an old one: *can ParseAtlas independently rediscover the 34 percent Ultrafast rewrite that was found by hand?* Until a search finds, without being told the transformation, a representation a human already found, the system is a description of intuition rather than a search procedure. This is the acceptance gate for Phase 11 and it requires the baseline and candidate forms of that rewrite to be preserved verbatim as a golden case. *OPEN — Phase 11 exit gate.*
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
