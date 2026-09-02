@@ -45,6 +45,8 @@ Completed extension: cross-family cost comparison and calibration identity resid
 
 Completed extension: domain-aware identity validation, original restriction preservation, and sampled counterexamples are recorded in [experiments/0015_domain_aware_invariant_mining/REPORT.md](experiments/0015_domain_aware_invariant_mining/REPORT.md).
 
+Completed extension: multivariable gradient/Hessian analysis, complex branch metadata, and symbolic conjecture ranking are recorded in [experiments/0016_multivariable_complex_conjectures/REPORT.md](experiments/0016_multivariable_complex_conjectures/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
