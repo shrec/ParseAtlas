@@ -186,7 +186,13 @@ Still open: the dual-mul G-table window width, 15 (1280 KB of a 2048 KB L2) agai
 
 > Searching **within** a fixed representation found nothing: 5 894 generated equivalent programs moved 0.34%. **Changing** the representation found 7–8%.
 
-That is roughly a twentyfold gap between rearranging inside a representation and changing it, measured on production cryptographic code by a search that tried both. It is the strongest evidence the project has for the principle it was founded on, and it did not come from ParseAtlas — ParseAtlas supplies the framework and the vocabulary. *OBSERVED — Ultrafast `b265ec2`.*
+**Correction, and it matters.** An earlier revision of this thesis called that "roughly a twentyfold gap". That was an overstatement: the two percentages do not share a baseline — the in-representation figure is against 123.37 ns on a shared, loaded machine and the representation-change micro-figure against 139.05 ns on a pinned i5-14400F, 12.7% apart — so dividing them is not legitimate. The defensible statement is weaker in form and stronger in substance:
+
+> The in-representation search found **no improvement distinguishable from zero**, while the representation change delivered roughly 35%.
+
+If the true in-representation optimum is zero, the ratio is unbounded rather than twentyfold, so this is a **lower bound**, not a measurement of a factor. The ~35% is independently reproduced three ways from the vendored snapshot alone — weighted model −34.69%/−35.75%, measured-throughput model 129.77 → 82.37 ns = −36.53% (which independently reproduces the 82.4 ns prediction recorded in T17), and loop heavy-operation count at T=16, 176 → 111 = −36.93%.
+
+One further honesty note: the "local optimum" half is **beam-truncated** — depth 3, beam 40, where depth-1 branching alone is 188 and 54.8% of it is the `mul_square_trade` axis the engine's own S/M = 0.874 already refutes. That truncation weakens the local-optimum claim only. It does not touch T20a, which is by construction and independent of depth and beam. *OBSERVED — Ultrafast `b265ec2`; verification in [experiments/0027_rediscovery_feasibility/FINDINGS.md](experiments/0027_rediscovery_feasibility/FINDINGS.md).*
 
 **T17c. A benchmark harness is part of the claim, not a detail beneath it.** The runner that produced these figures is worth adopting as the project standard, and the case-study schema should require its properties:
 
@@ -223,7 +229,41 @@ This is stronger than T19 as originally written. It is not that operation count 
 
 A fourth, from the same source: a **silent-wrong-answer window**. Changing a table-width constant while a separately written literal stayed at 15 gave a segfault at window 12 but, at window 13, **no crash and five silently wrong `dual_mul` results out of 89 checks**. A `static_assert` only helps while someone keeps the two constants syntactically linked; the behaviour itself must be asserted. *OBSERVED — Ultrafast `03245d99`, `422555c2`, `6f18bc1f`.*
 
-**T20. The rediscovery gate.** The first real test of an automated representation-search engine is not a new optimization but an old one: *can ParseAtlas independently rediscover the 34 percent Ultrafast rewrite that was found by hand?* Until a search finds, without being told the transformation, a representation a human already found, the system is a description of intuition rather than a search procedure. This is the acceptance gate for Phase 11 and it requires the baseline and candidate forms of that rewrite to be preserved verbatim as a golden case. *OPEN — Phase 11 exit gate.*
+**T20a. The co-Z form is unreachable by that search *by construction*, at any depth and any beam width.** Three lines of the vendored `repsearch/rewrite.py` fix the shape of every candidate it can ever produce: the input list is passed through literally at every level and no rule can introduce a free variable; the output key set is frozen by `set(candidate.outputs) != output_names`; and equivalence is raw coordinate **value** equality in `F_p`, deliberately stronger than projective equivalence.
+
+ZADDU violates all three. Its inputs are `['X1','Y1','Z1','X2','Y2']` against the mixed add's `['X1','Y1','X2','Y2','Z']`, it has six output keys against three, and decisively **it is a different function of the same five numbers** — the two agree exactly only on the slice `Z = 1`. Two unequal maps cannot be joined by map-preserving rewrites.
+
+So the recorded "local optimum at −0.34% over 5 894 rewrites" does not mean *nothing better exists*. It means **nothing better exists inside that space, and the answer was outside it.** *OBSERVED — 0027.*
+
+**T20b. The distance to co-Z is one substitution on the inputs, and the engine is one level too low.** This is the useful half, and it was not obvious. Verified over 270 cases with `L = 1` uniformly:
+
+```text
+madd_production(X1, Y1, Z, X2*Z^-2, Y2*Z^-3)  ==  zaddu_sum_only(X1, Y1, X2, Y2, Z)
+```
+
+The substitution cancels symbolically inside the program — `u2 = (X2*Z^-2)*Z^2 = X2`, `s2 = (Y2*Z^-3)*Z^2*Z = Y2` — which kills exactly the 3M+1S Z-lifting prefix, taking 8M+3S to 5M+2S. Deleting those four instructions by hand and keeping every other instruction byte-for-byte yields a program raw-value identical to ZADDU on 396 of 396 cases.
+
+**co-Z is therefore not a cleverer formula. It is the same program under a change of input encoding, with the now-dead prefix eliminated.** The rewriter rewrites programs; this happens at the input encoding, one level above it. *DERIVED — 0027.*
+
+A second finding from the same analysis is immediately actionable: the co-Z copy of `P` in `dbl_z1_production` is **already computed** — `Xp = -t` from the first multiply, `Yp = s2` from the last square, `Z3 = Y`, verified 12/12. The DBLU half costs **zero extra operations** and is blocked solely by the frozen-output-set line. Relaxing that one line to a superset test is the cheapest real extension available to this engine.
+
+**T20. The rediscovery gate — not well-posed as originally written, and now staged.** The original phrasing asked whether ParseAtlas could independently rediscover the co-Z rewrite. T20a shows that question is **unfair** in one direction — it asks an input-preserving rewriter for an input-representation change, which fails with probability 1 at every setting — and **too easy** in the other, since an axis with co-Z written into it makes the gate a tautology, and `tablebuild.py` already contains ZADDU and DBLU by name. It is also unsettleable here, being stated against a machine-specific figure ParseAtlas has verified nothing of.
+
+Staged replacement:
+
+- **T20.0 — golden case.** Preserve the baseline and candidate forms verbatim with their equivalence argument. *Attemptable now; near-done via the vendored snapshot.*
+- **T20.1 — reachability negative control.** Prove what a given axis set cannot reach, before searching with it. *Attemptable now — 0027 is an instance.*
+- **T20.2 — axis existence.** Define a coordinate-change axis **without naming Meloni, ZADDU or co-Z anywhere in its specification**, or the gate is circular. *Needs new machinery; specification in 0027 section C.*
+- **T20.3 — rediscovery, split into generation and SELECTION.** Selection is the harder half: the wrong operand order yields a **correct** table that delivers 10–18% instead of 34.7%, and neither a correctness oracle nor a per-formula cost model can see the difference. A search that generates the right candidate and cannot rank it has not rediscovered anything.
+- **T20.4 — transfer.** The same axis finds something on an unrelated target. *Needs a second case study.*
+
+*OPEN, restaged — Phase 11 exit gate.*
+
+**T20c. The sharp form of the thesis.** From 0027, and it is the most compact statement the project has produced:
+
+> **The completeness of a representation search and its blindness to representation change are the same property.**
+
+A search is complete precisely because it fixes a language — inputs, outputs, and an equivalence relation. Those same three commitments are what make the representation itself unreachable. Widening the axis set does not fix this; changing what the search is allowed to hold fixed does. *DERIVED — 0027.*
 
 ## Research Principles
 
