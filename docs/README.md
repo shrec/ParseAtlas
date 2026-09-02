@@ -20,5 +20,6 @@ This directory contains the publication-facing documentation for ParseAtlas.
 - [Experiment 0012 report](../experiments/0012_numerical_validation/REPORT.md): numerical cross-checks of symbolic canonicalization.
 - [Experiment 0013 report](../experiments/0013_cost_benchmark/REPORT.md): separate parsing and symbolic-processing cost measurements.
 - [Experiment 0014 report](../experiments/0014_cross_family_invariants/REPORT.md): cross-family cost comparison and symbolic identity mining.
+- [Experiment 0015 report](../experiments/0015_domain_aware_invariant_mining/REPORT.md): domain-aware identity validation and counterexamples.
 
 The normative Generation 1 language and semantic rules are defined in [SPEC.md](../SPEC.md). The project overview remains in [README.md](../README.md).

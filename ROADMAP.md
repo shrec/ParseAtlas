@@ -43,6 +43,8 @@ Completed extension: separate raw parsing and symbolic canonicalization benchmar
 
 Completed extension: cross-family cost comparison and calibration identity residual mining are recorded in [experiments/0014_cross_family_invariants/REPORT.md](experiments/0014_cross_family_invariants/REPORT.md).
 
+Completed extension: domain-aware identity validation, original restriction preservation, and sampled counterexamples are recorded in [experiments/0015_domain_aware_invariant_mining/REPORT.md](experiments/0015_domain_aware_invariant_mining/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.

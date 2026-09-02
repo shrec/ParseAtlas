@@ -4,7 +4,8 @@ from collections.abc import Iterable
 from statistics import median
 from typing import Any
 
-from sympy import Symbol, simplify, sympify
+from sympy import Symbol, fraction, simplify, solve, sympify
+from sympy.parsing.sympy_parser import parse_expr
 
 from .benchmark import benchmark_expression
 
@@ -37,6 +38,32 @@ def mine_identities(identities: Iterable[tuple[str, str]] = DEFAULT_IDENTITIES) 
     variable = Symbol("x", real=True)
     results = []
     for left, right in identities:
-        residual = simplify(sympify(left) - sympify(right))
-        results.append({"left": left, "right": right, "residual": str(residual), "is_identity": residual == 0, "variables": sorted(str(item) for item in residual.free_symbols) or [str(variable)]})
+        symbols = {"x": variable}
+        left_expression = parse_expr(left, local_dict=symbols, evaluate=False)
+        right_expression = parse_expr(right, local_dict=symbols, evaluate=False)
+        residual = simplify(left_expression - right_expression)
+
+        def restrictions(expression: Any) -> list[str]:
+            _, denominator = fraction(expression)
+            return [str(point) for point in solve(denominator, variable)]
+
+        left_restrictions = restrictions(left_expression)
+        right_restrictions = restrictions(right_expression)
+        counterexamples = []
+        for point in (-2, -1, 0, 1, 2):
+            if str(point) in left_restrictions or str(point) in right_restrictions:
+                continue
+            if simplify(left_expression.subs(variable, point) - right_expression.subs(variable, point)) != 0:
+                counterexamples.append(point)
+        results.append({
+            "left": left,
+            "right": right,
+            "residual": str(residual),
+            "left_restrictions": left_restrictions,
+            "right_restrictions": right_restrictions,
+            "domain_equal": left_restrictions == right_restrictions,
+            "counterexamples": counterexamples,
+            "is_identity": residual == 0 and left_restrictions == right_restrictions,
+            "variables": sorted(str(item) for item in residual.free_symbols) or [str(variable)],
+        })
     return {"identity_count": len(results), "valid_count": sum(item["is_identity"] for item in results), "results": results}
