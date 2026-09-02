@@ -1,0 +1,82 @@
+"""Specialized symbolic analyzers for the first mathematical domains."""
+
+from math import gcd
+from typing import Any
+
+from sympy import (
+    E, Rational, Symbol, acos, diff, expand, factor, integrate, limit, log, lcm, pi, simplify,
+    sin, solve, sqrt, sympify,
+)
+from sympy.ntheory import factorint, isprime
+
+
+def analyze_quadratic(a: int, b: int, c: int) -> dict[str, Any]:
+    discriminant = b * b - 4 * a * c
+    x = Symbol("x")
+    roots = solve(a * x**2 + b * x + c, x)
+    return {
+        "domain": "quadratic_equations",
+        "equation": f"{a}*x**2 + {b}*x + {c} = 0",
+        "discriminant": discriminant,
+        "root_count": len(roots),
+        "roots": [str(root) for root in roots],
+        "vertex": {"x": str(Rational(-b, 2 * a)), "y": str(Rational(-discriminant, 4 * a))},
+    }
+
+
+def analyze_geometry(base: Any, height: Any, x1: Any, y1: Any, x2: Any, y2: Any) -> dict[str, Any]:
+    base, height = sympify(base), sympify(height)
+    dx, dy = sympify(x2) - sympify(x1), sympify(y2) - sympify(y1)
+    return {
+        "domain": "geometry",
+        "triangle_area": str(simplify(base * height / 2)),
+        "distance": str(simplify(sqrt(dx**2 + dy**2))),
+        "midpoint": [str(simplify((sympify(x1) + sympify(x2)) / 2)), str(simplify((sympify(y1) + sympify(y2)) / 2))],
+    }
+
+
+def analyze_algebra(expression: str, variable: str = "x") -> dict[str, Any]:
+    symbol = Symbol(variable)
+    parsed = sympify(expression)
+    return {
+        "domain": "algebra",
+        "expanded": str(expand(parsed)),
+        "factored": str(factor(parsed)),
+        "simplified": str(simplify(parsed)),
+        "zeros": [str(root) for root in solve(parsed, symbol)],
+    }
+
+
+def analyze_calculus(expression: str, variable: str = "x", point: Any = 0) -> dict[str, Any]:
+    symbol = Symbol(variable)
+    parsed = sympify(expression)
+    return {
+        "domain": "calculus",
+        "derivative": str(simplify(diff(parsed, symbol))),
+        "integral": str(integrate(parsed, symbol)),
+        "limit_at_point": str(limit(parsed, symbol, point)),
+        "critical_points": [str(item) for item in solve(diff(parsed, symbol), symbol)],
+    }
+
+
+def analyze_number_theory(n: int) -> dict[str, Any]:
+    return {
+        "domain": "number_theory",
+        "value": n,
+        "is_prime": bool(isprime(n)),
+        "factorization": {str(key): value for key, value in factorint(n).items()},
+        "gcd_with_12": int(gcd(n, 12)),
+        "lcm_with_12": int(lcm(n, 12)),
+    }
+
+
+def analyze_trigonometry(angle: str = "x") -> dict[str, Any]:
+    symbol = Symbol(angle)
+    identity = sin(symbol) ** 2 + (1 - sin(symbol) ** 2)
+    return {
+        "domain": "trigonometry",
+        "identity_simplified": str(simplify(identity)),
+        "sin_derivative": str(diff(sin(symbol), symbol)),
+        "cos_at_zero": str(simplify(sin(symbol + pi / 2).subs(symbol, 0))),
+        "inverse_check": str(simplify(acos(1))),
+    }

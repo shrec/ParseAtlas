@@ -27,6 +27,8 @@ Next: expand coefficient families, add zero/rational coefficients, and benchmark
 
 Completed extension: an initial 1,000-formula catalog across eight mathematical domains is recorded in [experiments/0006_mathematical_domains/REPORT.md](experiments/0006_mathematical_domains/REPORT.md).
 
+Completed extension: first specialized analyzers for quadratic equations, geometry, algebra, calculus, trigonometry, and number theory are recorded in [experiments/0007_specialized_domain_analyzers/REPORT.md](experiments/0007_specialized_domain_analyzers/REPORT.md).
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
