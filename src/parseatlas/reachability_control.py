@@ -844,11 +844,25 @@ def _point_projective_status(
 
 @dataclass(frozen=True)
 class SliceConstraint:
-    """One constraint under which two unequal maps do agree."""
+    """One constraint under which two unequal maps do agree.
+
+    ``non_constant_keys`` and ``factor_degree`` are what rank one constraint
+    against another; see :func:`slice_of_agreement` for the rule they feed.
+
+    ``non_constant_keys`` are the shared output keys on which the two programs,
+    restricted to this slice, still *vary*.  Because the constraint is reported
+    only when every difference cancels on it, the two restricted maps are the
+    same rational function there, so measuring the reference alone measures both.
+    A slice with no non-constant key is one where both programs collapse to
+    constants: they agree because neither says anything, which is the least
+    informative way two maps can coincide.
+    """
 
     equation: str
     symbol: str
     solution: str
+    non_constant_keys: tuple[str, ...]
+    factor_degree: int
     verified_symbolically: bool
     slice_sample_count: int
     slice_agreement_count: int
@@ -859,6 +873,8 @@ class SliceConstraint:
             "equation": self.equation,
             "symbol": self.symbol,
             "solution": self.solution,
+            "non_constant_keys": list(self.non_constant_keys),
+            "factor_degree": self.factor_degree,
             "verified_symbolically": self.verified_symbolically,
             "slice_sample_count": self.slice_sample_count,
             "slice_agreement_count": self.slice_agreement_count,
@@ -866,9 +882,37 @@ class SliceConstraint:
         }
 
 
+def _informativeness_key(constraint: SliceConstraint) -> tuple[int, int, str]:
+    """Sort key that puts the most informative constraint first.
+
+    Three components, in order, each a total order on its own and the last one a
+    tie-break that leaves nothing to chance:
+
+    1. ``-len(non_constant_keys)`` -- prefer the slice on which the agreeing map
+       still varies on as many shared output keys as possible.  A slice that
+       flattens every output to a constant reports an agreement of collapse.
+    2. ``factor_degree`` ascending -- among equally non-degenerate slices prefer
+       the algebraically simpler constraint, because a linear one names a
+       substitution a caller can carry out directly.
+    3. ``equation`` ascending -- deterministic on ties, so repeated runs and
+       separate processes report the same primary.
+    """
+    return (
+        -len(constraint.non_constant_keys),
+        constraint.factor_degree,
+        constraint.equation,
+    )
+
+
 @dataclass(frozen=True)
 class AgreementSlice:
-    """The constraints under which an unequal pair of maps agrees, if any exist."""
+    """The constraints under which an unequal pair of maps agrees, if any exist.
+
+    ``constraints`` is ordered most-informative-first by
+    :func:`_informativeness_key`, and ``primary`` is its head; ``common_factors``
+    keeps plain canonical string order, since it lists the raw factors including
+    any that could not be solved and verified.
+    """
 
     reference: str
     candidate: str
@@ -921,6 +965,23 @@ def slice_of_agreement(
     differences; only constraints that make every difference cancel exactly are
     reported.
 
+    **Which constraint is primary.**  A difference can factor into more than one
+    common factor, and then more than one slice is reported, each verified and
+    each true.  ``F = a*c`` against ``F = 2*a`` is the smallest example: the
+    difference is ``a*(c - 2)``, so both ``a = 0`` and ``c = 2`` are genuine
+    slices of agreement, but only the second one says anything.  On ``c = 2`` the
+    two programs are the same non-constant map ``2*a``, and the constraint names
+    the missing transformation -- freeze the second input at 2.  On ``a = 0``
+    both sides collapse to the constant ``0``: they agree because neither
+    computes anything.
+
+    So ``constraints`` is ordered by :func:`_informativeness_key` -- most
+    non-constant shared keys first, then lower factor degree, then equation text
+    -- and ``primary`` is the head of that order rather than the alphabetically
+    first factor.  All constraints found are ranked before ``max_constraints``
+    truncates the list, so the cap can never discard the informative one in
+    favour of a degenerate one.
+
     The result is a **sufficient** condition for agreement, not the full
     agreement locus.  A pair may also agree on components that no single common
     factor describes; those show up in the agreement fraction and not here.
@@ -957,15 +1018,17 @@ def slice_of_agreement(
         common_keys &= set(bucket)
     common = sorted((factor_sets[0][key] for key in common_keys), key=str)
 
-    constraints: list[SliceConstraint] = []
+    restricted_source = {key: want[key] for key in shared}
+    found: list[SliceConstraint] = []
     for factor in common:
-        if len(constraints) >= max_constraints:
-            break
         constraint = _constraint_from_factor(
-            reference, candidate, factor, differences, samples
+            reference, candidate, factor, differences, restricted_source, samples
         )
         if constraint is not None:
-            constraints.append(constraint)
+            found.append(constraint)
+    # Rank before truncating: the cap bounds what is reported, never which
+    # constraints were considered, so it cannot drop the informative one.
+    constraints = sorted(found, key=_informativeness_key)[:max_constraints]
 
     if not common:
         reason = (
@@ -977,10 +1040,16 @@ def slice_of_agreement(
             "common factors exist but none could be solved for a single input and "
             "verified across every output"
         )
-    elif len(constraints) == 1:
+    elif len(found) == 1:
         reason = f"the maps agree exactly on the slice {constraints[0].equation}"
     else:
-        reason = "the maps agree on each of the reported slices"
+        omitted = len(found) - len(constraints)
+        tail = f", {omitted} further slice(s) not reported" if omitted else ""
+        reason = (
+            f"the maps agree on each of {len(found)} slices; the primary is "
+            f"{constraints[0].equation}, which leaves "
+            f"{list(constraints[0].non_constant_keys)} still varying{tail}"
+        )
 
     return AgreementSlice(
         reference=reference.name,
@@ -993,11 +1062,19 @@ def slice_of_agreement(
     )
 
 
+def _factor_degree(factor: Any) -> int:
+    """Total degree of a common factor, used to rank two equally useful slices."""
+    expanded = sympy.expand(factor)
+    symbols = sorted(expanded.free_symbols, key=str)
+    return int(sympy.Poly(expanded, *symbols).total_degree())
+
+
 def _constraint_from_factor(
     reference: Program,
     candidate: Program,
     factor: Any,
     differences: Mapping[str, Any],
+    restricted_source: Mapping[str, Any],
     samples: Sequence[Sequence[Fraction]] | None,
 ) -> SliceConstraint | None:
     for symbol in sorted(factor.free_symbols, key=str):
@@ -1015,11 +1092,22 @@ def _constraint_from_factor(
         )
         if not verified:
             continue
+        # Verified means both restricted maps are the same rational function on
+        # this slice, so the reference alone says whether anything still varies.
+        non_constant = tuple(
+            key
+            for key, expr in sorted(restricted_source.items())
+            if sympy.cancel(
+                sympy.together(expr.xreplace({symbol: solution}))
+            ).free_symbols
+        )
         count, agreed = _slice_agreement(reference, candidate, symbol, solution, samples)
         return SliceConstraint(
             equation=f"{factor} = 0",
             symbol=str(symbol),
             solution=f"{symbol} = {solution}",
+            non_constant_keys=non_constant,
+            factor_degree=_factor_degree(factor),
             verified_symbolically=True,
             slice_sample_count=count,
             slice_agreement_count=agreed,
@@ -1520,6 +1608,25 @@ RATIO_SCALED = Program(
     ),
 )
 
+PRODUCT_OF_INPUTS = Program(
+    name="product_of_inputs",
+    inputs=("a", "c"),
+    body=(Assignment("v", "a*c"),),
+    outputs=(("F", "v"),),
+    note="single-output reference: the product of both inputs",
+)
+
+SECOND_INPUT_FROZEN = Program(
+    name="second_input_frozen",
+    inputs=("a", "c"),
+    body=(Assignment("v", "2*a"),),
+    outputs=(("F", "v"),),
+    note=(
+        "the reference specialised at c = 2: same input list, same output key, "
+        "and the second input declared but never read"
+    ),
+)
+
 
 @dataclass(frozen=True)
 class CorpusPair:
@@ -1603,6 +1710,20 @@ CORPUS: tuple[CorpusPair, ...] = (
         ),
     ),
     CorpusPair(
+        id="specialised_input",
+        reference=PRODUCT_OF_INPUTS,
+        target=SECOND_INPUT_FROZEN,
+        commitments=DEFAULT_COMMITMENTS,
+        expected_violations=("map_equality",),
+        expected_slice="c = 2",
+        note=(
+            "the one-output pair that forces a choice of primary slice: the "
+            "difference a*c - 2*a factors as a*(c - 2), so both a = 0 and c = 2 "
+            "are verified slices of agreement, and only c = 2 is informative -- "
+            "on a = 0 both programs collapse to the constant 0"
+        ),
+    ),
+    CorpusPair(
         id="coz_analogue",
         reference=GRADED_FORM,
         target=COZ_ANALOGUE,
@@ -1629,9 +1750,13 @@ def corpus_pair(identifier: str) -> CorpusPair:
         ) from None
 
 
-def evaluate_pair(identifier: str) -> dict[str, Any]:
-    """Verdict plus relaxation analysis for one corpus pair, as plain data."""
-    pair = corpus_pair(identifier)
+def evaluate_corpus_pair(pair: CorpusPair) -> dict[str, Any]:
+    """Verdict plus relaxation analysis for one pair, as plain data.
+
+    Takes the pair itself rather than a corpus id, so a caller can evaluate a
+    :class:`CorpusPair` they built from their own two programs.  Nothing here
+    consults :data:`PAIRS_BY_ID`; the built-in corpus is one input among others.
+    """
     evidence = gather_evidence(pair.reference, pair.target)
     verdict = reachability_verdict(
         pair.reference, pair.target, pair.commitments, evidence=evidence
@@ -1659,14 +1784,24 @@ def evaluate_pair(identifier: str) -> dict[str, Any]:
     }
 
 
+def evaluate_pair(identifier: str) -> dict[str, Any]:
+    """The same, for one pair of the built-in corpus looked up by id."""
+    return evaluate_corpus_pair(corpus_pair(identifier))
+
+
 # --------------------------------------------------------------------------
 # Corpus sweep
 # --------------------------------------------------------------------------
 
 
-def _pool_task(identifier: str) -> dict[str, Any]:
-    """Module-level pool entry point: required by the Windows ``spawn`` start method."""
-    return evaluate_pair(identifier)
+def _pool_task(pair: CorpusPair) -> dict[str, Any]:
+    """Module-level pool entry point: required by the Windows ``spawn`` start method.
+
+    The pair travels to the child by pickle rather than by id, which is what
+    lets a caller's own corpus take the parallel path too: a child that only
+    received an id could resolve nothing outside :data:`PAIRS_BY_ID`.
+    """
+    return evaluate_corpus_pair(pair)
 
 
 WORKER_HEADROOM_CORES = 2
@@ -1674,23 +1809,24 @@ WORKER_CAP = 12
 
 #: Pair count from which a process pool pays for itself, measured rather than
 #: assumed.  Sequential against a six-worker pool on the 16-core development
-#: machine, best of three runs each, warm parent process:
+#: machine, best of six runs per cell, warm parent process:
 #:
 #: ===========  ============  ==========  =======
 #: pairs        sequential    pool of 6   speedup
 #: ===========  ============  ==========  =======
-#: 6             0.154 s       0.721 s      0.21x
-#: 24            0.663 s       0.826 s      0.80x
-#: 36            1.024 s       0.880 s      1.16x
-#: 48            1.360 s       0.942 s      1.44x
-#: 96            2.603 s       1.206 s      2.16x
-#: 384          10.597 s       2.567 s      4.13x
+#: 7             0.171 s       0.793 s      0.22x
+#: 28            0.772 s       0.875 s      0.88x
+#: 36            0.966 s       0.850 s      1.14x
+#: 48            1.190 s       1.007 s      1.18x
+#: 96            2.424 s       1.401 s      1.73x
+#: 384          10.408 s       2.991 s      3.48x
 #: ===========  ============  ==========  =======
 #:
-#: One pair is about 26 ms of sympy cancellation, while a Windows ``spawn`` child
-#: pays 0.42 s to import this module before it can start any of it.  Break-even
-#: is near 36 pairs and the margin is only clear from 48, which is where the
-#: threshold sits.  The six-pair corpus of this module therefore runs
+#: One pair is about 27 ms of sympy cancellation, while a Windows ``spawn`` child
+#: pays 0.41 s to import this module before it can start any of it.  Fitting both
+#: columns puts break-even at 37 pairs; the margin is still under 1.2x at 48 and
+#: only opens up beyond it, so the threshold stays at 48 rather than at the
+#: crossing itself.  The seven-pair corpus of this module therefore runs
 #: sequentially -- a measured decision, not a habit -- and the same code takes
 #: the pool unchanged as soon as a caller sweeps a corpus large enough to earn it.
 PARALLEL_THRESHOLD_PAIRS = 48
@@ -1721,7 +1857,18 @@ def resolve_workers(task_count: int, workers: int | None = None) -> int:
 def reachability_sweep(
     pairs: Iterable[CorpusPair] | None = None, workers: int | None = None
 ) -> dict[str, Any]:
-    """Run the negative control over the corpus and check it against the known answers.
+    """Run the negative control over a corpus and check it against the known answers.
+
+    ``pairs`` is the caller's own corpus: any iterable of :class:`CorpusPair`,
+    each carrying two programs, the commitments to decide against, and the
+    answer the caller already knows from the algebra.  It defaults to
+    :data:`CORPUS`, the module's own validation set, so the built-in sweep is
+    the no-argument call and nothing about the module has to be edited to sweep
+    something else.  Ids need not be unique and need not appear in
+    :data:`PAIRS_BY_ID`; ``expected_violations`` and ``expected_slice`` are what
+    ``mismatched`` and ``all_match_known_answers`` are checked against, so a
+    caller who does not yet know the answer writes down their conjecture and
+    reads whether the module agrees.
 
     Work is independent per pair and CPU-bound, so the parallel path exists;
     ``workers=1`` forces the sequential one.  Parallelism changes only how fast
@@ -1730,10 +1877,10 @@ def reachability_sweep(
     the test suite asserts as much.
 
     The default follows :data:`PARALLEL_THRESHOLD_PAIRS`, whose value is a
-    measurement: at the six pairs of :data:`CORPUS` a pool is four times slower
-    than running them one after another, and it only starts winning in the
-    forties.  A caller sweeping a bigger corpus gets the pool without changing
-    anything.
+    measurement: at the seven pairs of :data:`CORPUS` a pool is four and a half
+    times slower than running them one after another, and it only starts winning
+    in the high thirties.  A caller sweeping a bigger corpus gets the pool
+    without changing anything.
 
     Caller guard: Windows uses the ``spawn`` start method, so every child
     re-imports the caller's ``__main__``.  Drive a parallel sweep from inside an
@@ -1742,15 +1889,14 @@ def reachability_sweep(
     selected = tuple(pairs) if pairs is not None else CORPUS
     if not selected:
         raise ValueError("reachability_sweep needs at least one pair")
-    identifiers = [pair.id for pair in selected]
-    resolved = resolve_workers(len(identifiers), workers)
+    resolved = resolve_workers(len(selected), workers)
     if resolved <= 1:
         execution = "sequential"
-        results = [_pool_task(identifier) for identifier in identifiers]
+        results = [_pool_task(pair) for pair in selected]
     else:
         execution = "parallel"
         with ProcessPoolExecutor(max_workers=resolved) as executor:
-            results = list(executor.map(_pool_task, identifiers, chunksize=1))
+            results = list(executor.map(_pool_task, selected, chunksize=1))
 
     reachable = [result["id"] for result in results if result["verdict"]["reachable"]]
     blocked = [result["id"] for result in results if not result["verdict"]["reachable"]]
