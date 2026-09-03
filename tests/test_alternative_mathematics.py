@@ -5,7 +5,10 @@ in the suite; one module-scoped atlas over a five-entry catalogue carries most o
 each remaining test builds the smallest input that can carry its own.
 """
 
+import os
+
 import pytest
+from sympy import Rational, Symbol, sqrt
 
 from parseatlas.alternative_mathematics import (
     STANDARD_CATALOGUE,
@@ -13,6 +16,7 @@ from parseatlas.alternative_mathematics import (
     divergence_report,
     parallelism_measurement,
     reading_profiles,
+    requires_radical,
     resolve_worker_count,
     solution_formula,
     textbook,
@@ -118,6 +122,29 @@ def test_solution_formula_names_the_procedure_of_each_world():
     assert other["method"] == "degree 3: 3 roots read straight off the factorisation, no radical"
 
 
+def test_a_radical_free_degree_two_object_is_not_called_a_quadratic_formula():
+    """A degree-2 reading whose roots are rational must not be labelled as needing a radical."""
+    difference = solution_formula("a*a - b*b", control_grammar(), "a")
+    assert difference["degree"] == 2
+    assert difference["has_discriminant"] is True
+    assert difference["requires_radical"] is False
+    assert difference["roots"] == ["-b", "b"]
+    assert difference["method"] == (
+        "degree 2, radical-free: the roots are already rational in the coefficients"
+    )
+
+
+def test_radical_detection_separates_fractional_powers_from_reciprocals():
+    """``1/a`` is ``Pow(a, -1)`` and must not count; ``sqrt`` and cube roots must."""
+    a = Symbol("a", real=True)
+    assert requires_radical([sqrt(a)]) is True
+    assert requires_radical([a ** Rational(1, 3)]) is True
+    assert requires_radical([(1 + sqrt(5)) / 2]) is True
+    assert requires_radical([1 / a]) is False
+    assert requires_radical([a**2, -a, a**-3, Rational(3, 4)]) is False
+    assert requires_radical([]) is False
+
+
 # ---------------------------------------------------------------- the convention-independent core
 
 
@@ -221,6 +248,17 @@ def test_some_worlds_read_the_cosine_series_as_a_bounded_function():
     assert [grammar_id for grammar_id, item in profiles.items() if item["bounded"]]
     assert not any(item["periodic"] for item in profiles.values())
 
+    # G14 reads it as a rational function with limit 1 either way and no real pole: bounded.
+    assert profiles["G14"]["real_poles"] == []
+    assert profiles["G14"]["limit_at_plus_infinity"] == "1"
+    assert profiles["G14"]["bounded"] is True
+
+    # G01 also has finite limits at both infinities, but it has real poles, so it is NOT bounded.
+    assert profiles["G01"]["limit_at_plus_infinity"] == "0"
+    assert profiles["G01"]["limit_at_minus_infinity"] == "0"
+    assert profiles["G01"]["real_poles"] == ["-2", "0"]
+    assert profiles["G01"]["bounded"] is False
+
 
 # ------------------------------------------------------- the semantic key, not the canonical text
 
@@ -236,9 +274,13 @@ def test_objects_are_separated_by_the_full_semantic_key_not_canonical_text_alone
 
 
 def test_worker_count_is_derived_from_the_observed_cores():
+    cores = os.cpu_count() or 1
     assert resolve_worker_count(4) == 1  # below the floor, process startup would dominate
-    assert resolve_worker_count(64) > 1
+    # derived from the observed cores, with one core of headroom for the interactive session
+    assert resolve_worker_count(1000) == max(1, cores - 1)
+    assert resolve_worker_count(1000) < cores or cores == 1
     assert resolve_worker_count(64, workers=3) == 3
+    assert resolve_worker_count(2, workers=9) == 2  # never more workers than items
 
 
 def test_sequential_and_parallel_atlas_agree():

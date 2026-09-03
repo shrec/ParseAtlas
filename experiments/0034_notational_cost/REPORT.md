@@ -11,7 +11,7 @@ direction B   intended tree  --render(g)-->  string, cost_g    (0034)
 
 ## 1. სად დგას conventional G0
 
-`G0` (`*/ +-`) მთელ corpus-ზე `53` parenthesis pair-ს იხდის და ranking-ში `11`-ე ადგილზეა 25-დან; მასზე იაფია ათი grammar, მასზე ძვირი - თოთხმეტი.
+`G0` (`*/ +-`) მთელ corpus-ზე `53` parenthesis pair-ს იხდის და ranking-ში `11`-ე ადგილზეა 25-დან; მასზე იაფია ათი grammar, მასზე ძვირი - თორმეტი.
 
 Rank არის competition rank (`1, 2, 2, 4`) და tie-ები ნამდვილია: `53` არის აგრეთვე `G03`-ისა და `G12`-ის total.
 
@@ -38,8 +38,8 @@ Ranking **არ** არის ერთგვაროვანი area-ებ
 | arithmetic | 10 | 8 | 8 | 6 | `G09`, `G13`, `G15` | 11 |
 | calculus | 9 | 8 | 12 | 4 | `G09`, `G10` | 13 |
 | geometry | 9 | 10 | 17 | 2 | `G09` | 14 |
-| physics | 11 | 5 | 8 | 2 | `G13`, `G15` | 11 |
-| statistics | 9 | 11 | 8 | 6 | `G14` | 16 |
+| physics | 11 | 5 | 8 | 2 | `G13`, `G15` | 12 |
+| statistics | 9 | 11 | 8 | 6 | `G14` | 17 |
 
 `G0`-ის ყველაზე სუსტი area არის geometry (rank `17`, `10` vs best `2`) - სწორედ იქ, სადაც თითქმის ყველა formula fraction-ია. ყველაზე ძლიერი area არის physics (rank `8`, `5` vs best `2`), სადაც corpus-ის ხუთი formula ერთ operator type-ს იყენებს.
 
@@ -237,7 +237,9 @@ Workload არის `1450` string render pure Python-ში; process pool-ი�
 
 Direction A-ს ინსტრუმენტები ("რას ნიშნავს string") საკმარისი აღმოჩნდა direction B-ს ("რა ღირს object") ასაწყობად: იგივე `Grammar`, იგივე `Parser`, შებრუნებული მიმართულებით.
 
-პასუხი founding question-ის პირველ ნახევარზე - is the convention we inherited any good - ამ corpus-ზე არის: **არა optimal, მაგრამ არც ცუდი**. `G0` ranking-ის შუაშია (11/25), spread-ის `44%`-ზე დგას, და `45%`-ით ძვირია cheapest-ზე. ამასთან `G0` ერთადერთია, რომელიც tied levels-ს იყენებს, და სწორედ ეს tie უზრუნველყოფს, რომ `a * b / c` და `a + b - c` ორივე free იყოს - strict ordering-ს ერთი მათგანი ყოველთვის უჯდება.
+პასუხი founding question-ის პირველ ნახევარზე - is the convention we inherited any good - ამ corpus-ზე არის: **არა optimal, მაგრამ არც ცუდი**. `G0` ranking-ის შუაშია (11/25), spread-ის `44%`-ზე დგას, და `45%`-ით ძვირია cheapest-ზე. `G0` მართლაც ერთადერთია, რომელიც tied levels-ს იყენებს, მაგრამ **ეს tie აქ არაფერს ყიდულობს**. review-მ გაზომა: `a * b / c` და `a + b - c` ორივე free-ია **ექვს strict ordering-შიც** — `G01`, `G03`, `G04`, `G13`, `G14`, `G17` — ანუ ნებისმიერში, სადაც `*` წინ უსწრებს `/`-ს და `+` წინ უსწრებს `-`-ს. მათ შორის `G17` (`* / + -`) არის `G0`-ის საკუთარი strict ტყუპი და ranking-ის **მე-9 ადგილზე დგას, `G0`-ზე იაფად**.
+
+(ამ აბზაცის წინა რედაქცია ამტკიცებდა, რომ „strict ordering-ს ერთი მათგანი ყოველთვის უჯდება". ეს **მცდარი იყო** და conventional grammar-ს ისეთ უპირატესობას მიაწერდა, რომელიც მას არ აქვს. გასწორდა review-ის შემდეგ.)
 
 მიზეზი, რის გამოც `G09` იგებს, სტრუქტურულია და corpus-ზეა დამოკიდებული: `/`-ის ყველაზე სუსტ operator-ად ქცევა თითოეულ დიდ წილადს ორ ფრჩხილს აცლის, ხოლო `-`-ის ყველაზე მაგრად დაკავშირება difference-ებს ათავისუფლებს. Corpus-ში `slope`, `mean`, `z-score`, `weighted mean`, `pooled mean`, `difference quotient` - ყველა ეს shape-ია. ეს არ არის artefact: fraction-of-differences ნამდვილად ხშირია სასკოლო და საინჟინრო მათემატიკაში. მაგრამ ის corpus-ის თვისებაა, და სხვა corpus (მაგალითად reciprocal-ებით და series-ებით დატვირთული) `G09`-ს დასჯიდა - `harmonic_sum` და `ohm_parallel_reciprocal` მასში `G0`-ზე ძვირია.
 
