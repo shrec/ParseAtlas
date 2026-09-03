@@ -46,6 +46,26 @@ Ten hand-picked formulas are a probe and not a result. But the conventional gram
 - **Which mathematics is convention-sensitive?** Some identities cost the same under every grammar; others swing wildly. The swing is a property of the mathematics, not of the notation.
 - **Would a different convention have favoured a different mathematics?** If factoring were cheap to write and expansion expensive, which results would have been reached first, and which would have looked "obvious"?
 
+### The main line: the domain-worlds series
+
+Direction B proceeds field by field, and in each field the corpus is **fundamental identities, canonical objects and laws** — not random or generated formulas. What a convention does to `(a+b)(c+d) = ac+ad+bc+bd` is a historical question; what it does to a sampled template is not.
+
+```text
+algebra worlds       distributive law both ways, (a+b)^2, a^2-b^2, factored vs expanded
+geometry worlds      line, circle, conics, distance, slope, area laws
+trigonometry worlds  DONE - 0036: the Pythagorean identity survives in 13 of 25
+calculus worlds      difference quotient, product and chain rule forms, Taylor terms
+linear algebra       dot product, determinant, linear combination, norm
+```
+
+For each field and each world: which side of a law is parenthesis-free, which factorisation is visually obvious, which expansion becomes expensive, which identity stays true in the same textual form.
+
+**The question the series is built to answer.** Two measurements already point the same way and neither was designed to. Experiment 0034 puts `G0` **11th of 25** on notational cost, 45.3 percent dearer than the cheapest. Experiment 0036 puts `G0` in the **top three of 25** at preserving trigonometric identities, holding all eight. So:
+
+> Is there a grammar that beats `G0` across the **whole** mathematical workload — or did the conventional convention survive because it is a **good compromise across many fields** rather than an optimum in any one?
+
+That is a historically meaningful question with a measurable answer, and it is the natural headline of the series. A convention that is mediocre everywhere and excellent at nothing would look exactly like `G0` does so far.
+
 ### How the existing work serves it
 
 Nothing built so far is discarded; it is repointed.
@@ -340,7 +360,11 @@ A search is complete precisely because it fixes a language — inputs, outputs, 
 
 ### Group F — The turn: from grammar statistics to a representation-axis engine
 
-**Decided 2026-09-03 by the owner.** The Generation 1 grammar branch is declared **sufficiently characterised** and is frozen as a laboratory, not closed as a subject. Its structure is now known: the space collapses into semantic classes (T1), the collapse is not universal (T2, T14b), it has no cluster structure beyond the parsing artifact (T14), no transferable structural predictor of sensitivity exists (T15), precedence reaches a vanishing fraction of the parenthesization space (T9), and widening the grammar parameter hits diminishing returns fast — associativity multiplied the registry sixteenfold and recovered under twelve percent of the gap while adding **50 percent more syntax and zero new mathematics** on the template corpus (T30).
+**CORRECTED 2026-09-03.** An earlier revision of this section declared the whole Generation 1 grammar branch frozen and moved the project's centre to the representation-axis engine. **That was premature and it is withdrawn.** What is sufficiently characterised is **Direction A on the grammar space** — asking what a fixed string means under each grammar. Direction B on that same space is the founding question and is barely begun.
+
+The Direction A result stands and is what closes it: the space collapses into semantic classes (T1), the collapse is not universal (T2), there is no cluster structure beyond the parsing artifact (T14), no transferable structural predictor of sensitivity (T15), precedence reaches a vanishing fraction of the parenthesization space (T9), and widening the parameter hits diminishing returns fast — associativity multiplied the registry sixteenfold, recovered under twelve percent of the gap, and added **50 percent more syntax with zero new mathematics** on the template corpus (T30).
+
+Phase 14 below remains a real long-range programme, strengthened by the external evidence. **It does not replace the founding question and must not be allowed to.** The ordering is: Direction B is the main line; Phase 14 runs behind it.
 
 Two ways this project can lose its subject, both named so they can be avoided:
 
