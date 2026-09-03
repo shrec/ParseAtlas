@@ -11,6 +11,10 @@ Two tests exist because a measurement in this module was wrong before they were 
   invisible until the same work runs in two processes.
 """
 
+import os
+import subprocess
+import sys
+
 from sympy import Symbol, cos, simplify, sin, sympify
 
 from parseatlas.functions import analyze_outer_functions
@@ -135,8 +139,10 @@ def test_the_series_readings_are_grouped_by_the_project_semantic_key():
 
     The gap is the whole reason the key is a triple.  Four classes denote the *same* function --
     the constant zero -- and differ only in the validity restrictions their parse trees carry, so
-    grouping by canonical text alone would report eleven classes and lose four distinctions that
-    the project's own domain discipline says are real.
+    grouping by canonical text alone would report eleven classes and lose three distinctions that
+    the project's own domain discipline says are real -- four classes collapsing into one loses
+    three, and 14 - 11 = 3 confirms it.  (An earlier revision of this docstring said four; the
+    assertions below were always correct, only the prose count was wrong.)
     """
     atlas = series_atlas()
     assert atlas["distinct_semantic_classes"] == 14
@@ -318,9 +324,11 @@ def test_the_sequential_and_parallel_paths_agree():
 def test_the_parallel_decision_is_taken_from_the_measured_costs():
     """Cell count alone does not decide it; the measured per-cell cost does.
 
-    The series atlas has more cells than the outer route's second phase and still runs sequentially,
-    because 25 cells at 0.14 s is less work than a pool costs to raise.  Pinning both sides of that
-    comparison is what stops the rule from quietly becoming "parallel if there are enough cells".
+    The series atlas runs sequentially at 25 cells while the identity atlas runs across a pool at
+    200, and no cell-count threshold placed between them would survive a change in per-cell cost:
+    what actually decides it is that 25 cells at 0.14 s is less work than a pool costs to raise.
+    Pinning both sides of that comparison is what stops the rule from quietly becoming "parallel if
+    there are enough cells".
     """
     assert should_parallelise(25, SERIES_CELL_SECONDS, 12) is False
     assert should_parallelise(200, IDENTITY_CELL_SECONDS, 12) is True
@@ -330,23 +338,41 @@ def test_the_parallel_decision_is_taken_from_the_measured_costs():
 
 
 def test_the_domain_slot_is_a_function_of_the_value_not_of_the_process():
-    """A set renders the same however its members happen to be ordered in memory.
+    """A set must render identically in interpreters that hash strings differently.
 
-    ``Union`` stores its members in hash order, so the two constructions below are the same set with
-    different ``args`` orders and different ``str`` output.  The canonical rendering must not see a
-    difference, or the semantic key stops being a function of the denoted value.
+    ``Union`` holds its members in an order derived from object hashes, and CPython randomises
+    string hashing per process, so ``str(continuous_domain(...))`` of the tangent-like domain below
+    genuinely comes out in different member orders under different ``PYTHONHASHSEED`` values.  A
+    semantic key built on that string would be a function of the process rather than of the value.
+
+    Forcing the seed is what makes the check deterministic; asserting it in one process cannot work,
+    because ``Union`` canonicalises its arguments on construction, so two orderings of the *same*
+    members collapse to one object before ``str`` ever sees them.
     """
-    from sympy import Interval, S, Union, imageset, pi
+    script = (
+        "from sympy import S, Symbol, cos, sin\n"
+        "from sympy.calculus.util import continuous_domain\n"
+        "from parseatlas.trigonometry_worlds import _set_text\n"
+        "x = Symbol('x', real=True)\n"
+        "for expression in [(1 + 1/sin(x))/cos(x)**2, sin(x)/cos(x), (1 - x**2)/(120*x**3*(x + 6))]:\n"
+        "    print(_set_text(continuous_domain(expression, x, S.Reals)))\n"
+    )
+    renderings = set()
+    for seed in ("0", "1", "12345"):
+        completed = subprocess.run(
+            [sys.executable, "-c", script],
+            capture_output=True,
+            text=True,
+            env={**os.environ, "PYTHONHASHSEED": seed},
+            check=True,
+        )
+        renderings.add(completed.stdout)
+    assert len(renderings) == 1, "the canonical rendering moved with the interpreter's hash seed"
 
-    n = Symbol("n")
-    poles = [imageset(lambda k: 2 * k * pi + shift, S.Integers) for shift in (pi / 2, 3 * pi / 2)]
-    assert _set_text(Union(*poles)) == _set_text(Union(*reversed(poles)))
+    from sympy import Interval, S, Union
 
     intervals = [Interval.open(-S.Infinity, -6), Interval.open(-6, 0), Interval.open(0, S.Infinity)]
-    forward = _set_text(Union(*intervals))
-    assert forward == _set_text(Union(*reversed(intervals)))
-    assert forward == "Union(Interval.open(-oo, -6), Interval.open(-6, 0), Interval.open(0, oo))"
-    assert str(n) == "n"
+    assert _set_text(Union(*intervals)) == "Union(Interval.open(-oo, -6), Interval.open(-6, 0), Interval.open(0, oo))"
 
 
 def test_worker_count_is_derived_from_the_observed_core_count():

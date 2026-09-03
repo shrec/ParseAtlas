@@ -241,8 +241,16 @@ POOL_STARTUP_SECONDS: float = 4.0
 
 #: Measured mean seconds per cell, per kind of work.  These are the inputs to
 #: :func:`should_parallelise`, and they are the *reason* the routes do not all take the same path.
+#:
+#: Re-measured during review.  ``IDENTITY_CELL_SECONDS`` was published as ``0.25`` and did not
+#: reproduce: three cold runs of ``identity_atlas(workers=1)`` gave 23.11 s, 19.37 s and 18.26 s
+#: over 200 cells, a median of 0.097 s per cell.  The old figure was 2.6x high.  Correcting it
+#: changes no routing decision -- ``should_parallelise(200, 0.097, 12)`` is still True, as it was
+#: at 0.25 -- which is why no published result moves.  ``SERIES_CELL_SECONDS`` reproduces cleanly.
+#: These are wall-clock figures on a loaded developer machine and are inputs to a threshold, not
+#: results; treat them as an order of magnitude.
 SERIES_CELL_SECONDS: float = 0.14
-IDENTITY_CELL_SECONDS: float = 0.25
+IDENTITY_CELL_SECONDS: float = 0.097
 OUTER_ROW_SECONDS: float = 0.065
 COMPOSITION_CELL_SECONDS: float = 0.07
 
@@ -509,13 +517,16 @@ def series_reading(grammar_id: str) -> dict[str, Any]:
     unbounded_at_infinity = not (limit_plus.is_finite and limit_minus.is_finite)
 
     samples = []
-    worst = 0.0
+    # None, not 0.0: a reading undefined at every sample point has NO measured error, and 0.0
+    # would read as a perfect match for sine.  No world triggers this today -- every world is
+    # defined at at least one sample -- but the trap opens if SAMPLE_POINTS or the corpus changes.
+    worst: float | None = None
     for point in SAMPLE_POINTS:
         observed = _sample_value(value, point)
         truth = float(sin(point).evalf())
         error = None if observed is None else abs(observed - truth)
         if error is not None:
-            worst = max(worst, error)
+            worst = error if worst is None else max(worst, error)
         samples.append(
             {
                 "point": str(point),
@@ -858,7 +869,8 @@ def measure_parallel_decision(identity_names: Sequence[str] | None = None, worke
     Repository policy is that a parallel path changes only how fast, never what is produced, and
     that the choice between the two is a *measurement*.  This function is that measurement: it runs
     the same atlas twice and returns both elapsed times together with an equality check on the
-    records, so :data:`PARALLEL_MINIMUM_CELLS` can be justified from numbers rather than asserted.
+    records, so :func:`should_parallelise` and the per-cell constants it reads can be justified from
+    numbers rather than asserted.
     """
     names = tuple(identity_names) if identity_names is not None else tuple(item.name for item in IDENTITIES)
 
