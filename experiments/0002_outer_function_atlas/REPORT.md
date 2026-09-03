@@ -71,3 +71,64 @@ Report-ის შექმნისას შესრულებული focu
 3 passed  # outer-function tests
 7 passed  # complete test suite before this experiment report
 ```
+
+
+## შესწორება 2026-09-03: NF-2026-00004 (domain slot)
+
+ექსპერიმენტი 0032-ის review-მ bug აღმოაჩინა **სწორედ ამ ექსპერიმენტის code path-ში**,
+`src/parseatlas/functions.py`-ის `_property_summary`-ში. ის outer function-ს **raw** parse
+tree-ზე აკომპოზირებდა — `to_sympy(parse(source, grammar))` — და მერე იძახებდა
+`continuous_domain`-ს, მაშინ როცა იმავე record-ის canonical slot და inner key `simplify(...)`-ს
+იყენებდა. შედეგად ორი grammar, რომლებიც **ერთსა და იმავე** function-ს denote-ს აკეთებენ, მაგრამ
+სტრუქტურულად განსხვავებულ SymPy tree-ს ტოვებენ, ერთსა და იმავე canonical string-ს და
+**განსხვავებულ** domain-ს იღებდნენ. ე.ი. `real_domain` სლოტი parse tree-ის function იყო და არა
+denoted value-ის — ზუსტად ის, რისი აღკვეთაც `(F, D, U)` triple discipline-ის მიზანია.
+
+მინიმალური reproducer: `3 * 2 - t / 2 - t`. რვა grammar-ისთვის inner value არის constant `3`;
+ოთხი მათგანი ტოვებს tree-ს `(6 - 3*t)/(2 - t)` (გაუქარვებელი removable singularity), ოთხი კი
+`Integer(3)`-ს. `log`-ის raw tree-ზე კომპოზიცია პირველ ოთხს აძლევდა
+`Union(Interval.open(-oo, 2), Interval.open(2, oo))`-ს, მეორე ოთხს `Reals`-ს. ორივე reading
+excluded point `2`-ს ისედაც ატარებდა, ე.ი. validity restriction სადავო არასოდეს ყოფილა —
+მხოლოდ ის სლოტი არ თანხმდებოდა, რომელსაც value უნდა აღეწერა.
+
+**Fix.** domain ახლა canonicalised argument-ზე ითვლება (`canonical_argument = simplify(...)`), და
+outer function-იც იმავე ერთ argument-ზეა კომპოზირებული. parse tree-ის validity restriction
+ცალკე, უცვლელად, `inner_excluded_points`-ში მიდის.
+
+### რა შეიცვალა ამ report-ში: არაფერი
+
+ripple ამ ექსპერიმენტზე გაიზომა და **არც ერთი გამოქვეყნებული რიცხვი არ მოძრაობს**.
+
+გაშვებული შემოწმება: `2*t + 1 - t/2`-ის სრული atlas (`25 grammar × 13 outer function = 325`
+result) ორჯერ აიგო — fix-ამდელი და fix-შემდგომი გამოთვლით — და ველ-ველ შედარდა: `inner`,
+`canonical`, `inner_excluded_points` და `properties`-ის ყოველი key (`constant_argument`,
+`frequency`, `period`, `inner_real_domain`, `real_domain`). განსხვავებული ველი: **0 / 325**.
+იგივე შედარება `x/x` smoke case-ზე: **0 / 325**.
+
+მიზეზი სტრუქტურულია და არა შემთხვევითი: founding sequence-ის არც ერთი inner class არ შეიცავს
+სტრუქტურულად განსხვავებულ parse tree-ს — თითოეული class-ის ყველა grammar იდენტურ `srepr`-ს
+იძლევა — ამიტომ raw და canonicalised argument ამ input-ზე ერთი და იგივეა და bug ვერ ირთვება.
+ის სხვა shape-ებზე ირთვება, სადაც removable singularity ერთი reading-ისთვის ქარწყლდება და
+მეორისთვის არა.
+
+fix-შემდგომ ხელახლა გაზომილი მაჩვენებლები:
+
+| მაჩვენებელი | გამოქვეყნებული | ხელახლა გაზომილი |
+|---|---|---|
+| outer-function result | `325` | `325` |
+| canonical form თითო family-ზე | `8` | `8` |
+| constant-argument grammar | `4` | `4` |
+| მათი inner canonical form | `1` | `1` |
+| `sin`/`cos` period, `a = 1/2` | `4*pi` | `4*pi` |
+| `sin`/`cos` period, `a = 1` | `2*pi` | `2*pi` |
+| `sin`/`cos` period, `a = 3/2` | `4*pi/3` | `4*pi/3` |
+| `tan` period, `a = 1/2, 1, 3/2` | `2*pi`, `pi`, `2*pi/3` | `2*pi`, `pi`, `2*pi/3` |
+| reproduction command output | 13 function, 325 result | 13 function, 325 result |
+
+regression test, რომელიც ამ bug-ს ხელახლა შემოსვლის საშუალებას აღარ აძლევს:
+`tests/test_outer_functions.py::test_a_removable_singularity_does_not_move_the_composed_domain`
+და `::test_the_domain_slots_are_computed_on_one_shared_canonical_argument`. ამ ფაილში
+report-ის შექმნის დროინდელი `3` test-ის ნაცვლად ახლა `5`-ია.
+
+დეტალური falsification, pre/post violation count და შესწორებული claim-ები:
+`experiments/0032_outer_quotient/REPORT.md`.
