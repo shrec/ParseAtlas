@@ -249,7 +249,13 @@ The substitution cancels symbolically inside the program — `u2 = (X2*Z^-2)*Z^2
 
 A second finding from the same analysis is immediately actionable: the co-Z copy of `P` in `dbl_z1_production` is **already computed** — `Xp = -t` from the first multiply, `Yp = s2` from the last square, `Z3 = Y`, verified 12/12. The DBLU half costs **zero extra operations** and is blocked solely by the frozen-output-set line. Relaxing that one line to a superset test is the cheapest real extension available to this engine.
 
-**T20. The rediscovery gate — not well-posed as originally written, and now staged.** The original phrasing asked whether ParseAtlas could independently rediscover the co-Z rewrite. T20a shows that question is **unfair** in one direction — it asks an input-preserving rewriter for an input-representation change, which fails with probability 1 at every setting — and **too easy** in the other, since an axis with co-Z written into it makes the gate a tautology, and `tablebuild.py` already contains ZADDU and DBLU by name. It is also unsettleable here, being stated against a machine-specific figure ParseAtlas has verified nothing of.
+**T20. The rediscovery gate — SUPERSEDED BY T24 as project direction; retained below as the record of experiment 0027.**
+
+> **Read T20a, T20b and T20c as findings, not as a plan.** They are what 0027 measured on one external case study, and they are why the Region model exists. The forward direction is T24, which states the same two gates in general mathematical terms against targets drawn from ordinary mathematics. This project studies representation, not any one application area; the case study is evidence that the idea produces results, and is not a research agenda.
+
+The staging below is kept because it correctly separates *generation* from *selection*, which T23 carries forward.
+
+**T20 (as originally staged) — not well-posed as first written.** The original phrasing asked whether ParseAtlas could independently rediscover the co-Z rewrite. T20a shows that question is **unfair** in one direction — it asks an input-preserving rewriter for an input-representation change, which fails with probability 1 at every setting — and **too easy** in the other, since an axis with co-Z written into it makes the gate a tautology, and `tablebuild.py` already contains ZADDU and DBLU by name. It is also unsettleable here, being stated against a machine-specific figure ParseAtlas has verified nothing of.
 
 Staged replacement:
 
@@ -270,6 +276,66 @@ Its own limit, stated: deciding these commitments is a **necessary** condition, 
 > **The completeness of a representation search and its blindness to representation change are the same property.**
 
 A search is complete precisely because it fixes a language — inputs, outputs, and an equivalence relation. Those same three commitments are what make the representation itself unreachable. Widening the axis set does not fix this; changing what the search is allowed to hold fixed does. *DERIVED — 0027.*
+
+### Group F — The turn: from grammar statistics to a representation-axis engine
+
+**Decided 2026-09-03 by the owner.** The Generation 1 grammar branch is declared **sufficiently characterised** and is frozen as a laboratory, not closed as a subject. Its structure is now known: the space collapses into semantic classes (T1), the collapse is not universal (T2, T14b), it has no cluster structure beyond the parsing artifact (T14), no transferable structural predictor of sensitivity exists (T15), precedence reaches a vanishing fraction of the parenthesization space (T9), and widening the grammar parameter hits diminishing returns fast — associativity multiplied the registry sixteenfold and recovered under twelve percent of the gap while adding **50 percent more syntax and zero new mathematics** on the template corpus (T30).
+
+Two ways this project can lose its subject, both named so they can be avoided:
+
+1. becoming an **operator-precedence grammar research project**. Cartesian trees, Catalan coverage, associativity matrices and reachability constraints were needed to understand the Generation 1 space. That work is done.
+2. spending its energy adding **more domain property analyzers** — further `sin`, `log`, ODE and probability extractors. Those exercise the infrastructure and answer the central question less and less.
+
+The subject is wider than either:
+
+```text
+Given a problem, search representations in which its structure or its cost changes radically.
+```
+
+**T22. Equivalence must generalise beyond value equality.** The equivalence-preserving mode has been written as `F1(x) = F2(x)`. Almost nothing interesting fits that shape. Ordinary mathematics is full of transformations where the two sides do not even take the same inputs:
+
+```text
+a rational value            <->  a (numerator, denominator) pair, divided once at the end
+a polynomial in x^k         <->  the same polynomial in a Chebyshev or Bernstein basis
+a closed form               <->  a recurrence, or a matrix power
+a single rational function  <->  its partial-fraction decomposition
+a product                   <->  a sum of logarithms
+a linear map                <->  a factorisation of it
+```
+
+Each changes the input encoding, often the number of outputs, usually the carried state, and sometimes the preconditions — while denoting the same mathematical object **at the boundary**. That is the class of transformation this project exists to search, and value equality cannot express any of it. The obligation therefore becomes a decode relation
+
+```text
+decode(R2(x')) = R1(x)        or, generally,     R(s_baseline, s_candidate)
+```
+
+and the search object stops being an expression AST. It becomes a **Region**:
+
+```text
+Region = (inputs, state, operations, outputs, invariants)
+candidate:  R : Region_A -> Region_B
+```
+
+This is exactly what 0028's reachability control was measuring the absence of: `preserve_inputs`, `preserve_outputs` and `map_equality` are the three commitments a Region transformation is allowed to break — and the decode relation is what must replace the equality it gives up. *OPEN — Phase 14.*
+
+**T23. Generation is not the hard half; SELECTION is.** A real engine is `Generate + Prove + Rank + Measure`, not `Generate + Check equivalence`. Two candidates can be *both correct* and differ substantially in cost, in a way no correctness oracle sees and no per-formula operation count expresses — because the difference is a per-step overhead amortised across a loop, invisible until the region is priced as a whole. Experiment 0033 reproduces exactly this: two orderings of the same rational computation with identical single-step cost, `div 1, mul 1, total 2, depth 2`, and loop costs of `n+1` against `2n`. Ranking at region level rather than formula level is where the engine will actually be hard. *OPEN — Phase 14.*
+
+**T24. The two acceptance gates, in order of increasing importance.**
+
+1. **Rediscovery.** Given a transformation that is already known to be good in some area of mathematics, can the engine find it **without that transformation being named anywhere in the search specification**? This proves the engine finds independently what was previously found by hand. Note T20a: any transformation that changes the input encoding is unreachable to an input-preserving rewriter at every depth, so passing this gate requires the Region model, not a wider axis list.
+2. **Generalisation, and this is the one that matters.** Does the same representation axis, unchanged, find something useful on an unrelated problem? Gate 1 proves the engine works once. Gate 2 proves the **method** transfers, and that is where the project stops being anecdotal.
+
+**Candidate targets, all ordinary mathematics.** The engine is to be developed against these, not against any one application area:
+
+```text
+polynomial evaluation      monomial + Horner  vs  a different basis  vs  factored form
+rational arithmetic        divide per step    vs  carry (num, den), divide once
+sequences                  closed form        vs  recurrence  vs  matrix power
+rational functions         one expression     vs  partial-fraction decomposition
+products                   direct             vs  sum of logarithms
+```
+
+Each has a classical decode map, a real structural cost difference, and none of them requires anything outside general mathematics. *OPEN — Phase 14 exit gates.*
 
 ## Research Principles
 
