@@ -398,6 +398,23 @@ products                   direct             vs  sum of logarithms
 
 Each has a classical decode map, a real structural cost difference, and none of them requires anything outside general mathematics. *OPEN — Phase 14 exit gates.*
 
+## A standing caveat on negative results
+
+**A structure invisible in the representations we searched is not thereby absent.**
+
+The measurements make this concrete rather than philosophical. The written form `x*x + y*y - r*r` is a circle in 9 of the 25 worlds; in the other 16 it is a cubic or a quartic curve. `y - m*x - c` is a straight line in 13 worlds and a hyperbola in 12. The circularity did not go anywhere — the representation simply stopped presenting it as a recognisable form. And symmetrically: in a world where our circle reads as a quartic, that world's natural objects would read as noise to us.
+
+So perception of form is representation-relative. Form is not.
+
+This applies directly to this project's own negative findings and must be read alongside every one of them:
+
+- **T14** — "no residual cluster structure in grammar space beyond the null model" means *none that survives the excess-matrix measurement on that corpus*. It is not a proof that grammar space is unstructured.
+- **T15** — "no transferable structural predictor of grammar sensitivity" means *none among the 21 features tested, on that corpus, across template shapes*. A predictor in a representation we did not construct would not have shown up.
+- **0026** — "the operation-count finding does not transfer to the symbolic level" is a statement about what the symbolic level exposes, not about what the transformation is.
+- **0020, 0023** — "92.159% of parenthesizations are unreachable" is exact, but it is a statement about *precedence* as a representation. 0027 then showed the interesting object was unreachable by construction rather than absent, and 0028 turned that into a control.
+
+The discipline this imposes is not to weaken the negatives — they are measured and they stand as measured. It is to state their **scope** in the same breath as their content: what was searched, in what representation, and therefore what a null result can and cannot rule out. A negative reported without its representation is an overclaim in the same way an unqualified positive is.
+
 ## Research Principles
 
 - Treat `(token sequence, grammar)` as the research object.
