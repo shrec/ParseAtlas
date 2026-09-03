@@ -2,6 +2,67 @@
 
 This roadmap defines the staged research program for ParseAtlas. Each phase produces executable artifacts, tests, and a report before the next phase expands the search space.
 
+---
+
+## The founding question
+
+Everything in this repository exists to answer one question, and it should be read first:
+
+> **What mathematics would we have today if humans had agreed on different operator precedence?**
+
+Today `*` and `/` bind tighter than `+` and `-`. That is a *convention*, adopted historically, not a theorem. It decides which expressions can be written without parentheses — and therefore which expressions are cheap to write, cheap to read, cheap to teach, and cheap to build on. Notation that is expensive to write tends not to get used, named, or generalised.
+
+So the question is not abstract. It asks: **under a different convention, which mathematics would have been the natural, parenthesis-free mathematics?**
+
+### The research object, stated correctly
+
+There are two directions, and only the second answers the founding question.
+
+```text
+direction A   fixed token string  ->  what does it MEAN under each grammar?
+direction B   fixed mathematical object  ->  what does it COST to WRITE under each grammar?
+```
+
+Experiments 0001 through 0033 run direction A. That work built the instruments — the grammar registry, the parser, domain-aware equivalence, the null model, reachability — and it established the structure of the Generation 1 space. But direction A asks what a *string* becomes, and the founding question asks what *mathematics* costs.
+
+**Direction B is the primary programme from here.** Take a mathematical object as its intended tree, and measure, per grammar, the minimum parentheses needed to write it unambiguously.
+
+### Why this is answerable, and a first indication that it is interesting
+
+Minimal parenthesisation is exactly computable: given the intended tree and a grammar, a child needs brackets only where that grammar would otherwise reparse it. A manager probe over ten ordinary formulas — the distributive law both ways, the binomial square, a mean, a slope, a difference of squares — gives:
+
+```text
+conventional G0  ( * / + - )    7 parentheses
+best observed    G10 ( - * / + ) 4 parentheses
+worst observed   G06 ( + / * - ) 15 parentheses
+```
+
+Ten hand-picked formulas are a probe and not a result. But the conventional grammar was not the cheapest even here, and that is enough to make the question worth measuring properly.
+
+### What direction B can actually decide
+
+- **Is the convention we inherited any good?** Rank all 25 grammars by the notational cost of real mathematics. If `G0` is optimal, that is a real finding about a historical accident. If it is not, the gap is the price of the convention.
+- **What becomes free under another rule?** Under `+` binding tighter than `*`, the string `a + b * c + d` denotes `(a+b)*(c+d)`: **factored form becomes the parenthesis-free default and expanded form becomes the expensive one.** The distributive law's natural direction reverses.
+- **Which mathematics is convention-sensitive?** Some identities cost the same under every grammar; others swing wildly. The swing is a property of the mathematics, not of the notation.
+- **Would a different convention have favoured a different mathematics?** If factoring were cheap to write and expansion expensive, which results would have been reached first, and which would have looked "obvious"?
+
+### How the existing work serves it
+
+Nothing built so far is discarded; it is repointed.
+
+| built | serves direction B as |
+|---|---|
+| grammar registry, parser | the 25 conventions being compared |
+| domain-aware equivalence `(F, D, U)` | the guarantee that two writings denote the same object |
+| operator-support reduction (T6) | the null model: cost differences a convention forces, not chooses |
+| reachability control (0028) | which intended trees a convention can express at all |
+| associativity space (0030) | the convention axis widened beyond precedence |
+| the Region model (Phase 14) | representation change once notation alone is exhausted |
+
+The equivalence-preserving search of Group F remains the long-range programme. The founding question above is the near-range one, and it comes first.
+
+---
+
 ## Current implementation status
 
 The first executable vertical slice is now available under `src/parseatlas/`. It implements the Generation 1 grammar registry, custom binary-expression parser, SymPy-backed canonical analysis, domain-aware undefined metadata, JSON/Markdown CLI output, and tests for the initial `24 -> 8` finding. The generated result is recorded in [experiments/0001_affine_functions/REPORT.md](experiments/0001_affine_functions/REPORT.md).
