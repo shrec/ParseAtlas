@@ -494,6 +494,23 @@ The discipline this imposes is not to weaken the negatives — they are measured
 - Expand one controlled dimension at a time; do not infer general laws from one expression.
 - Preserve an independent reference implementation before introducing a performance engine.
 
+### Let the system find the wall — set by the owner, 2026-09-05
+
+> **Do not impose a limit in advance. Sweep the parameter until the measurement shows where the limit is.**
+
+A declared threshold — a bracket budget, a memory ceiling, an enumeration bound, a corpus cut-off — can only answer the question it was already framed around. It cannot find a wall nobody knew was there, and worse, it silently decides the result: experiment 0043 published a gap of `6` at one budget and `1` at another, and only the sweep printed beside it made that visible.
+
+The owner's analogy is the shape to look for. Raise a tax rate and revenue rises — **up to a point**, past which raising it further makes revenue *fall*. The turning point is not derivable from the first half of the curve, and no threshold chosen in advance would have found it. The same shape may exist in many of the quantities this project measures, and if it does, the turn is the discovery and the monotone stretch before it is only the approach.
+
+So, for every card from here:
+
+1. **Sweep the whole range of any parameter that could have been a threshold**, and publish the curve rather than a point.
+2. **Look explicitly for non-monotonicity.** Where does more of something give *less*? Name the turning point and its value, or state plainly that the curve is monotone over the range swept, which is itself a result.
+3. **A bound that must exist for the run to terminate is disclosed as a computational limit, never as a finding**, and the card must say what was checked beyond it.
+4. **A number that moves with a threshold is reported with its sensitivity**, in the same sentence, not in a limits section a reader may skip.
+
+This does not license unbounded runs. It requires that where a bound is unavoidable, it is named as a bound and the shape of the curve up to it is published, so a reader can see whether the answer was still moving when the sweep stopped.
+
 ## Phase Gates
 
 Every phase must provide:
