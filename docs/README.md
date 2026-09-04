@@ -75,6 +75,23 @@ For an external reader, the shortest honest path through this repository is:
 4. [grammar-space-structure.md](grammar-space-structure.md) for the Direction A structural picture in one place;
 5. the individual experiment reports for the measurements.
 
-Experiment reports are written in Georgian for project communication; the methodology, structural theory, publication, and case-study documents are in English. That split is deliberate and is recorded in ROADMAP Phase 13.
+## Language
+
+**Every document here exists in both English and Georgian, and both are normative** — see [DOCUMENTATION_POLICY.md](DOCUMENTATION_POLICY.md) / [DOCUMENTATION_POLICY.ka.md](DOCUMENTATION_POLICY.ka.md). In force from 2026-09-04.
+
+This replaces the earlier split, which kept methodology in English and experiment reports in Georgian. That split let each language fall behind the other and eventually disagree with it; requiring both at write time is cheaper than reconciling two drifted documents later.
+
+```text
+docs/X.md                            English
+docs/X.ka.md                         ქართული
+experiments/NNNN_name/REPORT.en.md   English
+experiments/NNNN_name/REPORT.ka.md   ქართული
+```
+
+Experiments 0001–0039 still carry `REPORT.md` in Georgian and keep that name until their English counterparts exist; a single migration then renames them to `REPORT.ka.md`. Technical terms stay in Latin script inside Georgian text, so that a Georgian reader can search for the same word the code uses.
+
+## Cross-experiment documents
+
+- [The quadratic in 25 conventions](quadratic-in-25-conventions.en.md) · [კვადრატული განტოლება 25 კონვენციაში](quadratic-in-25-conventions.ka.md) — what the standard quadratic string denotes in each world, what the fixed problem costs to write, what each writing lets you read off, and how good the inherited convention actually is. Written for a mathematician from outside the project; draws on 0035, 0037, 0038 and 0039.
 
 The normative Generation 1 language and semantic rules are defined in [SPEC.md](../SPEC.md). The project overview remains in [README.md](../README.md).

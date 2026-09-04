@@ -583,8 +583,8 @@ Exit gate: every optimization has a proof obligation and an adversarial test sui
 
 ## Phase 13: Publication and Release
 
-- Maintain English methodology and publication documents.
-- Maintain Georgian experiment reports for project communication.
+- **Every published document exists in both English and Georgian, and both are normative.** In force from 2026-09-04; this replaces the earlier split of English methodology against Georgian reports, which let the two languages drift until they contradicted each other. The rule, the file convention and the agreement obligations are in [docs/DOCUMENTATION_POLICY.md](docs/DOCUMENTATION_POLICY.md) / [docs/DOCUMENTATION_POLICY.ka.md](docs/DOCUMENTATION_POLICY.ka.md).
+- A card that produces a report produces both languages; a card that corrects a number corrects it in both files in the same commit, or it is returned.
 - Include exact commands, dependency versions, report hashes, and limitations.
 - Freeze datasets and generate a reproducibility bundle.
 - Tag releases only after all phase gates and full validation pass.

@@ -1,0 +1,125 @@
+# The quadratic in 25 conventions
+
+**Sources:** experiments [0035](../experiments/0035_alternative_mathematics/REPORT.md), [0037](../experiments/0037_domain_worlds/REPORT.md), [0038](../experiments/0038_manifest_properties/REPORT.md), [0039](../experiments/0039_visibility_ceiling/REPORT.md).
+**Georgian version:** [quadratic-in-25-conventions.ka.md](quadratic-in-25-conventions.ka.md)
+**Audience:** a mathematician from outside the project.
+
+Operator precedence is a **convention, not a theorem**. Had it been agreed differently, the standard string `a·x·x + b·x + c` would denote a different object — and in nearly half of all possible worlds there would be no quadratic formula at all.
+
+## 1. Setup
+
+The four binary operators `+ − * /` admit `4! = 24` strict precedence orderings. To these we add the conventional grammar `G0`, in which `*` and `/` share one level and `+` and `−` share a lower one. **25 conventions in total.**
+
+Associativity is left-to-right everywhere, parentheses override precedence everywhere, and symbolic simplification happens *only after* parsing — so that grammar and algebra are never conflated.
+
+## 2. The main result
+
+One string, which every world would write:
+
+```text
+a * x * x + b * x + c
+```
+
+Across the 25 conventions it yields **exactly two** distinct mathematical objects:
+
+| | 13 conventions (incl. `G0`) | 12 conventions |
+|---|---|---|
+| denotes | `a·x² + b·x + c` | `a·x·(b + x)·(c + x)` |
+| degree | 2 | 3 |
+| roots | `(−b ± √(b² − 4ac)) / 2a` | `0`, `−b`, `−c` |
+| what it demands | a discriminant, a radical, a formula to memorise | nothing — the roots are read off the coefficients |
+
+In those 12 worlds the standard polynomial **arrives already factored**. There would be no discriminant, no `b² − 4ac`, no square root — and no quadratic formula as a thing to be taught. Their "hard" step would be the opposite one: **expanding the brackets**.
+
+## 3. The problem held fixed
+
+Section 2 fixes the *string*. Now the reverse: fix the *problem* and ask how it would be written elsewhere.
+
+```text
+2x² + 3x − 5 = 0        →        x = 1,   x = −5/2
+```
+
+Both writings denote the same function. Minimum bracket count per convention:
+
+| writing | cheaper in this many worlds | brackets in `G0` |
+|---|---|---|
+| `2*x*x + 3*x − 5` (expanded) | 9 | 0 |
+| `(2*x + 5)*(x − 1)` (factored) | 8 | 2 |
+| tie | 8 | — |
+
+**In eight worlds the factored form is the cheaper thing to write.** There, writing the problem down already solves it — the roots `−5/2` and `1` are in the string. The difficulty does not vanish; it **moves**.
+
+> **A note on convention.** 0038 breaks ties toward the expanded form, so the same measurement reads as 17/8 there. The three-way split is given here so that the tied case stays visible.
+
+This generalises: of 15 two-sided laws, **13** reverse their natural direction somewhere, and **22 of the 25 worlds** reverse at least one. For the distributive law, `G0` charges 0 brackets for the expanded side and 2 for the factored; `G01` charges exactly the opposite.
+
+## 4. What each writing lets you see
+
+The quadratic `2x² + 3x − 5` has six checkable properties. **No convention displays more than four at once.**
+
+| writing | visible | hidden |
+|---|---|---|
+| `2*x*x + 3*x − 5` | degree · leading coefficient · constant term · signs | roots · factor structure |
+| `(2*x + 5)*(x − 1)` | roots · factor structure | constant term · leading coefficient |
+
+Measuring across 34 objects and 25 worlds gave two results.
+
+**First:** no world makes every true property of any multi-property object manifest at once — **0 cells of 625**.
+
+**Second, narrower and sharper:**
+
+```text
+the constant term and the roots are never manifest together — 0 cells of 850
+```
+
+This is a **measurement, not an artefact of the definitions**: the same rules *do* admit both together on a synthetic writing. So a world in which the roots are legible hides the constant term, and vice versa. The trade is unavoidable.
+
+## 5. How good is the convention we inherited
+
+Over 33 named laws in four fields, by summed minimum bracket count:
+
+| # | grammar | precedence | algebra | geom. | calc. | lin. alg. | total |
+|---|---|---|---|---|---|---|---|
+| 1 | `G18` | `* / − +` | 1 | 3 | 1 | 1 | 42 |
+| 2 | `G16` | `* − / +` | 1 | 3 | 6 | 1 | 44 |
+| 3 | **`G0`** | `(* /) (+ −)` | 1 | 5 | 6 | 1 | 45 |
+| 25 | `G02` | `+ − / *` | 22 | 22 | 23 | 18 | 99 |
+
+`G0` is **3rd of 25**, first in algebra and in linear algebra, and never worse than 6th. Exactly two grammars beat it. And the best of them, `G18`, differs from ours only in that the tie between `+` and `−` is broken in favour of `−` — *the same grouping with one fewer conventional choice*.
+
+An independent measurement pointing the same way: across eight trigonometric identities `G0` is in the top three, and the Pythagorean identity `s·s + c·c` survives in exactly the **13** worlds where `*` precedes `+`.
+
+## 6. Method and verification
+
+Every number is generated by code and independently re-derived by a second reviewer who reproduced the results with their *own* implementation.
+
+| check | what it establishes |
+|---|---|
+| round-trip | re-parsing a writing under its own grammar returns the tree it came from — 1,250 checks, 0 failures |
+| minimality | bracket counts confirmed by exhaustive search to be **global** minima — 1,737 brackets, 0 violations |
+| manifest ⇒ true | a "visible" claim always agrees with algebraic truth — 2,573 claims, 0 violations |
+| syntacticity | the visibility rules read only the shape of the writing; the reviewer poisoned every algebraic entry point and 3,561 claims passed unchanged |
+| independence | the quadratic result was re-derived by the reviewer without importing the module, and matched to the letter |
+
+Equivalence is defined by a pair — **canonical form and excluded points** — because textual equality is not enough: `x/x` simplifies to `1`, yet `x = 0` remains undefined.
+
+## 7. Limitations
+
+- The language has only binary `+ − * /` and parentheses. There is no exponentiation, no radical and no function call, so some writings use stand-in symbols.
+- "Visible" is defined by our own declared shape rules. Different rules would move the figures — though this was tested: the *trade* survived a change of rules, the *counts* did not.
+- The corpus is hand-chosen and reflects a judgement about which laws are fundamental.
+- Bracket count is one measure. Reading difficulty and the unary minus lie outside it.
+- **Invisible ≠ absent.** Of 140 true (object, property) pairs, 46 are visible in none of the 25 writings. They were established by computation, not read off a writing — and that is precisely the limit of this method.
+- **And that limit was measured.** Experiment 0039 opened the *full* parenthesization space — 1,510,820 trees, every possible bracketing — and recovered **exactly one** of the 46, which turned out to be precedence-reachable anyway, making it a defect in our own model rather than a gain from the wider space. The real breakdown:
+
+  | why it is invisible | pairs |
+  |---|---|
+  | the search space is too narrow | 1 (and that one a defect) |
+  | the language — no radical, no `i` | 8 |
+  | the visibility rules themselves | 37 |
+
+  So **0** of the 46 require a tree that precedence cannot write. The bracketing barrier explains nothing here — the cause is almost entirely the rules and the language.
+
+---
+
+*ParseAtlas is an open research project on alternative expression grammars. Every figure is reproducible from a clean clone. Questions and objections are welcome — particularly ones that refute a claim.*
