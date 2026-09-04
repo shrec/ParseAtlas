@@ -45,6 +45,8 @@ The project runs in **two modes that are never mixed**:
 
 What the measurements support, and what they do not, is stated thesis by thesis in the **Working Theses** section of [ROADMAP.md](ROADMAP.md) — each claim carries an evidence level and the experiment that tests it. Several results that look striking are deliberately marked there as folklore, tautology, or trivial-by-counting, with the prior art named. Read that section before citing anything from this repository.
 
+**Language rule, in force from 2026-09-04:** every document this project publishes exists in **both English and Georgian**, and both are normative — the standard is agreement, not translation. Numbers, limitations and corrections must match across the pair. See [docs/DOCUMENTATION_POLICY.md](docs/DOCUMENTATION_POLICY.md) / [docs/DOCUMENTATION_POLICY.ka.md](docs/DOCUMENTATION_POLICY.ka.md).
+
 The first-generation rules are defined in [SPEC.md](SPEC.md). The earliest observations are recorded in [INITIAL_FINDINGS.md](INITIAL_FINDINGS.md), the staged research program is in [ROADMAP.md](ROADMAP.md), and the publication-facing documentation and the full experiment index are in [docs/README.md](docs/README.md).
 
 The experiment contains one conventional control grammar, `G0`, plus 24 strict precedence permutations, `G01` through `G24`. The control grammar is separate because conventional arithmetic gives `*` and `/` the same precedence, and `+` and `-` the same lower precedence; no single strict four-operator ordering represents that rule for general expressions.
