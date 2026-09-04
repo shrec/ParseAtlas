@@ -26,7 +26,11 @@ Two results give the flavour, and they point in opposite directions on purpose:
 - **0035** — the standard form `a*x*x + b*x + c` is our quadratic in 13 of 25 worlds and the cubic `a·x·(b+x)·(c+x)` in the other 12, whose roots are `0, −b, −c`, read straight off the coefficients. **In roughly half of all possible worlds there is no quadratic formula to memorise.**
 - **0036** — the Pythagorean identity `s*s + c*c` survives in exactly 13 of 25 worlds, precisely those where `*` precedes `+`. Across eight trigonometric identities the conventional grammar is in the **top three**.
 
-So the convention we inherited ranks **11th of 25** on notational cost (0034) and **top three** on preserving known structure (0036). Whether it is an optimum anywhere or a good compromise everywhere is the open headline question, and experiment 0037 is built to settle it.
+So the convention we inherited ranks **11th of 25** on the notational cost of 58 named formulas (0034) and **top three** on preserving known trigonometric structure (0036). Experiment **0037** was built to settle which of those is the fairer picture, and its answer is the third: on 33 named laws spread across algebra, geometry, calculus and linear algebra, `G0` is **3rd of 25** on the summed workload, **1st** in algebra and in linear algebra, and never worse than 6th in any field. It is beaten by exactly two grammars, and the best of them, `G18` = `* / - +`, is *our own grouping with the `+`/`-` tie broken*.
+
+The two rankings do not conflict; they are different corpora, and the gap between 11th and 3rd is itself the finding — **how good the convention looks depends on which mathematics you ask it to write.** That is the sense in which there is no single optimum, and it is stated as a thesis rather than as a slogan.
+
+**0038** then shows the trade is not only about cost but about sight: of the corpus objects with more than one true property, **no world makes them all readable at once**, and the constant term and the roots are never legible together in 850 measured cells — though nothing in the rules forbids it. Choosing a notation chooses what you will not see.
 
 Claims are stated thesis by thesis in the **Working Theses** section of [ROADMAP.md](ROADMAP.md), each with an evidence level. Several striking-looking results are deliberately marked there as folklore, tautology, or trivial-by-counting, with the prior art named. **Negative results carry their scope**: a structure invisible in the representations searched is not thereby absent — see the standing caveat in ROADMAP.md.
 

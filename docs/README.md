@@ -57,6 +57,8 @@ Only Direction B answers the founding question. Direction A built the instrument
 - [Experiment 0034 report](../experiments/0034_notational_cost/REPORT.md): the notational cost of 58 named formulas — conventional `G0` ranks 11th of 25, 45.3% dearer than the cheapest, and per-formula routing would cost 3 brackets against a single convention's 29.
 - [Experiment 0035 report](../experiments/0035_alternative_mathematics/REPORT.md): the standard objects in each world — `a*x*x + b*x + c` is our quadratic in 13 worlds and a factored cubic with roots `0, −b, −c` in the other 12.
 - [Experiment 0036 report](../experiments/0036_trigonometry_worlds/REPORT.md): sine and the trigonometric identities — the Pythagorean identity survives in exactly the 13 worlds where `*` precedes `+`, and `G0` is top-three across eight identities.
+- [Experiment 0037 report](../experiments/0037_domain_worlds/REPORT.md): the compromise test over 33 named laws in four fields — `G0` is **3rd of 25** on the summed workload, 1st in algebra and linear algebra, never worse than 6th; only `G16` and `G18` beat it, and `G18` is our own grouping with the `+`/`-` tie broken. Also: 13 of 15 two-sided laws reverse their natural direction somewhere, and 22 of the 25 worlds reverse at least one.
+- [Experiment 0038 report](../experiments/0038_manifest_properties/REPORT.md): what a writing lets you *read off* versus what is merely true — of the 25 corpus objects with more than one true property, **no world makes them all manifest at once**, and the constant term and the roots are never co-manifest in 850 cells despite nothing in the rules forbidding it. `G0` ties `G17` for the most manifest properties overall.
 
 Direction A's later instrument work, kept because Direction B depends on it:
 
@@ -69,7 +71,7 @@ For an external reader, the shortest honest path through this repository is:
 
 1. [README.md](../README.md) — **the founding question first**, then the Direction A / Direction B split. Skipping this is how a reader ends up extending the finished direction;
 2. the **Working Theses** section of [ROADMAP.md](../ROADMAP.md), which states what each result is worth and names the prior art — several striking-looking results are marked there as folklore, tautology, or trivial-by-counting — followed by the standing caveat that every negative result carries the scope of the representation it was measured in;
-3. the Direction B reports above (0034, 0035, 0036) for what the founding question has actually produced;
+3. the Direction B reports above (0034 onward) for what the founding question has actually produced — 0035 for what the standard objects become, 0037 for how good the convention we inherited actually is, 0038 for the visibility trade it forces;
 4. [grammar-space-structure.md](grammar-space-structure.md) for the Direction A structural picture in one place;
 5. the individual experiment reports for the measurements.
 

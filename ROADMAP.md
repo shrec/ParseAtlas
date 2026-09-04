@@ -51,11 +51,11 @@ Ten hand-picked formulas are a probe and not a result. But the conventional gram
 Direction B proceeds field by field, and in each field the corpus is **fundamental identities, canonical objects and laws** — not random or generated formulas. What a convention does to `(a+b)(c+d) = ac+ad+bc+bd` is a historical question; what it does to a sampled template is not.
 
 ```text
-algebra worlds       distributive law both ways, (a+b)^2, a^2-b^2, factored vs expanded
-geometry worlds      line, circle, conics, distance, slope, area laws
+algebra worlds       DONE - 0037: G0 ranks 1st of 25 here
+geometry worlds      DONE - 0037 (cost, G0 5th); 0040 extends it to what the CURVES become
 trigonometry worlds  DONE - 0036: the Pythagorean identity survives in 13 of 25
-calculus worlds      difference quotient, product and chain rule forms, Taylor terms
-linear algebra       dot product, determinant, linear combination, norm
+calculus worlds      DONE - 0037: G0 ranks 6th of 25, its worst field
+linear algebra       DONE - 0037: G0 ranks 1st of 25 here
 ```
 
 For each field and each world: which side of a law is parenthesis-free, which factorisation is visually obvious, which expansion becomes expensive, which identity stays true in the same textual form.
@@ -64,7 +64,9 @@ For each field and each world: which side of a law is parenthesis-free, which fa
 
 > Is there a grammar that beats `G0` across the **whole** mathematical workload — or did the conventional convention survive because it is a **good compromise across many fields** rather than an optimum in any one?
 
-That is a historically meaningful question with a measurable answer, and it is the natural headline of the series. A convention that is mediocre everywhere and excellent at nothing would look exactly like `G0` does so far.
+**ANSWERED by 0037, and the answer is neither of the two options as posed.** Over 33 named laws in four fields, `G0` is **3rd of 25** on the summed workload, **1st** in algebra and in linear algebra, and never worse than **6th**. Exactly two grammars beat it, and the better of them — `G18` = `* / - +` — is not a rearrangement but **our own grouping with the `+`/`-` tie broken in favour of `-`**. So the convention we inherited is neither a mediocre compromise nor an optimum: it is a near-optimum whose one improvement is a *tie-break*, not a regrouping. That is a stronger result than either branch of the original question, and it is why the 11th-of-25 figure from 0034 and the 3rd-of-25 figure here do not conflict — **how good the convention looks depends on which mathematics it is asked to write**, and that dependence is itself the measurement.
+
+**0038 adds the half that cost cannot see.** A cheaper writing is not thereby a more informative one. Of the corpus objects carrying more than one true property, **no world makes them all manifest at once**; the constant term and the roots are never legible together across 850 cells, and nothing in the shape rules forbids it — the emptiness is measured, not defined. `G0` ties `G17` for the most manifest properties overall, so on *this* axis the conventional convention is first rather than third. Cost and visibility are separate orderings of the same 25 worlds.
 
 ### How the existing work serves it
 
