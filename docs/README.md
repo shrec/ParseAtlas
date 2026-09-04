@@ -60,7 +60,7 @@ Only Direction B answers the founding question. Direction A built the instrument
 - Experiment 0037 — [English](../experiments/0037_domain_worlds/REPORT.en.md) · [ქართული](../experiments/0037_domain_worlds/REPORT.md): the compromise test over 33 named laws in four fields — `G0` is **3rd of 25** on the summed workload, 1st in algebra and linear algebra, never worse than 6th; only `G16` and `G18` beat it, and `G18` is our own grouping with the `+`/`-` tie broken. Also: 13 of 15 two-sided laws reverse their natural direction somewhere, and 22 of the 25 worlds reverse at least one.
 - Experiment 0038 — [English](../experiments/0038_manifest_properties/REPORT.en.md) · [ქართული](../experiments/0038_manifest_properties/REPORT.md): what a writing lets you *read off* versus what is merely true — of the 25 corpus objects with more than one true property, **no world makes them all manifest at once**, and the constant term and the roots are never co-manifest in 850 cells despite nothing in the rules forbidding it. `G0` ties `G17` for the most manifest properties overall.
 - Experiment 0039 — [English](../experiments/0039_visibility_ceiling/REPORT.en.md) · [ქართული](../experiments/0039_visibility_ceiling/REPORT.md): what it would take to see the 46 invisible pairs. Opening the **full** parenthesization space — 1,510,820 trees — recovers exactly one, and that one is precedence-reachable, so **0 of the 46 are blocked by precedence**; 8 need a language with radicals and `i`, and 37 are the shape rules themselves.
-- Experiment 0040 — [ქართული](../experiments/0040_geometry_atlas/REPORT.md) (English in progress): the geometry atlas. **In 12 of the 25 worlds the standard written form of a straight line is not a line** but a degenerate conic carrying an `x*y` term. The circle splits four ways, the ellipse fractures into 13 distinct objects, and exactly one curve is invariant across all 25 — because it is already factored. Twelve generated SVG figures, regenerable byte-identically.
+- Experiment 0040 — [English](../experiments/0040_geometry_atlas/REPORT.en.md) · [ქართული](../experiments/0040_geometry_atlas/REPORT.ka.md): the geometry atlas. **In 12 of the 25 worlds the standard written form of a straight line is not a line** but a degenerate conic carrying an `x*y` term. The circle splits four ways, the ellipse fractures into 13 distinct objects, and exactly one curve is invariant across all 25 — because it is already factored. Twelve generated SVG figures, regenerable byte-identically.
 
 Direction A's later instrument work, kept because Direction B depends on it:
 
@@ -90,7 +90,7 @@ experiments/NNNN_name/REPORT.en.md   English
 experiments/NNNN_name/REPORT.ka.md   ქართული
 ```
 
-Experiments 0001–0039 still carry `REPORT.md` in Georgian and keep that name until their English counterparts exist; a single migration then renames them to `REPORT.ka.md`. Technical terms stay in Latin script inside Georgian text, so that a Georgian reader can search for the same word the code uses.
+Experiments 0001–0039 still carry `REPORT.md` in Georgian and keep that name until their English counterparts exist; a single migration then renames them to `REPORT.ka.md`. Experiment 0040 was the first created after the rule came into force and is already in the new shape. Technical terms stay in Latin script inside Georgian text, so that a Georgian reader can search for the same word the code uses.
 
 ## Cross-experiment documents
 

@@ -4,11 +4,11 @@
 
 **`25` world-იდან `12`-ში სწორი ხაზის განტოლება არ არის სწორი ხაზი.**
 
-`y - m*x - c` არის ის პირველი curve equation, რომელსაც ადამიანი სწავლობს. Conventional precedence-ის ქვეშ ის `-c - m*x + y`-ია: total degree `1`, ერთი ხაზი, slope `m`, intercept `c`. `12` world-ში ზუსტად იმავე written form იკითხება როგორც `(c - x)*(m - y)` - total degree `2`, `x*y` cross term-ით, `B^2 - 4*A*C = 1 > 0`, `3x3` discriminant determinant იდენტურად `0`, ანუ **degenerate conic: ორი გადამკვეთი ხაზი `x = c` და `y = m`**. ეს არც slope-ს ინახავს, არც intercept-ს, და საერთოდ ერთი curve არ არის.
+`y - m*x - c` არის ის პირველი curve equation, რომელსაც ადამიანი სწავლობს. Conventional precedence-ის ქვეშ ის `-c - m*x + y`-ია: total degree `1`, ერთი ხაზი, slope `m`, intercept `c`. `12` world-ში ზუსტად იმავე written form იკითხება როგორც `(c - x)*(m - y)` — total degree `2`, `x*y` cross term-ით, `B^2 - 4*A*C = 1 > 0`, `3x3` discriminant determinant იდენტურად `0`, ანუ **degenerate conic: ორი გადამკვეთი ხაზი `x = c` და `y = m`**. ეს არც slope-ს ინახავს, არც intercept-ს, და საერთოდ ერთი curve არ არის.
 
-ეს არის experiment `0035`-ის (alternative mathematics) გეომეტრიული მკლავი. Algebra-ში ერთი object მეორისგან coefficient-ებით განსხვავდება, და განსხვავების წაკითხვა ვარჯიშს მოითხოვს. გეომეტრიაში object-ს **classification** აქვს - line, circle, ellipse, parabola, hyperbola, cubic, quartic - და classification არის უხეში, მდგრადი, ადამიანის თვალით წასაკითხი label. ორ world-ს შეუძლია coefficient-ებზე არ დაეთანხმოს და მაინც ერთსა და იმავე სახის object-ს სწავლობდეს; როცა ისინი classification-ზე არ თანხმდებიან, ისინი **სხვა გეომეტრიას** სწავლობენ.
+ეს არის experiment `0035`-ის (alternative mathematics) გეომეტრიული მკლავი. Algebra-ში ერთი object მეორისგან coefficient-ებით განსხვავდება, და განსხვავების წაკითხვა ვარჯიშს მოითხოვს. გეომეტრიაში object-ს **classification** აქვს — line, circle, ellipse, parabola, hyperbola, cubic, quartic — და classification არის უხეში, მდგრადი, ადამიანის თვალით წასაკითხი label. ორ world-ს შეუძლია coefficient-ებზე არ დაეთანხმოს და მაინც ერთსა და იმავე სახის object-ს სწავლობდეს; როცა ისინი classification-ზე არ თანხმდებიან, ისინი **სხვა გეომეტრიას** სწავლობენ.
 
-Worlds არის `4! = 24` strict precedence ordering პლუს conventional tied-level control `G0`, სულ `25` - იგივე registry, რომელსაც მთელი repository იყენებს (`parseatlas.grammar.all_grammars`).
+Worlds არის `4! = 24` strict precedence ordering პლუს conventional tied-level control `G0`, სულ `25` — იგივე registry, რომელსაც მთელი repository იყენებს (`parseatlas.grammar.all_grammars`).
 
 ### ხუთი კითხვა, ხუთი პასუხი
 
@@ -21,7 +21,7 @@ Worlds არის `4! = 24` strict precedence ordering პლუს convention
 ## Catalogue
 
 `12` named curve, თითოეული `(name, area, written form, coordinates, parameters, window)` სახით,
-`src/parseatlas/geometry_atlas.py::CURVE_CATALOGUE`-ში. Intended tree არის ის, რასაც control grammar `G0` აძლევს - ანუ ის object, რომელსაც ჩვენ ვგულისხმობთ, როცა ამ string-ს ვწერთ.
+`src/parseatlas/geometry_atlas.py::CURVE_CATALOGUE`-ში. Intended tree არის ის, რასაც control grammar `G0` აძლევს — ანუ ის object, რომელსაც ჩვენ ვგულისხმობთ, როცა ამ string-ს ვწერთ.
 
 | # | name | written form | coordinates | parameters (drawing) | რა არის ეს |
 |---|---|---|---|---|---|
@@ -38,13 +38,13 @@ Worlds არის `4! = 24` strict precedence ordering პლუს convention
 | 11 | `circle_through_origin` | `x*x + y*y - a*x - b*y` | `x, y` | `a = 2`, `b = 2` | წრეწირი constant term-ის გარეშე |
 | 12 | `degenerate_pair` | `(x - y)*(x + y)` | `x, y` | - | ორი ხაზი ნამრავლად, control |
 
-**Generation 1-ს არ აქვს exponentiation**, ამიტომ ყოველი კვადრატი ნამრავლადაა დაწერილი: `x*x`, და არა `x**2`. ეს არ არის სტილის არჩევანი - ეს არის შესასწავლი grammar-ის თვისება, და სწორედ ის თვისებაა, რომელიც კვადრატებს precedence permutation-ის მიმართ დაუცველს ხდის. `**`-ის მქონე grammar-ში ეს კითხვა სხვანაირად დაისმებოდა.
+**Generation 1-ს არ აქვს exponentiation**, ამიტომ ყოველი კვადრატი ნამრავლადაა დაწერილი: `x*x`, და არა `x**2`. ეს არ არის სტილის არჩევანი — ეს არის შესასწავლი grammar-ის თვისება, და სწორედ ის თვისებაა, რომელიც კვადრატებს precedence permutation-ის მიმართ დაუცველს ხდის. `**`-ის მქონე grammar-ში ეს კითხვა სხვანაირად დაისმებოდა.
 
-Objects იდარებიან პროექტის არსებული **semantic key**-ით - `(canonical expression, domain, excluded points)` - რომელიც `parseatlas.alternative_mathematics`-იდან **იმპორტირებულია** და აქ ხელახლა არ არის დაწერილი, ისე რომ "იგივე object" ნიშნავს ზუსტად იმას, რასაც `analyze_expression`-ში ნიშნავს. Standing disclosure ამ key-ზე: `canonical.py` `domain`-ში ყოველთვის ლიტერალურ `"R"`-ს წერს, ამიტომ ოპერატიული discrimination არის `(canonical form, excluded points)` - `NF-2026-00005`, იხ. შეზღუდვები.
+Objects იდარებიან პროექტის არსებული **semantic key**-ით — `(canonical expression, domain, excluded points)` — რომელიც `parseatlas.alternative_mathematics`-იდან **იმპორტირებულია** და აქ ხელახლა არ არის დაწერილი, ისე რომ "იგივე object" ნიშნავს ზუსტად იმას, რასაც `analyze_expression`-ში ნიშნავს. Standing disclosure ამ key-ზე: `canonical.py` `domain`-ში ყოველთვის ლიტერალურ `"R"`-ს წერს, ამიტომ ოპერატიული discrimination არის `(canonical form, excluded points)` — `NF-2026-00005`, იხ. შეზღუდვები.
 
 ## Classification: რა წესით ერქმევა label
 
-`classify(expression, variables)` ჯერ expression-ს საერთო მნიშვნელზე დაჰყავს (`together`), შემდეგ ჰყოფს (`fraction`) და **numerator**-ს კლასიფიცირებს. ეს ორივე მიზეზით სწორია. მექანიკურად: `Poly` rational form-ს პირდაპირ უარყოფს, და სწორედ ამაზე მოკვდა ადრინდელი probe hyperbola-ზე. გეომეტრიულად: `N/D`-ის zero set არის `N`-ის zero set `D`-ის pole-ების გამოკლებით, ამიტომ curve-ს numerator ატარებს, ხოლო denominator - ნახვრეტებს. Denominator არასოდეს იკარგება ჩუმად: ის იწერება `denominator`, `denominator_set_aside`, `denominator_punctures` და `excluded_locus` ველებში, ცხრილში იბეჭდება და figure-ზე იხაზება dashed ხაზად.
+`classify(expression, variables)` ჯერ expression-ს საერთო მნიშვნელზე დაჰყავს (`together`), შემდეგ ჰყოფს (`fraction`) და **numerator**-ს კლასიფიცირებს. ეს ორივე მიზეზით სწორია. მექანიკურად: `Poly` rational form-ს პირდაპირ უარყოფს, და სწორედ ამაზე მოკვდა ადრინდელი probe hyperbola-ზე. გეომეტრიულად: `N/D`-ის zero set არის `N`-ის zero set `D`-ის pole-ების გამოკლებით, ამიტომ curve-ს numerator ატარებს, ხოლო denominator — ნახვრეტებს. Denominator არასოდეს იკარგება ჩუმად: ის იწერება `denominator`, `denominator_set_aside`, `denominator_punctures` და `excluded_locus` ველებში, ცხრილში იბეჭდება და figure-ზე იხაზება dashed ხაზად.
 
 Label-ების წესები, სრულად:
 
@@ -66,7 +66,7 @@ Label-ების წესები, სრულად:
 
 ორი წესი, რომელიც ცალკე უნდა ითქვას, რადგან ორივე უარია და არა label:
 
-**Degeneracy არის იდენტური განულება.** Determinant, რომელიც *შეიძლება* განულდეს parameter-ის კონკრეტულ მნიშვნელობაზე - წრეწირისთვის `-r**2` - curve-ს generic-ად non-degenerate-ად ტოვებს, ხოლო განულების locus ცალკე იწერება `degeneracy_locus`-ში. `r = 0` წრეწირს წერტილად აქცევს; ეს იმას არ ნიშნავს, რომ `x*x + y*y - r*r` წერტილია.
+**Degeneracy არის იდენტური განულება.** Determinant, რომელიც *შეიძლება* განულდეს parameter-ის კონკრეტულ მნიშვნელობაზე — წრეწირისთვის `-r**2` — curve-ს generic-ად non-degenerate-ად ტოვებს, ხოლო განულების locus ცალკე იწერება `degeneracy_locus`-ში. `r = 0` წრეწირს წერტილად აქცევს; ეს იმას არ ნიშნავს, რომ `x*x + y*y - r*r` წერტილია.
 
 **Label, რომელიც coefficient-ებიდან არ მართლდება, არ გაიცემა.** `3` reading-ს ამ catalogue-ში symbolic discriminant აქვს, რომლის ნიშანი გადაუწყვეტელია (`-4*r`, `-4*d`, `-4*c`); მათ label-ის ნაცვლად უარი და სამივე branch უწერიათ, ხოლო catalogue-ის declared parameter values-ზე გადაწყვეტილი label ცალკე ველშია (`label_source: coefficients at the declared parameter values`). სამივე `r, d, c > 0`-ზე `conic: ellipse`-ია.
 
@@ -81,7 +81,7 @@ x*x + y*y - r*r     9 | 8 | 4 | 4     (4 distinct object)
 y - m*x - c        13 | 12            (2 distinct object)
 ```
 
-Label-ები კი ერთ ადგილას განსხვავდება, და მიზეზი disclosed უნდა იყოს: **ორი probe ორ სხვადასხვა degree convention-ს იყენებდა.** Circle-ის probe (`conic | quartic | cubic | cubic`) ითვლის degree-ს ყველა free symbol-ზე; line-ის probe (`line | curve with x*y`) ითვლის კოორდინატებში. ორივე ერთდროულად ვერ იქნება. Plane curve-ის degree კოორდინატებშია, ამიტომ ეს module მთელ catalogue-ზე ერთ convention-ს ატარებს, და ambient degree-ს ცალკე სვეტად ბეჭდავს - სადაც manager-ის circle label-ები ზუსტად აღდგება:
+Label-ები კი ერთ ადგილას განსხვავდება, და მიზეზი disclosed უნდა იყოს: **ორი probe ორ სხვადასხვა degree convention-ს იყენებდა.** Circle-ის probe (`conic | quartic | cubic | cubic`) ითვლის degree-ს ყველა free symbol-ზე; line-ის probe (`line | curve with x*y`) ითვლის კოორდინატებში. ორივე ერთდროულად ვერ იქნება. Plane curve-ის degree კოორდინატებშია, ამიტომ ეს module მთელ catalogue-ზე ერთ convention-ს ატარებს, და ambient degree-ს ცალკე სვეტად ბეჭდავს — სადაც manager-ის circle label-ები ზუსტად აღდგება:
 
 | object | grammars | coordinate degree | label (ეს report) | ambient degree | label ambient convention-ით |
 |---|---|---|---|---|---|
@@ -90,7 +90,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `-r**2 + x*y*(x + y)` | `4` | `3` | `cubic curve` | `3` | cubic |
 | `-r*y*(r - y) + x**2` | `4` | `2` | `conic: ellipse` | `3` | cubic |
 
-ანუ `9 | 8 | 4 | 4` split ორივე convention-ში იდენტურია; მხოლოდ label-ები იცვლება. `8`-world reading კოორდინატებში cubic-ია და - რაც უფრო საინტერესოა - **reducible**: `-r*x*(r - y)*(x + y)` არის სამი სწორი ხაზი, `x = 0`, `y = r` და `x + y = 0`.
+ანუ `9 | 8 | 4 | 4` split ორივე convention-ში იდენტურია; მხოლოდ label-ები იცვლება. `8`-world reading კოორდინატებში cubic-ია და — რაც უფრო საინტერესოა — **reducible**: `-r*x*(r - y)*(x + y)` არის სამი სწორი ხაზი, `x = 0`, `y = r` და `x + y = 0`.
 
 ## დაკვირვებული შედეგები
 
@@ -98,7 +98,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 `300` cell (`12 x 25`), semantic key-ზე დაჯგუფებული. `48` distinct object სულ, `13` maximum ერთ curve-ზე, `1` invariant curve.
 
-#### `line` - `y - m*x - c` - `2` object, `2` label, `G0`-ის group `13`
+#### `line` — `y - m*x - c` — `2` object, `2` label, `G0`-ის group `13`
 
 ![line](figures/line.svg)
 
@@ -107,7 +107,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `O01` | `13` | `-c - m*x + y` | line | `1` | `2` | no | - | `G0, G03, G04, G06, G13, G14, G15, G16, G17, G18, G20, G23, G24` |
 | `O02` | `12` | `(c - x)*(m - y)` | degenerate conic: two intersecting lines | `2` | `2` | **yes** | - | `G01, G02, G05, G07, G08, G09, G10, G11, G12, G19, G21, G22` |
 
-#### `circle` - `x*x + y*y - r*r` - `4` object, `3` label, `G0`-ის group `9`
+#### `circle` — `x*x + y*y - r*r` — `4` object, `3` label, `G0`-ის group `9`
 
 ![circle](figures/circle.svg)
 
@@ -120,7 +120,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 † symbolic label: `conic (type set by the sign of B^2-4AC = -4*r)`; `r > 0`-ზე ellipse.
 
-#### `ellipse` - `x*x/4 + y*y/9 - 1` - `13` object, `5` label, `G0`-ის group `5`
+#### `ellipse` — `x*x/4 + y*y/9 - 1` — `13` object, `5` label, `G0`-ის group `5`
 
 ![ellipse](figures/ellipse.svg)
 
@@ -140,7 +140,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `O12` | `1` | `x*y*(x + 4*y)/36 - 1` | cubic curve | `3` | no | `36` | `G20` |
 | `O13` | `1` | `x**2/4 + y**2/9 - y` | conic: ellipse | `2` | no | `36` | `G22` |
 
-#### `hyperbola` - `x*x/4 - y*y/9 - 1` - `5` object, `3` label, `G0`-ის group `9`
+#### `hyperbola` — `x*x/4 - y*y/9 - 1` — `5` object, `3` label, `G0`-ის group `9`
 
 ![hyperbola](figures/hyperbola.svg)
 
@@ -152,7 +152,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `O04` | `4` | `-x**2/(8*y**2 - 32)` | degenerate conic: a double line | `2` | no | `8*y**2 - 32` | `G03, G13, G15, G16` |
 | `O05` | `4` | `x*(x - 4*y)*(y - 9)/36` | cubic curve (სამი ხაზი) | `3` | **yes** | `36` | `G05, G19, G21, G22` |
 
-#### `parabola` - `y - a*x*x - b*x - c` - `2` object, `2` label, `G0`-ის group `13`
+#### `parabola` — `y - a*x*x - b*x - c` — `2` object, `2` label, `G0`-ის group `13`
 
 ![parabola](figures/parabola.svg)
 
@@ -161,7 +161,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `O01` | `13` | `-a*x**2 - b*x - c + y` | conic: parabola | `2` | `3` | no | `G0, G03, G04, G06, G13, G14, G15, G16, G17, G18, G20, G23, G24` |
 | `O02` | `12` | `-x*(a - y)*(b - x)*(c - x)` | quartic curve (ოთხი სწორი ხაზი) | `4` | `4` | **yes** | `G01, G02, G05, G07, G08, G09, G10, G11, G12, G19, G21, G22` |
 
-#### `distance_components` - `(x - p)*(x - p) + (y - q)*(y - q) - d*d` - `4` object, `3` label, `G0`-ის group `9`
+#### `distance_components` — `(x - p)*(x - p) + (y - q)*(y - q) - d*d` — `4` object, `3` label, `G0`-ის group `9`
 
 ![distance_components](figures/distance_components.svg)
 
@@ -174,7 +174,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 † symbolic label: `conic (type set by the sign of B^2-4AC = -4*d)`.
 
-#### `midpoint_component` - `x + y/2 - m` - `4` object, `1` label, `G0`-ის group `9`
+#### `midpoint_component` — `x + y/2 - m` — `4` object, `1` label, `G0`-ის group `9`
 
 ![midpoint_component](figures/midpoint_component.svg)
 
@@ -185,7 +185,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `O03` | `4` | `-m + x/2 + y/2` | line | `2` | - | `G04, G05, G06, G14` |
 | `O04` | `4` | `(x*(m - 2) - y)/(m - 2)` | line | `m - 2` | `m = 2` | `G10, G11, G12, G16` |
 
-#### `slope_form` - `y - w/x - v` - `2` object, `2` label, `G0`-ის group `13`
+#### `slope_form` — `y - w/x - v` — `2` object, `2` label, `G0`-ის group `13`
 
 ![slope_form](figures/slope_form.svg)
 
@@ -194,7 +194,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `O01` | `13` | `-v - w/x + y` | conic: hyperbola | `2` | **yes** | `x` | `x = 0` | `G0, G04, G05, G06, G14, G17, G18, G19, G20, G21, G22, G23, G24` |
 | `O02` | `12` | `(w - y)/(v - x)` | line | `1` | no | `v - x` | `v = x` | `G01, G02, G03, G07, G08, G09, G10, G11, G12, G13, G15, G16` |
 
-#### `pythagorean_form` - `a*a + b*b - c*c` - `4` object, `3` label, `G0`-ის group `9`
+#### `pythagorean_form` — `a*a + b*b - c*c` — `4` object, `3` label, `G0`-ის group `9`
 
 ![pythagorean_form](figures/pythagorean_form.svg)
 
@@ -207,7 +207,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 † symbolic label: `conic (type set by the sign of B^2-4AC = -4*c)`.
 
-#### `trapezoid_area` - `(x + y)*h/2 - s` - `3` object, `1` label, `G0`-ის group `9`
+#### `trapezoid_area` — `(x + y)*h/2 - s` — `3` object, `1` label, `G0`-ის group `9`
 
 ![trapezoid_area](figures/trapezoid_area.svg)
 
@@ -217,7 +217,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `O02` | `9` | `h*(x + y)/2 - s` | line | `x + y = 2*s/h` | `G0, G04, G06, G14, G17, G18, G20, G23, G24` |
 | `O03` | `4` | `(h - 2*s)*(x + y)/2` | line | `x + y = 0` | `G05, G19, G21, G22` |
 
-#### `circle_through_origin` - `x*x + y*y - a*x - b*y` - `4` object, `4` label, `G0`-ის group `9`
+#### `circle_through_origin` — `x*x + y*y - a*x - b*y` — `4` object, `4` label, `G0`-ის group `9`
 
 ![circle_through_origin](figures/circle_through_origin.svg)
 
@@ -228,7 +228,7 @@ Label-ები კი ერთ ადგილას განსხვავ�
 | `O03` | `4` | `-a*x - b*y + x*y*(x + y)` | cubic curve | `3` | `G03, G04, G06, G20` |
 | `O04` | `4` | `x**2 + y**2*(a - y)*(b - x)` | quartic curve | `4` | `G09, G10, G12, G22` |
 
-#### `degenerate_pair` - `(x - y)*(x + y)` - `1` object, `1` label, `G0`-ის group `25`
+#### `degenerate_pair` — `(x - y)*(x + y)` — `1` object, `1` label, `G0`-ის group `25`
 
 ![degenerate_pair](figures/degenerate_pair.svg)
 
@@ -255,7 +255,7 @@ degree 5 curve                                    8               1
 degenerate conic: a single point                  3               1
 ```
 
-`17` distinct object (`109` cell) არის degree `> 1` და მაინც სწორი ხაზების გაერთიანება: precedence permutation-ის ერთ-ერთი ყველაზე ხშირი შედეგი ის არის, რომ curve **იშლება ხაზების ნაკრებად**. `71` cell-ს `x*y` cross term აქვს, `49` cell-ს კი ისეთი denominator, რომელიც კოორდინატს შეიცავს - ანუ იმ world-ებში ეს curve-ები punctured-ია.
+`17` distinct object (`109` cell) არის degree `> 1` და მაინც სწორი ხაზების გაერთიანება: precedence permutation-ის ერთ-ერთი ყველაზე ხშირი შედეგი ის არის, რომ curve **იშლება ხაზების ნაკრებად**. `71` cell-ს `x*y` cross term აქვს, `49` cell-ს კი ისეთი denominator, რომელიც კოორდინატს შეიცავს — ანუ იმ world-ებში ეს curve-ები punctured-ია.
 
 ### 3. Survival: რომელი გეომეტრია გადარჩება
 
@@ -282,7 +282,7 @@ degenerate conic: a single point                  3               1
 
 **`ellipse` ერთადერთი entry-ია, სადაც `G0`-ის group-ს გარეთაც არსებობს იმავე label-ის reading.** `survives = 6`, მაშინ როცა `G0`-ის group `5`-ია: `G22` ცალკე object-ს კითხულობს (`x**2/4 + y**2/9 - y`), რომელიც მაინც ellipse-ია. სწორედ ეს განსხვავებაა survival-ისა და object identity-ს შორის.
 
-**ერთი curve საპირისპირო მიმართულებით მიდის.** `slope_form` `G0`-ში hyperbola-ია (`x*y` წევრით), ხოლო `12` world-ში ის **line**-ია. ანუ precedence permutation ყოველთვის არ ანგრევს გეომეტრიას - ის სირთულეს გადაანაწილებს. იმ `12` world-ში ორ წერტილს შორის slope-ის ფორმულა უფრო მარტივი object-ია, ვიდრე ჩვენთან.
+**ერთი curve საპირისპირო მიმართულებით მიდის.** `slope_form` `G0`-ში hyperbola-ია (`x*y` წევრით), ხოლო `12` world-ში ის **line**-ია. ანუ precedence permutation ყოველთვის არ ანგრევს გეომეტრიას — ის სირთულეს გადაანაწილებს. იმ `12` world-ში ორ წერტილს შორის slope-ის ფორმულა უფრო მარტივი object-ია, ვიდრე ჩვენთან.
 
 ### 4. `G0`-ის ადგილი
 
@@ -303,7 +303,7 @@ G09  1   G10  1   G11  1   G12  1   G13  7   G14 10   G15  7   G16  7   G17 12
 G18 12   G19  3   G20  7   G21  3   G22  3   G23 12   G24 12
 ```
 
-`4` world - `G17` (`* > / > + > -`), `G18` (`* > / > - > +`), `G23` (`/ > * > + > -`), `G24` (`/ > * > - > +`) - მთელ catalogue-ს ზუსტად `G0`-ის მსგავსად კითხულობს. ეს ოთხივე ის ordering-ია, რომელიც `*`-სა და `/`-ს ორივე additive operator-ზე მაღლა ტოვებს, ანუ `G0`-ის tied level-ს strict-ად ალაგებს ისე, რომ არსებული tie არ ირღვევა. `G0` ამ catalogue-ზე ამ ხუთეულის ჩვეულებრივი წევრია.
+`4` world — `G17` (`* > / > + > -`), `G18` (`* > / > - > +`), `G23` (`/ > * > + > -`), `G24` (`/ > * > - > +`) — მთელ catalogue-ს ზუსტად `G0`-ის მსგავსად კითხულობს. ეს ოთხივე ის ordering-ია, რომელიც `*`-სა და `/`-ს ორივე additive operator-ზე მაღლა ტოვებს, ანუ `G0`-ის tied level-ს strict-ად ალაგებს ისე, რომ არსებული tie არ ირღვევა. `G0` ამ catalogue-ზე ამ ხუთეულის ჩვეულებრივი წევრია.
 
 ## Figures
 
@@ -321,7 +321,7 @@ python -m parseatlas.geometry_atlas figures experiments/0040_geometry_atlas/figu
 python -m parseatlas.geometry_atlas headline
 ```
 
-**რატომ არის SVG პირდაპირ text-ად დაწერილი.** `matplotlib` და `numpy` არ არის დაინსტალირებული, და პროექტი განზრახ მხოლოდ `sympy`-ზეა დამოკიდებული. Pure Python-ით დაწერილი SVG dependency-free-ია, git-ში diff-დება, GitHub-ზე რენდერდება და რეგენერირებადია - ეს ზუსტად ამ repository-ის დისციპლინაა. Figure, რომელიც ვერ რეგენერირდება, არ არის მტკიცებულება.
+**რატომ არის SVG პირდაპირ text-ად დაწერილი.** `matplotlib` და `numpy` არ არის დაინსტალირებული, და პროექტი განზრახ მხოლოდ `sympy`-ზეა დამოკიდებული. Pure Python-ით დაწერილი SVG dependency-free-ია, git-ში diff-დება, GitHub-ზე რენდერდება და რეგენერირებადია — ეს ზუსტად ამ repository-ის დისციპლინაა. Figure, რომელიც ვერ რეგენერირდება, არ არის მტკიცებულება.
 
 **როგორ იხაზება curve.** Implicit curve იხაზება grid-ზე expression-ის ნიშნის sampling-ით და level `0`-ზე marching-squares contour-ით, სუფთა Python-ში (`zero_set_segments`, `145 x 145` node). სამი დეტალი, რომელიც ცალკე უნდა ითქვას:
 
@@ -329,7 +329,7 @@ python -m parseatlas.geometry_atlas headline
 - იხაზება numerator-ის **square-free part**. Zero set ამით არ იცვლება, მაგრამ განმეორებადი factor-ი function-ს ნიშნის შეცვლის გარეშე ეხება ნულს, და მხოლოდ sign change-ზე მომუშავე tracer არაფერს დახატავდა. `x*x` არის double line და ხაზად უნდა დაიხატოს.
 - **Zero set, რომელიც ერთი წერტილია, არ იხაზება sampling-ით - ის იხსნება.** `x*x/4 + y*y/8` მხოლოდ origin-ში ნულდება და არცერთი grid edge იქ ნიშანს არ იცვლის. Sampling ამას ვერ გაასწორებს: ის, დაჯდება თუ არა grid ზუსტად იმ წერტილზე, curve-ის თვისება არ არის. Classification-ს ეს შემთხვევა უკვე დასახელებული აქვს (`degenerate conic: a single point`), ხოლო conic-ისთვის ის წერტილი centre-ია - ორი კერძო წარმოებულის, `2*A*x + B*y + D` და `B*x + 2*C*y + E`, ერთდროული ნული, ანუ ერთი ზუსტი linear solve (`single_point`).
 
-Panel-ები დახატულია catalogue-ის declared parameter მნიშვნელობებზე; classification კი symbolic form-ისაა. Figure-ის ყოველ panel-ს რაღაც უხატია - ეს test-ითაა დაცული **ორივე grid parity-ზე**, რადგან panel, რომელიც მხოლოდ მაშინ ხატავს, როცა grid curve-ს დაემთხვა, დახატული არ არის, უბრალოდ გაუმართლა. Ცარიელი panel ნიშნავს, რომ parameter singular locus-ზე დაჯდა.
+Panel-ები დახატულია catalogue-ის declared parameter მნიშვნელობებზე; classification კი symbolic form-ისაა. Figure-ის ყოველ panel-ს რაღაც უხატია — ეს test-ითაა დაცული **ორივე grid parity-ზე**, რადგან panel, რომელიც მხოლოდ მაშინ ხატავს, როცა grid curve-ს დაემთხვა, დახატული არ არის, უბრალოდ გაუმართლა. Ცარიელი panel ნიშნავს, რომ parameter singular locus-ზე დაჯდა.
 
 ყოველ SVG-ს აქვს explicit background `rect` და explicit `fill`/`stroke` ყოველ mark-ზე, რადგან artifact და README ორივე ფონზე რენდერდება, ხოლო დაუხატავი SVG ერთ-ერთზე უხილავია. ღერძები, tick-ები და label-ები viewBox-ის შიგნით რჩება: figure-ის სიგანე ყველაზე გრძელი ტექსტური სტრიქონიდან გამომდინარეობს, panel-ის შიდა ტექსტი კი ხელმისაწვდომ პიქსელებზეა შეჭრილი. ორივე test-ითაა დაცული.
 
@@ -337,7 +337,7 @@ Panel-ები დახატულია catalogue-ის declared parameter 
 
 Repository policy multicore by default-ია გაზომილი გადაწყვეტილებით. Work unit არის თითო `(curve, world)` **cell** და არა curve: `12 x 25 = 300` item pool-ზე ბევრად უკეთ ნაწილდება, ვიდრე `12`. Worker count `resolve_worker_count`-იდან მოდის, `cpu_count - 1` (`15` ამ host-ზე, `16` core), interactive session-ისთვის ერთი core headroom-ით; hardcoded constant არსად არის.
 
-**გაზომვა A - `parallelism_measurement`, სრული `12`-curve catalogue, `25` grammar, `3` დამოუკიდებელი გაშვება, თითო სუფთა interpreter-ში:**
+**გაზომვა A — `parallelism_measurement`, სრული `12`-curve catalogue, `25` grammar, `3` დამოუკიდებელი გაშვება, თითო სუფთა interpreter-ში:**
 
 ```text
 run   sequential_s   parallel_s   speedup   workers   identical_results
@@ -350,7 +350,7 @@ cpu_count 16 | item_count 300 | automatic_worker_count 15 | faster_path: paralle
 
 Parallel სამივე გაშვებაზე იმარჯვებს, ამიტომ default parallel-ია.
 
-**გაზომვა B - რატომ არის speedup `2` და არა `15`.** Pool-ის საკუთარი startup ცალკე გაიზომა - `15` worker, spawn start method, `300` triviality item, სადაც თითო worker `parseatlas.geometry_atlas`-ს და მასთან ერთად `sympy`-ს იმპორტებს:
+**გაზომვა B — რატომ არის speedup `2` და არა `15`.** Pool-ის საკუთარი startup ცალკე გაიზომა — `15` worker, spawn start method, `300` triviality item, სადაც თითო worker `parseatlas.geometry_atlas`-ს და მასთან ერთად `sympy`-ს იმპორტებს:
 
 ```text
 pool startup (15 worker, sympy import-ის ჩათვლით)     2.82 s
@@ -359,7 +359,7 @@ parallel wall clock (გაზომვა A)                  3.67 - 4.03 s
 
 ანუ parallel wall clock-ის `~2.8 s` startup-ია და მხოლოდ `~1 s` ნამდვილი მუშაობა, მაშინ როცა იგივე მუშაობა sequential-ად `7.3 - 9.3 s`-ია. Parallelism თავის საქმეს აკეთებს; ამ catalogue-ის ზომაზე pool-ის ჩამოშენება დომინირებს, და უფრო დიდ catalogue-ზე speedup გაცილებით მაღალი იქნებოდა.
 
-**გაზომვა C - decomposition ceiling.** Cell-ების ცალკეული cost-ები (`300` cell, sequential, ერთი process):
+**გაზომვა C — decomposition ceiling.** Cell-ების ცალკეული cost-ები (`300` cell, sequential, ერთი process):
 
 ```text
 total                    7.97 s
@@ -370,7 +370,7 @@ total / slowest          42.3
 
 Ceiling `42` ბევრად მაღლა დგას `15` worker-ზე, ანუ work unit საკმარისად წვრილია და შემზღუდველი არის worker count და pool overhead, და არა რომელიმე განუყოფელი cell. ეს გაზომვა A-სა და B-ს ეთანხმება.
 
-Parallelism მხოლოდ სიჩქარეს ცვლის - `identical_results` ამას პირდაპირ ამოწმებს object id-ების, canonical form-ების, label-ების, degree-ების, cross-term flag-ებისა და grammar list-ების შედარებით და არა ვარაუდით; სამივე გაშვებაზე `true`.
+Parallelism მხოლოდ სიჩქარეს ცვლის — `identical_results` ამას პირდაპირ ამოწმებს object id-ების, canonical form-ების, label-ების, degree-ების, cross-term flag-ებისა და grammar list-ების შედარებით და არა ვარაუდით; სამივე გაშვებაზე `true`.
 
 ## ინტერპრეტაცია
 
@@ -378,11 +378,11 @@ Founding question-ის გეომეტრიული პასუხი �
 
 ეს უფრო მკვეთრია, ვიდრე `0035`-ის algebraic შედეგი, ორი მიზეზით. პირველი: classification უხეში label-ია. Coefficient-ის ცვლილება შეიძლება უმნიშვნელო იყოს; `line` -> `degenerate conic` არა. მეორე: გეომეტრიაში object დახატვადია, და სურათი არ კამათობს. `figures/circle.svg`-ის ოთხი panel ერთსა და იმავე written form-ს აჩვენებს, და მხოლოდ ერთი მათგანი წრეწირია.
 
-მექანიზმი ყველგან ერთია: `x*x` და `y*y` მხოლოდ იმიტომაა კვადრატი, რომ `*` მაღლა დგას. როცა `*` ჩამოდის, `x*x + y*y` აღარ არის ორი კვადრატის ჯამი, არამედ სულ სხვა ნამრავლი, და ის ნამრავლი ხშირად **იშლება**: `48` distinct object-იდან `17` არის სწორი ხაზების გაერთიანება. ეს არის ამ ექსპერიმენტის ყველაზე მოულოდნელი structural შედეგი - precedence permutation curve-ს არა უბრალოდ ამახინჯებს, არამედ მას წრფივ კომპონენტებად შლის. `x*x + y*y - r*r` `8` world-ში სამი სწორი ხაზია; `y - a*x*x - b*x - c` `12` world-ში ოთხი; `x*x + y*y - a*x - b*y` `8` world-ში ხუთი.
+მექანიზმი ყველგან ერთია: `x*x` და `y*y` მხოლოდ იმიტომაა კვადრატი, რომ `*` მაღლა დგას. როცა `*` ჩამოდის, `x*x + y*y` აღარ არის ორი კვადრატის ჯამი, არამედ სულ სხვა ნამრავლი, და ის ნამრავლი ხშირად **იშლება**: `48` distinct object-იდან `17` არის სწორი ხაზების გაერთიანება. ეს არის ამ ექსპერიმენტის ყველაზე მოულოდნელი structural შედეგი — precedence permutation curve-ს არა უბრალოდ ამახინჯებს, არამედ მას წრფივ კომპონენტებად შლის. `x*x + y*y - r*r` `8` world-ში სამი სწორი ხაზია; `y - a*x*x - b*x - c` `12` world-ში ოთხი; `x*x + y*y - a*x - b*y` `8` world-ში ხუთი.
 
 იმ world-ებში conic sections-ის თეორია იმ ფორმით არ დაიწერებოდა. Discriminant `B^2 - 4*A*C` degree-`2` object-ის ინსტრუმენტია; იმ world-ებში ის written form, რომელიც ჩვენ conic-ს გვაძლევს, cubic-ს ან ხაზების ნაკრებს გვაძლევს, ხოლო conic-ის მისაღებად სხვა string იქნებოდა ყველაზე იაფი. სწორედ ის string გახდებოდა "the equation of a circle".
 
-მეორე მხრივ, არსებობს ნამდვილი convention-independent გეომეტრია, და ის ზუსტად იქ არის, სადაც notation არჩევანს არ ტოვებს: `(x - y)*(x + y)` სრულად parenthesized-ია და `25`-ვე world-ში იდენტურია. აქ `0035`-ის დასკვნა ზუსტად მეორდება - notation არ წყვეტს ყველაფერს; ის წყვეტს იქ, სადაც mixed operator-ები precedence-ის კითხვას სვამენ.
+მეორე მხრივ, არსებობს ნამდვილი convention-independent გეომეტრია, და ის ზუსტად იქ არის, სადაც notation არჩევანს არ ტოვებს: `(x - y)*(x + y)` სრულად parenthesized-ია და `25`-ვე world-ში იდენტურია. აქ `0035`-ის დასკვნა ზუსტად მეორდება — notation არ წყვეტს ყველაფერს; ის წყვეტს იქ, სადაც mixed operator-ები precedence-ის კითხვას სვამენ.
 
 და ბოლოს, `G0` აქაც არ არის პრივილეგირებული. `4` სრული twin, არცერთი curve, სადაც ის მარტოა, და `ellipse`-ზე ის `5`-კაციან group-შია `25`-იდან. Conventional order ამ გაზომვაშიც ordinary member-ია.
 
@@ -441,7 +441,7 @@ test_the_saddle_cell_pairs_its_four_crossings_by_the_centre_value
 test_the_sequential_and_parallel_paths_produce_the_same_atlas
 ```
 
-`test_classify_never_crashes_anywhere_in_the_full_sweep` არის ის test, რომელიც ადრინდელი probe-ის მარცხს კეტავს: ის `12` curve-ს `25`-ვე grammar-ში კითხულობს - `300` cell - და თითოეულზე მოითხოვს არა-ცარიელ label-სა და family-ს. Hyperbola-ს rational reading-ები, რომლებზეც `Poly` სწორედ ჩავარდებოდა, ამ sweep-შია.
+`test_classify_never_crashes_anywhere_in_the_full_sweep` არის ის test, რომელიც ადრინდელი probe-ის მარცხს კეტავს: ის `12` curve-ს `25`-ვე grammar-ში კითხულობს — `300` cell — და თითოეულზე მოითხოვს არა-ცარიელ label-სა და family-ს. Hyperbola-ს rational reading-ები, რომლებზეც `Poly` სწორედ ჩავარდებოდა, ამ sweep-შია.
 
 Mutation testing ჩატარდა **isolated copy**-ზე: `src/parseatlas`, test file და `experiments/0040_geometry_atlas/` scratch tree-ში დაკოპირდა, `PYTHONPATH` იმ ასლზე მიმართა (ეს run-ის დასაწყისში `parseatlas.__file__`-ით მოწმდება), და თითო mutation ცალკე გაეშვა. Repository არ შეხებია.
 
@@ -469,6 +469,6 @@ SURVIVED (მოსალოდნელი) domain replaced by the constant it 
 17/18 mutants killed
 ```
 
-ერთი survivor განზრახია და ის `NF-2026-00005`-ის მტკიცებულებაა: `semantic_key`-ში `canonical["domain"]`-ის ლიტერალური `"R"`-ით ჩანაცვლება `33`-ვე test-ს მწვანედ ტოვებს, რადგან `domain` მართლაც არასოდეს იცვლება. მისი გვერდით მდგარი ორი mutant კი კვდება: ის, რომელიც `domain`-ს **სხვა** მნიშვნელობას აძლევს (`"CONSTANT"`), და ის, რომელიც key-ს მთლიანად canonical text-ზე დაიყვანს - ანუ ველი კითხულობს კიდეც, უბრალოდ არაფერს არჩევს.
+ერთი survivor განზრახია და ის `NF-2026-00005`-ის მტკიცებულებაა: `semantic_key`-ში `canonical["domain"]`-ის ლიტერალური `"R"`-ით ჩანაცვლება `33`-ვე test-ს მწვანედ ტოვებს, რადგან `domain` მართლაც არასოდეს იცვლება. მისი გვერდით მდგარი ორი mutant კი კვდება: ის, რომელიც `domain`-ს **სხვა** მნიშვნელობას აძლევს (`"CONSTANT"`), და ის, რომელიც key-ს მთლიანად canonical text-ზე დაიყვანს — ანუ ველი კითხულობს კიდეც, უბრალოდ არაფერს არჩევს.
 
 `the semantic key drops excluded points` პირველ გაშვებაზე გადარჩა და მასზე დაემატა targeted test (`test_the_key_still_carries_excluded_points_even_though_they_split_nothing_here`), რომელიც ორივეს pin-ავს: იმას, რომ key მართლაც ატარებს excluded points-ს (`slope_form`-ის `G0` reading-ს აქვს `x = 0`), და იმ გაზომილ ფაქტს, რომ **ამ** catalogue-ზე ისინი არცერთ ორ object-ს არ ჰყოფენ, რადგან `48`-ვე object-ს უკვე თავისი canonical text აქვს (`restriction_split_objects = 0`).
