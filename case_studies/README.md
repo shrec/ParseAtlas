@@ -9,6 +9,12 @@ imported the case study holds a claim, not a result.
 The directory therefore exists to make one distinction impossible to blur: **what was measured
 here, and what was reported to us.**
 
+## Documents in this directory
+
+- [RECORD_SCHEMA.md](RECORD_SCHEMA.md) — the normative record format and the admission gate.
+- [Modular arithmetic and carry chains](modular_arithmetic_guidance.md) · [მოდულური არითმეტიკა და carry chain-ები](modular_arithmetic_guidance.ka.md) — **guidance, not a record.** What this project's results do and do not say about carry-chain and redundant-representation work. Every statement is labelled `MEASURED HERE`, `PRIOR ART` or `NOT ESTABLISHED`, so that a reader working in another codebase knows which claims are load-bearing. It carries no measurement of any external system.
+- [ultrafast_secp256k1/](ultrafast_secp256k1/README.md) — the intake for the first case study.
+
 ---
 
 ## The two research modes
