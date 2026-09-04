@@ -66,6 +66,22 @@ For each field and each world: which side of a law is parenthesis-free, which fa
 
 **ANSWERED by 0037, and the answer is neither of the two options as posed.** Over 33 named laws in four fields, `G0` is **3rd of 25** on the summed workload, **1st** in algebra and in linear algebra, and never worse than **6th**. Exactly two grammars beat it, and the better of them — `G18` = `* / - +` — is not a rearrangement but **our own grouping with the `+`/`-` tie broken in favour of `-`**. So the convention we inherited is neither a mediocre compromise nor an optimum: it is a near-optimum whose one improvement is a *tie-break*, not a regrouping. That is a stronger result than either branch of the original question, and it is why the 11th-of-25 figure from 0034 and the 3rd-of-25 figure here do not conflict — **how good the convention looks depends on which mathematics it is asked to write**, and that dependence is itself the measurement.
 
+**T31. REACHABILITY OUTRANKS COST, and the corpus already contains a case where they disagree.** Set by the owner on 2026-09-04, and it changes how every world in this project is to be ranked:
+
+> A task can be **unreachable** in representation A and **reachable** in representation B. When that happens, B wins — even if B is slower, dearer to write, and worse on every cost measure we have. A slow solution beats no solution, and no amount of bracket-counting expresses that.
+
+Cost is a *total* order over the 25 worlds and it is the easy thing to measure, which is why the project reached for it first. Reachability is a *partial* order, it is the thing that actually decides whether a problem can be attacked at all, and every ranking in 0034 and 0037 is silent about it.
+
+**The corpus already refutes the cost ranking on its own terms.** Of the seven properties in 0038, exactly one is not manifest everywhere: `factor_structure` is manifest in **20 of 25 worlds**, and the five blind ones are
+
+```text
+G0   G15   G16   G18   G24
+```
+
+Now compare that against 0037's cost podium — `G18` first, `G16` second, `G0` third. **All three of the cheapest grammars to write mathematics in are among the five that cannot see factorisation at all.** Optimising for notational cost selects precisely the conventions that are blind to a structure the other twenty display. That is not a trade discovered by argument; it is two independent measurements pointing opposite ways, and it is the sharpest existing evidence for T31.
+
+The consequence for the routing work: a fragment router that ranks worlds by cost will systematically route away from the worlds that can see factor structure. **Reachability must be checked first and cost used only to break ties among the worlds that can do the job at all.** *MEASURED — 0037 × 0038, and the direct subject of 0043.*
+
 **0038 adds the half that cost cannot see.** A cheaper writing is not thereby a more informative one. Of the corpus objects carrying more than one true property, **no world makes them all manifest at once**; the constant term and the roots are never legible together across 850 cells, and nothing in the shape rules forbids it — the emptiness is measured, not defined. `G0` ties `G17` for the most manifest properties overall, so on *this* axis the conventional convention is first rather than third. Cost and visibility are separate orderings of the same 25 worlds.
 
 ### How the existing work serves it
@@ -424,6 +440,16 @@ products                   direct             vs  sum of logarithms
 
 Each has a classical decode map, a real structural cost difference, and none of them requires anything outside general mathematics. *OPEN — Phase 14 exit gates.*
 
+### Group G — Generation 2 grammar space, cognitive cost, and non-commutative algebras
+
+**T25. Generation 2: Exponentiation dynamics and the 5-operator space.** Adding right-associative exponentiation (`^`) expands the strict grammar registry from `4! = 24` to `5! = 120` orders. Does the conventional grammar `G0` retain its top-tier compromise ranking across polynomial, transcendental, and physics formulas when `^` binds tighter than `*` versus looser? *HYPOTHESIS — Phase 15.*
+
+**T26. Juxtaposition and unary interaction create non-tree priority conflicts.** In real mathematical practice, implicit multiplication (juxtaposition, e.g. `2x`, `1/2x`) binds tighter than explicit `*` or `/`, while unary minus (`-x^2`) conflicts with binary `-`. These interactions cannot be captured by a single flat binary operator precedence and require tiered syntax layers. *JUSTIFIED — Phase 15.*
+
+**T27. Cognitive cost is governed by parse-stack depth and chunking, not parenthesis count alone.** Direction B currently measures notational cost solely via parenthesis count. But human readability and working-memory load correlate with the maximum Shunting-yard stack depth during left-to-right evaluation and visual chunking boundaries. A notation with fewer parentheses can impose a higher working-memory burden if it forces deep operator postponement. *HYPOTHESIS — Phase 16.*
+
+**T28. Non-commutative and multi-type algebras invert classical precedence invariants.** For matrix, vector, and exterior algebras ($A B \neq B A$, cross products, tensor contractions), the cost and readability of identities diverge fundamentally from scalar algebra. Commutativity-dependent identities vanish, and operator type-checking bounds valid parenthesizations independently of precedence. *OPEN — Phase 17.*
+
 ## A standing caveat on negative results
 
 **A structure invisible in the representations we searched is not thereby absent.**
@@ -590,6 +616,49 @@ Exit gate: every optimization has a proof obligation and an adversarial test sui
 - Tag releases only after all phase gates and full validation pass.
 
 Exit gate: an external researcher can reproduce the reported tables from a clean checkout.
+
+## Phase 14: The Region Model & Autonomous Representation Engine
+
+- Implement the formal `Region = (inputs, state, operations, outputs, invariants)` abstraction.
+- Implement the decode obligation relation `decode(R2(x')) = R1(x)` for cross-encoding representation transformations.
+- Build canonical mathematical target benchmarks:
+  - polynomial evaluation (monomial vs Horner vs Chebyshev);
+  - rational arithmetic with carry-pair (numerator, denominator) vs single division;
+  - sequences (closed form vs recurrence vs matrix exponentiation);
+  - rational functions (single expression vs partial-fraction decomposition).
+- Implement Region-level cost selection accounting for amortized loop overhead, register pressure, and dataflow dependency chains.
+- Test Rediscovery Gate and Generalisation Gate (T24).
+
+Exit gate: the engine independently rediscovers at least one known representation transformation on an ordinary mathematical benchmark without that transformation named in the search specification.
+
+## Phase 15: Generation 2 Language & Exponentiation Dynamics
+
+- Expand the grammar space to 5 operators: `+ - * / ^`.
+- Support right associativity for `^` alongside left associativity for arithmetic operators.
+- Register all `5! = 120` strict precedence grammars plus conventional tied control grammars.
+- Incorporate unary minus and juxtaposition rules (`2x`, `1/2x`) via tiered precedence layers.
+- Extend Direction B domain-worlds corpus with exponential laws, power series, and physics formulas (kinetic energy, gravitational potentials).
+- Evaluate `G0`'s ranking across the 120-world space to test whether its near-optimal compromise status survives.
+
+Exit gate: complete ranking of all 120 strict grammars and conventional tied controls on the extended exponential/polynomial workload.
+
+## Phase 16: Cognitive Cost & Human Parse-Stack Ergonomics
+
+- Define quantitative metrics for cognitive notational cost: maximum operator stack depth during left-to-right scanning, visual chunking entropy, and lookahead requirements.
+- Compare parenthesis minimization with stack-depth minimization across all registered grammars.
+- Measure which grammars minimize human working-memory burden versus textual character count.
+- Validate cognitive cost model against classical pedagogical formula progressions (elementary algebra through calculus).
+
+Exit gate: cognitive cost model implemented, benchmarked against human readability metrics, and published as a dual-axis ranking alongside parenthesis cost.
+
+## Phase 17: Non-Commutative Algebras & Matrix-Tensor Notations
+
+- Introduce non-commutative multiplication ($A B \neq B A$).
+- Add matrix and vector operations: transpose, determinant, trace, matrix inverse, vector dot and cross products.
+- Measure notational cost and manifest properties of canonical linear algebra and quantum mechanical identities (Dirac notation, commutators $[A, B] = AB - BA$).
+- Characterize how non-commutativity restricts the reachable AST space.
+
+Exit gate: representation cost atlas for non-commutative algebraic identities across the grammar space.
 
 The project begins with operator-precedence permutations and then expands toward a broader search over mathematical representations, equivalence classes, invariants, and computational cost.
 
@@ -1592,6 +1661,22 @@ Introduce modular arithmetic and proof-preserving transformations.
 ## M8 — secp256k1 primitive experiment
 
 Run the first real benchmark comparing equivalent representations of a cryptographic primitive.
+
+## M9 — Autonomous Region Engine (Phase 14)
+
+Pass the T24 Rediscovery Gate on classical polynomial, sequence, and rational arithmetic benchmarks without named transformations.
+
+## M10 — Generation 2 5-Operator Precedence Atlas (Phase 15)
+
+Enumerate the 120-world precedence space with exponentiation and evaluate whether `G0` preserves its top-tier compromise ranking.
+
+## M11 — Cognitive Parse-Stack Model (Phase 16)
+
+Deliver the working-memory stack-depth cost metric alongside parenthesis count across all grammar worlds.
+
+## M12 — Non-Commutative Algebra Atlas (Phase 17)
+
+Map matrix and tensor expression grammars under non-commutative operator orders and operator-typing constraints.
 
 ---
 
