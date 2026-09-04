@@ -6,6 +6,7 @@ This directory contains the publication-facing documentation for ParseAtlas.
 
 - [Research methodology](research-methodology.md): experimental protocol, evidence levels, and reproducibility requirements.
 - [Publication outline](publication-outline.md): a proposed structure for a future research paper.
+- [Roadmap completion audit](roadmap-audit.md) · [Roadmap-ის დასრულების აუდიტი](roadmap-audit.ka.md): which experiments bear on which phase, and what remains before the roadmap is finished. Every exit gate is marked UNVERIFIED unless a card discharged it — mapping an experiment to a phase is not the same as checking the gate.
 - [Experiment 0001 report](../experiments/0001_affine_functions/REPORT.md): the first executable result.
 - [Experiment 0002 report](../experiments/0002_outer_function_atlas/REPORT.md): outer-function behavior, periods, and domain metadata.
 - [Experiment 0003 report](../experiments/0003_quadratic_properties/REPORT.md): degree, roots, discriminant, vertex, and critical-point analysis.
