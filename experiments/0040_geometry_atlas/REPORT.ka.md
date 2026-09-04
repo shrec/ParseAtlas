@@ -100,7 +100,14 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 #### `line` — `y - m*x - c` — `2` object, `2` label, `G0`-ის group `13`
 
+> **GitHub არ არენდერებს Markdown-ში ჩაშენებულ SVG-ს.** ქვემოთ ყოველი ნახაზი ორჯერაა მოცემული:
+> სურათად, რომელსაც Markdown-ის მაჩვენებლების და რედაქტორების უმეტესობა ადგილზევე აჩვენებს, და
+> ბმულად, რომელიც ფაილს ხსნის იქ, სადაც GitHub მას არენდერებს. არტეფაქტი ფაილია; ორივე ფორმა
+> ერთსა და იმავეზე მიუთითებს.
+
 ![line](figures/line.svg)
+
+გახსენი [`figures/line.svg`](figures/line.svg)
 
 | object | worlds | canonical reading | classification | deg | ambient | `x*y` | denominator | grammars |
 |---|---|---|---|---|---|---|---|---|
@@ -110,6 +117,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 #### `circle` — `x*x + y*y - r*r` — `4` object, `3` label, `G0`-ის group `9`
 
 ![circle](figures/circle.svg)
+
+გახსენი [`figures/circle.svg`](figures/circle.svg)
 
 | object | worlds | canonical reading | classification | deg | ambient | `x*y` | grammars |
 |---|---|---|---|---|---|---|---|
@@ -123,6 +132,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 #### `ellipse` — `x*x/4 + y*y/9 - 1` — `13` object, `5` label, `G0`-ის group `5`
 
 ![ellipse](figures/ellipse.svg)
+
+გახსენი [`figures/ellipse.svg`](figures/ellipse.svg)
 
 | object | worlds | canonical reading | classification | deg | `x*y` | denominator | grammars |
 |---|---|---|---|---|---|---|---|
@@ -144,6 +155,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 ![hyperbola](figures/hyperbola.svg)
 
+გახსენი [`figures/hyperbola.svg`](figures/hyperbola.svg)
+
 | object | worlds | canonical reading | classification | deg | `x*y` | denominator | grammars |
 |---|---|---|---|---|---|---|---|
 | `O01` | `9` | `x**2/4 - y**2/9 - 1` | conic: hyperbola | `2` | no | `36` | `G0, G04, G06, G14, G17, G18, G20, G23, G24` |
@@ -156,6 +169,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 ![parabola](figures/parabola.svg)
 
+გახსენი [`figures/parabola.svg`](figures/parabola.svg)
+
 | object | worlds | canonical reading | classification | deg | ambient | `x*y` | grammars |
 |---|---|---|---|---|---|---|---|
 | `O01` | `13` | `-a*x**2 - b*x - c + y` | conic: parabola | `2` | `3` | no | `G0, G03, G04, G06, G13, G14, G15, G16, G17, G18, G20, G23, G24` |
@@ -164,6 +179,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 #### `distance_components` — `(x - p)*(x - p) + (y - q)*(y - q) - d*d` — `4` object, `3` label, `G0`-ის group `9`
 
 ![distance_components](figures/distance_components.svg)
+
+გახსენი [`figures/distance_components.svg`](figures/distance_components.svg)
 
 | object | worlds | canonical reading | classification | deg | ambient | `x*y` | grammars |
 |---|---|---|---|---|---|---|---|
@@ -178,6 +195,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 ![midpoint_component](figures/midpoint_component.svg)
 
+გახსენი [`figures/midpoint_component.svg`](figures/midpoint_component.svg)
+
 | object | worlds | canonical reading | classification | denominator | excluded points | grammars |
 |---|---|---|---|---|---|---|
 | `O01` | `9` | `-m + x + y/2` | line | `2` | - | `G0, G17, G18, G19, G20, G21, G22, G23, G24` |
@@ -189,6 +208,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 ![slope_form](figures/slope_form.svg)
 
+გახსენი [`figures/slope_form.svg`](figures/slope_form.svg)
+
 | object | worlds | canonical reading | classification | deg | `x*y` | denominator | excluded | grammars |
 |---|---|---|---|---|---|---|---|---|
 | `O01` | `13` | `-v - w/x + y` | conic: hyperbola | `2` | **yes** | `x` | `x = 0` | `G0, G04, G05, G06, G14, G17, G18, G19, G20, G21, G22, G23, G24` |
@@ -197,6 +218,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 #### `pythagorean_form` — `a*a + b*b - c*c` — `4` object, `3` label, `G0`-ის group `9`
 
 ![pythagorean_form](figures/pythagorean_form.svg)
+
+გახსენი [`figures/pythagorean_form.svg`](figures/pythagorean_form.svg)
 
 | object | worlds | canonical reading | classification | deg | ambient | cross | grammars |
 |---|---|---|---|---|---|---|---|
@@ -211,6 +234,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 
 ![trapezoid_area](figures/trapezoid_area.svg)
 
+გახსენი [`figures/trapezoid_area.svg`](figures/trapezoid_area.svg)
+
 | object | worlds | canonical reading | classification | რომელი ხაზი | grammars |
 |---|---|---|---|---|---|
 | `O01` | `12` | `-h*(x + y)/(s - 2)` | line | `x + y = 0` | `G01, G02, G03, G07, G08, G09, G10, G11, G12, G13, G15, G16` |
@@ -220,6 +245,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 #### `circle_through_origin` — `x*x + y*y - a*x - b*y` — `4` object, `4` label, `G0`-ის group `9`
 
 ![circle_through_origin](figures/circle_through_origin.svg)
+
+გახსენი [`figures/circle_through_origin.svg`](figures/circle_through_origin.svg)
 
 | object | worlds | canonical reading | classification | deg | grammars |
 |---|---|---|---|---|---|
@@ -231,6 +258,8 @@ Label-ები კი ერთ ადგილას განსხვავ�
 #### `degenerate_pair` — `(x - y)*(x + y)` — `1` object, `1` label, `G0`-ის group `25`
 
 ![degenerate_pair](figures/degenerate_pair.svg)
+
+გახსენი [`figures/degenerate_pair.svg`](figures/degenerate_pair.svg)
 
 | object | worlds | canonical reading | classification | grammars |
 |---|---|---|---|---|

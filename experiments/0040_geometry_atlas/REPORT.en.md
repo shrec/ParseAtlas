@@ -100,7 +100,13 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 
 #### `line` — `y - m*x - c` — `2` objects, `2` labels, `G0`'s group `13`
 
+> **GitHub does not render SVG embedded in Markdown.** Each figure below is given twice: as an
+> image, which most Markdown viewers and editors display inline, and as a link, which opens the
+> file where GitHub does render it. The file is the artefact; both forms point at the same one.
+
 ![line](figures/line.svg)
+
+open [`figures/line.svg`](figures/line.svg)
 
 | object | worlds | canonical reading | classification | deg | ambient | `x*y` | denominator | grammars |
 |---|---|---|---|---|---|---|---|---|
@@ -110,6 +116,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 #### `circle` — `x*x + y*y - r*r` — `4` objects, `3` labels, `G0`'s group `9`
 
 ![circle](figures/circle.svg)
+
+open [`figures/circle.svg`](figures/circle.svg)
 
 | object | worlds | canonical reading | classification | deg | ambient | `x*y` | grammars |
 |---|---|---|---|---|---|---|---|
@@ -123,6 +131,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 #### `ellipse` — `x*x/4 + y*y/9 - 1` — `13` objects, `5` labels, `G0`'s group `5`
 
 ![ellipse](figures/ellipse.svg)
+
+open [`figures/ellipse.svg`](figures/ellipse.svg)
 
 | object | worlds | canonical reading | classification | deg | `x*y` | denominator | grammars |
 |---|---|---|---|---|---|---|---|
@@ -144,6 +154,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 
 ![hyperbola](figures/hyperbola.svg)
 
+open [`figures/hyperbola.svg`](figures/hyperbola.svg)
+
 | object | worlds | canonical reading | classification | deg | `x*y` | denominator | grammars |
 |---|---|---|---|---|---|---|---|
 | `O01` | `9` | `x**2/4 - y**2/9 - 1` | conic: hyperbola | `2` | no | `36` | `G0, G04, G06, G14, G17, G18, G20, G23, G24` |
@@ -156,6 +168,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 
 ![parabola](figures/parabola.svg)
 
+open [`figures/parabola.svg`](figures/parabola.svg)
+
 | object | worlds | canonical reading | classification | deg | ambient | `x*y` | grammars |
 |---|---|---|---|---|---|---|---|
 | `O01` | `13` | `-a*x**2 - b*x - c + y` | conic: parabola | `2` | `3` | no | `G0, G03, G04, G06, G13, G14, G15, G16, G17, G18, G20, G23, G24` |
@@ -164,6 +178,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 #### `distance_components` — `(x - p)*(x - p) + (y - q)*(y - q) - d*d` — `4` objects, `3` labels, `G0`'s group `9`
 
 ![distance_components](figures/distance_components.svg)
+
+open [`figures/distance_components.svg`](figures/distance_components.svg)
 
 | object | worlds | canonical reading | classification | deg | ambient | `x*y` | grammars |
 |---|---|---|---|---|---|---|---|
@@ -178,6 +194,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 
 ![midpoint_component](figures/midpoint_component.svg)
 
+open [`figures/midpoint_component.svg`](figures/midpoint_component.svg)
+
 | object | worlds | canonical reading | classification | denominator | excluded points | grammars |
 |---|---|---|---|---|---|---|
 | `O01` | `9` | `-m + x + y/2` | line | `2` | - | `G0, G17, G18, G19, G20, G21, G22, G23, G24` |
@@ -189,6 +207,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 
 ![slope_form](figures/slope_form.svg)
 
+open [`figures/slope_form.svg`](figures/slope_form.svg)
+
 | object | worlds | canonical reading | classification | deg | `x*y` | denominator | excluded | grammars |
 |---|---|---|---|---|---|---|---|---|
 | `O01` | `13` | `-v - w/x + y` | conic: hyperbola | `2` | **yes** | `x` | `x = 0` | `G0, G04, G05, G06, G14, G17, G18, G19, G20, G21, G22, G23, G24` |
@@ -197,6 +217,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 #### `pythagorean_form` — `a*a + b*b - c*c` — `4` objects, `3` labels, `G0`'s group `9`
 
 ![pythagorean_form](figures/pythagorean_form.svg)
+
+open [`figures/pythagorean_form.svg`](figures/pythagorean_form.svg)
 
 | object | worlds | canonical reading | classification | deg | ambient | cross | grammars |
 |---|---|---|---|---|---|---|---|
@@ -211,6 +233,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 
 ![trapezoid_area](figures/trapezoid_area.svg)
 
+open [`figures/trapezoid_area.svg`](figures/trapezoid_area.svg)
+
 | object | worlds | canonical reading | classification | which line | grammars |
 |---|---|---|---|---|---|
 | `O01` | `12` | `-h*(x + y)/(s - 2)` | line | `x + y = 0` | `G01, G02, G03, G07, G08, G09, G10, G11, G12, G13, G15, G16` |
@@ -220,6 +244,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 #### `circle_through_origin` — `x*x + y*y - a*x - b*y` — `4` objects, `4` labels, `G0`'s group `9`
 
 ![circle_through_origin](figures/circle_through_origin.svg)
+
+open [`figures/circle_through_origin.svg`](figures/circle_through_origin.svg)
 
 | object | worlds | canonical reading | classification | deg | grammars |
 |---|---|---|---|---|---|
@@ -231,6 +257,8 @@ So the `9 | 8 | 4 | 4` split is identical under both conventions; only the label
 #### `degenerate_pair` — `(x - y)*(x + y)` — `1` object, `1` label, `G0`'s group `25`
 
 ![degenerate_pair](figures/degenerate_pair.svg)
+
+open [`figures/degenerate_pair.svg`](figures/degenerate_pair.svg)
 
 | object | worlds | canonical reading | classification | grammars |
 |---|---|---|---|---|
