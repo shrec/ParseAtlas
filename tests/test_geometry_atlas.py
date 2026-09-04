@@ -36,13 +36,20 @@ from parseatlas.geometry_atlas import (
 from parseatlas.grammar import all_grammars, control_grammar
 from parseatlas.parser import parse
 
-REPORT = os.path.join(
+#: Both language sides, because the documentation policy makes them equally normative: a figure
+#: referenced by one report and missing from disk is a defect no matter which language names it.
+#: The Georgian side was renamed from REPORT.md to REPORT.ka.md when 0040 was found to postdate the
+#: policy's cutover, which is why this is a tuple rather than a path.
+_EXPERIMENT = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "experiments",
     "0040_geometry_atlas",
-    "REPORT.md",
 )
-FIGURES = os.path.join(os.path.dirname(REPORT), "figures")
+REPORTS = (
+    os.path.join(_EXPERIMENT, "REPORT.ka.md"),
+    os.path.join(_EXPERIMENT, "REPORT.en.md"),
+)
+FIGURES = os.path.join(_EXPERIMENT, "figures")
 SVG = "{http://www.w3.org/2000/svg}"
 
 # A four-curve slice that still crosses the parallel threshold: 4 * 25 = 100 cells.
@@ -427,10 +434,19 @@ def _assert_text_stays_inside(root, name):
         assert 0 <= float(text.get("y")) <= height, f"{name}: text sits outside the viewBox"
 
 
-def _referenced_figures():
-    with open(REPORT, encoding="utf-8") as handle:
-        text = handle.read()
-    return sorted(set(re.findall(r"figures/([A-Za-z0-9_]+\.svg)", text)))
+def _referenced_figures(path=None):
+    """Figures referenced by one report, or by both when no path is given.
+
+    Both sides must reference the same set: a figure dropped from one language is a divergence
+    the bilingual rule forbids, and asserting the union alone would hide it.
+    """
+    paths = (path,) if path else REPORTS
+    seen = []
+    for candidate in paths:
+        with open(candidate, encoding="utf-8") as handle:
+            seen.append(sorted(set(re.findall(r"figures/([A-Za-z0-9_]+\.svg)", handle.read()))))
+    assert len(set(map(tuple, seen))) == 1, "the two reports reference different figures"
+    return seen[0]
 
 
 def test_every_svg_the_report_references_exists_and_is_not_empty():
