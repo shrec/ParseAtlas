@@ -15,7 +15,30 @@ parsing the written form with :func:`parseatlas.parser.parse`, canonicalizing it
 ``(canonical expression, domain, excluded points)`` - the same triple
 :func:`parseatlas.analyze.analyze_expression` and :func:`parseatlas.corpus_matrix.expression_classes`
 use, so two worlds count as sharing an object only when they agree on all three, never on canonical
-text alone.
+text alone. One disclosure about that key: :func:`parseatlas.canonical.canonicalize` writes the
+literal string ``"R"`` into ``domain`` for every expression it ever produces, so the component that
+actually discriminates is ``(canonical expression, excluded points)`` and ``domain`` is a fixed
+declaration of the analysis setting rather than a measured field. The key is reused here exactly as
+the project defines it; only the guarantee is stated at its true strength.
+
+**Root convention: every root list in this module is the complete multiset of roots over C.**
+This has to be said out loud because SymPy will silently do something else. The symbols
+:func:`parseatlas.canonical.to_sympy` builds carry ``real=True``, and ``solve`` then returns only
+the real roots whenever it can decide realness - which it can for numeric coefficients and cannot
+for free symbolic ones. A textbook generated that way would print all three roots of
+``a**3 + b**3`` and only one of the three roots of ``r**3 + r**2 + r + 1``, mixing two notions of
+"root" inside a single page without saying so. Real-roots-only is not an available fix: with
+symbolic coefficients the realness of a root is undecidable, so that convention cannot be applied
+uniformly at all. So roots are solved over C: :func:`solving_symbol` strips the realness assumption
+before solving, :func:`root_list_is_complete` checks the printed multiplicities against the degree,
+and every printed root list carries ``root_domain`` and ``roots_complete`` alongside it.
+:func:`requires_radical` counts ``I`` for the same reason it counts ``sqrt(2)`` - ``I`` is the
+square root of ``-1``, and a world whose pages print it has left the rationals by taking a root.
+
+Real-line statements are kept separate and named for it. :func:`function_profile` (parity,
+boundedness, growth, periodicity, real poles) and the ``real_zeros`` / ``real_poles`` /
+``real_removable_restrictions`` fields describe the reading as a function of a real variable, which
+is a different question from where its roots live and is labelled as such wherever it appears.
 
 A note that the module refuses to fudge: **a truncated series is a polynomial, and a polynomial is
 not periodic - in every world, ours included.** :func:`function_profile` measures periodicity with
@@ -33,10 +56,12 @@ from dataclasses import dataclass
 from typing import Any
 
 from sympy import (
+    Dummy,
     Poly,
     Pow,
     Symbol,
     cancel,
+    diff,
     expand,
     factor,
     fraction,
@@ -49,6 +74,7 @@ from sympy import (
     together,
 )
 from sympy.calculus.util import periodicity
+from sympy.core.numbers import ImaginaryUnit
 from sympy.polys.polyerrors import PolynomialError
 from sympy.polys.rootoftools import CRootOf
 
@@ -110,30 +136,80 @@ PARALLEL_MINIMUM_ITEMS: int = 16
 # ------------------------------------------------------------------------------ symbolic helpers
 
 
+#: The domain every root list in this module is solved over. Stated as data so that the pages, the
+#: solution records and the report all quote one value rather than three independent sentences.
+ROOT_DOMAIN: str = "C"
+
+#: The one-line statement of the convention, printed wherever a root list is rendered.
+ROOT_CONVENTION_NOTE: str = (
+    "Roots are the complete multiset over `C`; `requires_radical` counts `I` as a radical."
+)
+
+
 def principal_symbol(name: str) -> Symbol:
-    """The symbol :func:`parseatlas.canonical.to_sympy` builds, so assumptions match exactly."""
+    """The symbol :func:`parseatlas.canonical.to_sympy` builds, so assumptions match exactly.
+
+    ``real=True``, which is what makes it the right symbol for matching a canonical expression and
+    for the real-line questions in :func:`function_profile`, and the wrong symbol for solving - see
+    :func:`solving_symbol` and the module docstring.
+    """
     return Symbol(name, real=True)
 
 
+def solving_symbol(name: str) -> Dummy:
+    """The same variable with the realness assumption stripped, so ``solve`` answers over C.
+
+    With ``real=True`` SymPy returns only the real roots whenever it can decide realness, which
+    silently makes "roots" mean one thing for numeric coefficients and another for symbolic ones.
+    Substituting this symbol first is what makes :data:`ROOT_DOMAIN` true of every root list here.
+    """
+    return Dummy(name)
+
+
 def semantic_key(canonical: dict[str, Any]) -> tuple[str, str, tuple[str, ...]]:
-    """The project's semantic identity: canonical form, domain and excluded points together."""
+    """The project's semantic identity: canonical form, domain and excluded points together.
+
+    ``domain`` is part of the project's triple but is not a measured component:
+    :func:`parseatlas.canonical.canonicalize` sets it to ``"R"`` for every expression, so the
+    operative discrimination is ``(canonical form, excluded points)``.
+    """
     return (canonical["expression"], canonical["domain"], tuple(canonical["excluded_points"]))
 
 
 def requires_radical(expressions: Sequence[Any]) -> bool:
-    """True when writing these expressions needs a non-integer power or an unsolvable root object.
+    """True when writing these expressions needs more than the field operations on the coefficients.
 
     ``1/a`` is ``Pow(a, -1)`` and does NOT count; ``sqrt(b**2 - 4*a*c)`` is ``Pow(..., 1/2)`` and
     does. A :class:`~sympy.polys.rootoftools.CRootOf` counts too - it is a root that has no radical
-    expression at all, which is a stronger form of the same answer.
+    expression at all, which is a stronger form of the same answer. ``I`` counts for exactly the
+    same reason ``sqrt(2)`` does: it *is* a square root, the one a world has to adjoin to write down
+    a complex root at all. Under the module's over-C root convention this is what keeps the flag
+    honest - dropping the complex roots is what used to make pages read ``radical: no``.
     """
     for expression in expressions:
         for node in preorder_traversal(expression):
-            if isinstance(node, CRootOf):
+            if isinstance(node, (CRootOf, ImaginaryUnit)):
                 return True
             if isinstance(node, Pow) and not node.exp.is_Integer:
                 return True
     return False
+
+
+def root_list_is_complete(
+    degree: int | None, roots_with_multiplicity: Sequence[dict[str, Any]]
+) -> bool | None:
+    """Do the multiplicities of the roots this module PRINTS add up to the degree?
+
+    The comparison is deliberately against the reported list and not against SymPy's internal root
+    table: a check against the internal table answers ``True`` in precisely the cases where the
+    printed list is short, which is the failure it is supposed to detect.
+
+    ``None`` means the question does not apply - a rational reading, or the zero reading, has no
+    polynomial degree to account for. It is never silently reported as complete.
+    """
+    if degree is None:
+        return None
+    return sum(int(item["multiplicity"]) for item in roots_with_multiplicity) == degree
 
 
 def _polynomial_degree(expression: Any, variable: Symbol) -> int | None:
@@ -162,15 +238,35 @@ def _polynomial_properties(expression: Any, variable: Symbol) -> dict[str, Any]:
     return polynomial_properties(expression, variable)
 
 
-def _root_multiset(expression: Any, variable: Symbol) -> dict[str, Any]:
-    """Roots in a deterministic order, with multiplicity where SymPy can supply it."""
+def _solve_over_complexes(expression: Any, variable: Symbol) -> list[Any]:
+    """``solve`` with the realness assumption stripped, so the answer is the full complex set.
+
+    The substituted symbol is a :class:`~sympy.core.symbol.Dummy`, whose printed name is not the
+    variable the reader knows, so any answer that still mentions it is dropped rather than printed:
+    a root expressed in terms of the unknown is not a root a textbook page can state.
+    """
+    unconstrained = solving_symbol(variable.name)
     try:
-        solved = solve(expression, variable)
-    except (TypeError, ValueError, NotImplementedError):
-        solved = []
-    ordered = [value for value in solved if not isinstance(value, dict)] if isinstance(solved, list) else []
+        solved = solve(expression.subs(variable, unconstrained), unconstrained)
+    except (TypeError, ValueError, NotImplementedError, PolynomialError):
+        return []
+    if not isinstance(solved, list):
+        return []
+    return [
+        value
+        for value in solved
+        if not isinstance(value, dict) and unconstrained not in getattr(value, "free_symbols", set())
+    ]
+
+
+def _root_multiset(expression: Any, variable: Symbol) -> dict[str, Any]:
+    """Roots over C in a deterministic order, with multiplicity where SymPy can supply it.
+
+    ``roots_complete`` compares the multiplicities of the list built here - the one the pages print -
+    against the degree, so a short list is detected rather than papered over.
+    """
+    ordered = _solve_over_complexes(expression, variable)
     multiplicity: dict[str, int] = {}
-    complete = False
     degree = _polynomial_degree(expression, variable)
     try:
         table = roots(Poly(expression, variable)) if degree is not None else {}
@@ -178,16 +274,30 @@ def _root_multiset(expression: Any, variable: Symbol) -> dict[str, Any]:
         table = {}
     if table:
         multiplicity = {str(root): int(count) for root, count in table.items()}
-        complete = sum(table.values()) == degree
+    with_multiplicity = [
+        {"root": str(value), "multiplicity": multiplicity.get(str(value), 1)} for value in ordered
+    ]
     return {
+        "root_domain": ROOT_DOMAIN,
         "roots": [str(value) for value in ordered],
-        "roots_with_multiplicity": [
-            {"root": str(value), "multiplicity": multiplicity.get(str(value), 1)} for value in ordered
-        ],
-        "multiplicity_complete": complete,
+        "roots_with_multiplicity": with_multiplicity,
+        "root_multiplicity_sum": sum(item["multiplicity"] for item in with_multiplicity),
+        "roots_complete": root_list_is_complete(degree, with_multiplicity),
         "requires_radical": requires_radical(ordered),
         "sympy_roots": ordered,
     }
+
+
+def _critical_points(expression: Any, variable: Symbol) -> list[str]:
+    """Stationary points over C, so they follow the same convention as the roots.
+
+    :func:`parseatlas.properties.polynomial_properties` solves for these with the real symbol, which
+    would put a second, unstated root convention into the same record.
+    """
+    derivative = diff(expression, variable)
+    if derivative == 0:
+        return []
+    return [str(value) for value in _solve_over_complexes(derivative, variable)]
 
 
 def function_profile(expression: Any, variable: Symbol) -> dict[str, Any]:
@@ -247,6 +357,11 @@ def world_object(source: str, grammar: Grammar, variable: str = "x") -> dict[str
     Property extraction is delegated to :mod:`parseatlas.properties`; this function only chooses the
     principal variable, adds the expanded/factored pair, roots with multiplicity, and - for a
     univariate reading - the analytic profile.
+
+    Two conventions meet in one record and both are named in it. ``roots``,
+    ``roots_with_multiplicity``, ``critical_points`` and ``requires_radical`` are over
+    :data:`ROOT_DOMAIN`, i.e. C. ``real_zeros``, ``real_poles``, ``real_removable_restrictions`` and
+    everything under ``profile`` are statements about the reading as a function of a real variable.
     """
     node = parse(source, grammar)
     canonical = canonicalize(node)
@@ -272,28 +387,49 @@ def world_object(source: str, grammar: Grammar, variable: str = "x") -> dict[str
         "is_rational": bool(rational.get("is_rational")),
         "degree": degree,
         "coefficients": polynomial.get("coefficients"),
+        "root_domain": multiset["root_domain"],
         "roots": multiset["roots"],
         "roots_with_multiplicity": multiset["roots_with_multiplicity"],
         "root_count": len(multiset["roots"]),
-        "multiplicity_complete": multiset["multiplicity_complete"],
+        "root_multiplicity_sum": multiset["root_multiplicity_sum"],
+        "roots_complete": multiset["roots_complete"],
         "requires_radical": multiset["requires_radical"],
         "discriminant": polynomial.get("discriminant"),
         "vertex": polynomial.get("vertex"),
-        "critical_points": polynomial.get("critical_points"),
-        "zeros": rational.get("zeros"),
-        "poles": rational.get("poles"),
-        "removable_restrictions": rational.get("removable_restrictions"),
+        "critical_points": _critical_points(symbolic, symbol) if polynomial.get("is_polynomial") else None,
+        # named for their convention: these three come from ``rational_properties``, which solves
+        # with the real symbol, and they are the real-line reading rather than the over-C one.
+        "real_zeros": rational.get("zeros"),
+        "real_poles": rational.get("poles"),
+        "real_removable_restrictions": rational.get("removable_restrictions"),
         "profile": function_profile(symbolic, symbol),
     }
     return record
 
 
-def _solution_method(degree: int | None, radical: bool, root_count: int, polynomial: bool) -> str:
-    """Name the procedure from measured facts only - never from what the form is called."""
+def _solution_method(
+    degree: int | None,
+    radical: bool,
+    root_count: int,
+    polynomial: bool,
+    complete: bool | None = True,
+    multiplicity_sum: int = 0,
+) -> str:
+    """Name the procedure from measured facts only - never from what the form is called.
+
+    An incomplete root list gets its own label rather than one of the confident ones: saying that
+    ``n`` roots are read off a factorisation is a false statement about a list that is short of the
+    degree, and that is exactly the sentence this module used to print.
+    """
     if not polynomial:
-        return "rational: solve the numerator, then discard the poles"
+        return "rational over C: solve the numerator, then discard the poles"
     if degree is None or degree == 0:
         return "no equation to solve: the reading carries no power of the variable"
+    if complete is False:
+        return (
+            f"degree {degree}: INCOMPLETE - the reported roots account for {multiplicity_sum} "
+            f"of {degree} with multiplicity"
+        )
     if degree == 1:
         return "one linear step"
     if degree == 2 and radical:
@@ -302,7 +438,10 @@ def _solution_method(degree: int | None, radical: bool, root_count: int, polynom
         return "degree 2, radical-free: the roots are already rational in the coefficients"
     if radical:
         return f"degree {degree}: a radical or an unsolvable root object is required"
-    return f"degree {degree}: {root_count} roots read straight off the factorisation, no radical"
+    return (
+        f"degree {degree}: {root_count} distinct roots over C, multiplicities summing to "
+        f"{degree}, read straight off the factorisation, no radical"
+    )
 
 
 def solution_formula(source: str, grammar: Grammar, variable: str = "x") -> dict[str, Any]:
@@ -311,6 +450,10 @@ def solution_formula(source: str, grammar: Grammar, variable: str = "x") -> dict
     This is the direct answer to "how would the quadratic equation be solved there": the root
     expressions, whether a radical is needed at all, whether a discriminant exists, and how many
     roots there are.
+
+    ``root_domain`` is carried in the record and ``root_convention`` spells it out, because the
+    answer to "what are the roots" is only meaningful once the domain they are solved over is on the
+    page next to them. ``roots_complete`` says whether the printed multiplicities reach the degree.
     """
     obj = world_object(source, grammar, variable)
     degree = obj["degree"]
@@ -322,14 +465,25 @@ def solution_formula(source: str, grammar: Grammar, variable: str = "x") -> dict
         "denotes": obj["canonical"],
         "equation": f"{obj['canonical']} = 0",
         "degree": degree,
+        "root_domain": obj["root_domain"],
+        "root_convention": ROOT_CONVENTION_NOTE,
         "roots": obj["roots"],
         "roots_with_multiplicity": obj["roots_with_multiplicity"],
         "root_count": obj["root_count"],
+        "root_multiplicity_sum": obj["root_multiplicity_sum"],
+        "roots_complete": obj["roots_complete"],
         "requires_radical": obj["requires_radical"],
         "has_discriminant": has_discriminant,
         "discriminant": obj["discriminant"] if has_discriminant else None,
         "excluded_points": obj["excluded_points"],
-        "method": _solution_method(degree, obj["requires_radical"], obj["root_count"], obj["is_polynomial"]),
+        "method": _solution_method(
+            degree,
+            obj["requires_radical"],
+            obj["root_count"],
+            obj["is_polynomial"],
+            obj["roots_complete"],
+            obj["root_multiplicity_sum"],
+        ),
     }
 
 
@@ -386,9 +540,11 @@ def _entry_atlas(payload: tuple[StandardForm, tuple[Grammar, ...]]) -> dict[str,
                 "degree": record["degree"],
                 "is_polynomial": record["is_polynomial"],
                 "is_rational": record["is_rational"],
+                "root_domain": record["root_domain"],
                 "roots": record["roots"],
                 "roots_with_multiplicity": record["roots_with_multiplicity"],
                 "root_count": record["root_count"],
+                "roots_complete": record["roots_complete"],
                 "requires_radical": record["requires_radical"],
                 "discriminant": record["discriminant"],
                 "vertex": record["vertex"],
@@ -425,6 +581,11 @@ def _entry_atlas(payload: tuple[StandardForm, tuple[Grammar, ...]]) -> dict[str,
         "control_grammars": list(control["grammars"]) if control else [],
         "radical_grammar_count": sum(
             item["grammar_count"] for item in objects if item["requires_radical"]
+        ),
+        # the REJECT-1 detector, aggregated: how many worlds would be handed a root list whose
+        # multiplicities do not reach the degree. It is expected to be 0 and is reported, not assumed.
+        "incomplete_root_grammar_count": sum(
+            item["grammar_count"] for item in objects if item["roots_complete"] is False
         ),
     }
 
@@ -467,6 +628,8 @@ def world_atlas(
     return {
         "entries": entries,
         "entry_count": len(entries),
+        "root_domain": ROOT_DOMAIN,
+        "incomplete_root_page_count": sum(entry["incomplete_root_grammar_count"] for entry in entries),
         "grammar_count": len(grammars),
         "grammar_ids": [grammar.id for grammar in grammars],
         "distinct_object_counts": {entry["name"]: entry["distinct_object_count"] for entry in entries},
@@ -484,7 +647,13 @@ def world_atlas(
 
 
 def textbook(grammar: Grammar, catalogue: Sequence[StandardForm] | None = None) -> dict[str, Any]:
-    """One world's page set: for every standard form, what it denotes here and how it is solved."""
+    """One world's page set: for every standard form, what it denotes here and how it is solved.
+
+    Every page states the convention its root list is under (``root_domain``, and the book-level
+    ``root_convention``) and whether that list reaches the degree (``roots_complete``).
+    ``incomplete_root_page_count`` is the book-level count of pages that do not; it is reported so
+    that a silent regression to a mixed convention shows up as a number rather than as prose.
+    """
     catalogue = tuple(catalogue or STANDARD_CATALOGUE)
     pages = []
     for entry in catalogue:
@@ -503,8 +672,11 @@ def textbook(grammar: Grammar, catalogue: Sequence[StandardForm] | None = None) 
                 "is_polynomial": record["is_polynomial"],
                 "is_rational": record["is_rational"],
                 "excluded_points": record["excluded_points"],
+                "root_domain": record["root_domain"],
                 "roots": record["roots"],
                 "roots_with_multiplicity": record["roots_with_multiplicity"],
+                "root_multiplicity_sum": record["root_multiplicity_sum"],
+                "roots_complete": record["roots_complete"],
                 "requires_radical": record["requires_radical"],
                 "discriminant": record["discriminant"],
                 "vertex": record["vertex"],
@@ -518,8 +690,11 @@ def textbook(grammar: Grammar, catalogue: Sequence[StandardForm] | None = None) 
         "precedence_text": " > ".join("=".join(level) for level in grammar.levels),
         "entry_count": len(pages),
         "pages": pages,
+        "root_domain": ROOT_DOMAIN,
+        "root_convention": ROOT_CONVENTION_NOTE,
         "radical_page_count": sum(1 for page in pages if page["requires_radical"]),
         "polynomial_page_count": sum(1 for page in pages if page["is_polynomial"]),
+        "incomplete_root_page_count": sum(1 for page in pages if page["roots_complete"] is False),
     }
 
 
@@ -529,11 +704,17 @@ def render_textbook(book: dict[str, Any], root_width: int = 80) -> str:
     ``root_width`` only elides the printed root column - the general cubic formula runs to some
     `1500` characters and would make the table unreadable. An elided cell states the root count and
     says it is elided, so nothing is silently dropped.
+
+    The convention line under the heading is not decoration: a root column and a ``radical`` column
+    mean different things over R and over C, so the table says which one it is every time it is
+    printed. A row whose printed multiplicities fall short of the degree is marked in place.
     """
     lines = [
         f"### World `{book['grammar_id']}` - precedence `{book['precedence_text']}`",
         "",
-        "| standard form | denotes here | deg | roots | radical | how it is solved |",
+        book["root_convention"],
+        "",
+        "| standard form | denotes here | deg | roots over C | radical | how it is solved |",
         "|---|---|---|---|---|---|",
     ]
     for page in book["pages"]:
@@ -544,6 +725,8 @@ def render_textbook(book: dict[str, Any], root_width: int = 80) -> str:
             cell = f"{len(page['roots'])} roots, {len(roots_text)} chars (elided)"
         else:
             cell = f"`{roots_text}`"
+        if page["roots_complete"] is False:
+            cell += f" **INCOMPLETE: {page['root_multiplicity_sum']}/{page['degree']}**"
         degree = "-" if page["degree"] is None else str(page["degree"])
         lines.append(
             f"| `{page['written_form']}` | `{page['denotes']}` | {degree} | "
@@ -726,6 +909,9 @@ def headline_report(workers: int | None = None) -> dict[str, Any]:
         "atlas": atlas,
         "divergence": divergence,
         "series": series_report(atlas),
+        "root_domain": ROOT_DOMAIN,
+        "root_convention": ROOT_CONVENTION_NOTE,
+        "incomplete_root_page_count": atlas["incomplete_root_page_count"],
         "quadratic": {
             "written_form": quadratic["written_form"],
             "distinct_object_count": quadratic["distinct_object_count"],
@@ -735,7 +921,9 @@ def headline_report(workers: int | None = None) -> dict[str, Any]:
                     "canonical": item["canonical"],
                     "factored": item["factored"],
                     "degree": item["degree"],
+                    "root_domain": item["root_domain"],
                     "roots": item["roots"],
+                    "roots_complete": item["roots_complete"],
                     "requires_radical": item["requires_radical"],
                     "discriminant": item["discriminant"],
                     "vertex": item["vertex"],

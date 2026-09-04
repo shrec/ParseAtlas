@@ -8,16 +8,20 @@ each remaining test builds the smallest input that can carry its own.
 import os
 
 import pytest
-from sympy import Rational, Symbol, sqrt
+from sympy import I, Rational, Symbol, sqrt
 
 from parseatlas.alternative_mathematics import (
+    ROOT_CONVENTION_NOTE,
+    ROOT_DOMAIN,
     STANDARD_CATALOGUE,
     StandardForm,
     divergence_report,
     parallelism_measurement,
     reading_profiles,
+    render_textbook,
     requires_radical,
     resolve_worker_count,
+    root_list_is_complete,
     solution_formula,
     textbook,
     world_atlas,
@@ -119,7 +123,10 @@ def test_solution_formula_names_the_procedure_of_each_world():
     assert other["discriminant"] is None
     assert other["requires_radical"] is False
     assert other["roots"] == ["0", "-b", "-c"]
-    assert other["method"] == "degree 3: 3 roots read straight off the factorisation, no radical"
+    assert other["method"] == (
+        "degree 3: 3 distinct roots over C, multiplicities summing to 3, "
+        "read straight off the factorisation, no radical"
+    )
 
 
 def test_a_radical_free_degree_two_object_is_not_called_a_quadratic_formula():
@@ -143,6 +150,143 @@ def test_radical_detection_separates_fractional_powers_from_reciprocals():
     assert requires_radical([1 / a]) is False
     assert requires_radical([a**2, -a, a**-3, Rational(3, 4)]) is False
     assert requires_radical([]) is False
+
+
+# ------------------------------------------------------------------------- the root convention
+#
+# These pin the fix for a defect that made the generated pages state something untrue: the roots
+# were solved with a ``real=True`` symbol, so SymPy returned every complex root when the
+# coefficients were free symbols and only the real ones when they were numeric. Two notions of
+# "root" then appeared on one page without either being named. The convention is now over C
+# everywhere, and the incompleteness that used to hide it is a measured flag rather than prose.
+
+
+def test_every_root_list_declares_the_domain_it_was_solved_over():
+    assert ROOT_DOMAIN == "C"
+    solution = solution_formula("a*x*x + b*x + c", control_grammar(), "x")
+    assert solution["root_domain"] == "C"
+    assert solution["root_convention"] == ROOT_CONVENTION_NOTE
+    assert "over `C`" in ROOT_CONVENTION_NOTE
+    book = textbook(control_grammar(), catalogue=TAUGHT)
+    assert book["root_domain"] == "C"
+    assert book["root_convention"] == ROOT_CONVENTION_NOTE
+    assert all(page["root_domain"] == "C" for page in book["pages"])
+    # the convention is printed with the table, not only carried in the record
+    assert ROOT_CONVENTION_NOTE in render_textbook(book)
+    assert "roots over C" in render_textbook(book)
+
+
+def test_control_geometric_sum_page_reports_all_three_roots():
+    """``1 + r + r*r + r*r*r`` under G0: the page used to print one root of three and no radical."""
+    solution = solution_formula("1 + r + r*r + r*r*r", control_grammar(), "r")
+    assert solution["denotes"] == "r**3 + r**2 + r + 1"
+    assert solution["degree"] == 3
+    assert solution["roots"] == ["-1", "-I", "I"]
+    assert solution["root_multiplicity_sum"] == 3
+    assert solution["roots_complete"] is True
+    # ``I`` is a square root, so the honest answer here is that a radical IS required
+    assert solution["requires_radical"] is True
+    assert solution["method"] == "degree 3: a radical or an unsolvable root object is required"
+    assert "factorisation" not in solution["method"]
+
+
+def test_control_sine_series_page_reports_all_five_roots():
+    """The quintic reading under G0: one real root printed before, five roots with radicals now."""
+    solution = solution_formula("x - x*x*x/6 + x*x*x*x*x/120", control_grammar(), "x")
+    assert solution["degree"] == 5
+    assert solution["root_count"] == 5
+    assert solution["root_multiplicity_sum"] == 5
+    assert solution["roots_complete"] is True
+    assert solution["roots"][0] == "0"
+    assert sum(1 for root in solution["roots"] if "I" in root) == 4
+    assert solution["requires_radical"] is True
+    assert solution["method"] == "degree 5: a radical or an unsolvable root object is required"
+
+
+def test_no_world_reports_a_root_list_short_of_its_degree():
+    """Swept over every world for the entry that broke in the most of them.
+
+    ``geometric_sum`` is the cheap member of the group the old convention truncated (it was short in
+    `13` of `25` worlds), and every one of its `25` readings has a polynomial degree, so the
+    multiplicity sum has something to be compared against in all of them.
+    """
+    records = [world_object("1 + r + r*r + r*r*r", grammar, "r") for grammar in all_grammars()]
+    assert len(records) == 25
+    assert all(record["degree"] is not None for record in records)
+    assert all(record["roots_complete"] is True for record in records)
+    for record in records:
+        assert record["root_multiplicity_sum"] == record["degree"]
+    atlas = world_atlas(
+        catalogue=(StandardForm("geometric_sum", "analysis", "1 + r + r*r + r*r*r", "r", True),),
+        workers=1,
+    )
+    assert atlas["incomplete_root_page_count"] == 0
+    assert atlas["root_domain"] == "C"
+
+
+def test_the_series_pages_of_the_control_world_are_complete_and_all_need_a_radical():
+    series = tuple(entry for entry in STANDARD_CATALOGUE if entry.series)
+    assert len(series) == 4
+    book = textbook(control_grammar(), catalogue=series)
+    assert book["incomplete_root_page_count"] == 0
+    assert book["radical_page_count"] == 4
+    assert all(page["roots_complete"] is True for page in book["pages"])
+
+
+def test_the_completeness_check_compares_the_printed_list_not_sympys_table():
+    """The check that used to be a false assurance, pinned as a function of the REPORTED list.
+
+    The predecessor compared SymPy's internal root table against the degree, so it answered ``True``
+    in exactly the cases where the printed list was short. Passing a short list must give ``False``.
+    """
+    short = [{"root": "-1", "multiplicity": 1}]
+    assert root_list_is_complete(3, short) is False
+    assert root_list_is_complete(3, short + [{"root": "-I", "multiplicity": 1}]) is False
+    assert root_list_is_complete(3, [{"root": "-1", "multiplicity": 3}]) is True
+    assert root_list_is_complete(2, [{"root": "-b", "multiplicity": 2}]) is True
+    # a rational reading or the zero reading has no degree to account for: not silently "complete"
+    assert root_list_is_complete(None, []) is None
+    assert root_list_is_complete(None, short) is None
+
+
+def test_an_incomplete_root_list_is_flagged_wherever_it_would_be_printed():
+    """No measured page is short any more, so the flag is proved on a constructed short page."""
+    page = {
+        "name": "constructed",
+        "written_form": "q",
+        "denotes": "q**3 + 1",
+        "degree": 3,
+        "roots": ["-1"],
+        "root_multiplicity_sum": 1,
+        "roots_complete": False,
+        "requires_radical": False,
+        "solution": {"method": "irrelevant"},
+    }
+    book = {
+        "grammar_id": "GX",
+        "precedence_text": "x",
+        "root_convention": ROOT_CONVENTION_NOTE,
+        "pages": [page],
+    }
+    rendered = render_textbook(book)
+    assert "INCOMPLETE: 1/3" in rendered
+
+    solution = solution_formula("1 + r + r*r + r*r*r", control_grammar(), "r")
+    assert solution["roots_complete"] is True  # the real page is complete
+    from parseatlas.alternative_mathematics import _solution_method
+
+    assert _solution_method(3, False, 1, True, complete=False, multiplicity_sum=1) == (
+        "degree 3: INCOMPLETE - the reported roots account for 1 of 3 with multiplicity"
+    )
+
+
+def test_radical_detection_counts_the_imaginary_unit():
+    """``I`` is ``sqrt(-1)``; dropping it from the radical test is what made short pages read "no"."""
+    b = Symbol("b", real=True)
+    assert requires_radical([I]) is True
+    assert requires_radical([-I, I]) is True
+    assert requires_radical([b * (Rational(1, 2) - sqrt(3) * I / 2)]) is True
+    assert requires_radical([-1, b, -b]) is False
 
 
 # ---------------------------------------------------------------- the convention-independent core
@@ -267,7 +411,20 @@ def test_objects_are_separated_by_the_full_semantic_key_not_canonical_text_alone
     keys = world_keys(SINE_SERIES.source)
     texts = {key[0] for key in keys.values()}
     assert len(set(keys.values())) == 14
-    assert len(texts) < 14  # readings that print the same but have different domains
+    assert len(texts) < 14  # readings that print the same but have different excluded points
+
+
+def test_the_domain_component_of_the_key_is_a_fixed_declaration_not_a_measurement():
+    """The triple is `(canonical, domain, excluded points)` but `domain` never varies.
+
+    `parseatlas.canonical.canonicalize` writes the literal `"R"` for every expression, so the
+    component that actually separates objects is `(canonical, excluded points)`. This is pinned
+    rather than described, so the report's guarantee is stated at its true strength.
+    """
+    keys = list(world_keys(SINE_SERIES.source).values()) + list(world_keys("1/a + 1/b").values())
+    assert {key[1] for key in keys} == {"R"}
+    two_component = {(key[0], key[2]) for key in keys}
+    assert len(two_component) == len({key for key in keys})
 
 
 # ------------------------------------------------------------------------- multicore measurement
