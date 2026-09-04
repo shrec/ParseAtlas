@@ -82,6 +82,19 @@ Now compare that against 0037's cost podium — `G18` first, `G16` second, `G0` 
 
 The consequence for the routing work: a fragment router that ranks worlds by cost will systematically route away from the worlds that can see factor structure. **Reachability must be checked first and cost used only to break ties among the worlds that can do the job at all.** *MEASURED — 0037 × 0038, and the direct subject of 0043.*
 
+**T32. Cost is a poor proxy for parallelism — but HOW poor is not yet settled, and the project must not claim more.** Experiment 0041 measures, for each world, the depth its cheapest writing gets for free against the shallowest depth available at any price. The gap is the parallelism tax. Ranking the 25 worlds by bracket cost and by that tax gives a rank correlation of
+
+```text
+0.167418    ties for a world's cheapest writing resolved toward the shallowest
+0.422211    resolved toward the deepest
+```
+
+Both readings are defensible and the module computes both. So the robust statement is only this: **cost does not determine parallelism** — a router that ranks worlds by brackets is not thereby ranking them by critical path. The stronger claim, that the two are near-independent, holds under one tie-break and not the other, and the vivid case moves with it: `G19` is the most expensive world in the corpus to write in and is joint-first on tax under the optimistic reading, twenty-second under the pessimistic. `G0` is fifth on cost and swings between twentieth and fourth on tax.
+
+**The modelling choice is therefore an open question, not a footnote**, and it is recorded here so that the next card settles it rather than inheriting whichever reading happens to be in the code. Until it is settled, no ranking of the 25 worlds by parallelism should be quoted without its tie-break. *MEASURED — 0041, with the sensitivity pinned by test.*
+
+This is the fourth criterion in the collision set. The others are cost (0034, 0037), visibility (0038), and peak memory (0044). None is a proxy for another, and T31 says which order they are applied in: reachability first, cost only to break ties among the worlds that can do the job at all.
+
 **0038 adds the half that cost cannot see.** A cheaper writing is not thereby a more informative one. Of the corpus objects carrying more than one true property, **no world makes them all manifest at once**; the constant term and the roots are never legible together across 850 cells, and nothing in the shape rules forbids it — the emptiness is measured, not defined. `G0` ties `G17` for the most manifest properties overall, so on *this* axis the conventional convention is first rather than third. Cost and visibility are separate orderings of the same 25 worlds.
 
 ### How the existing work serves it

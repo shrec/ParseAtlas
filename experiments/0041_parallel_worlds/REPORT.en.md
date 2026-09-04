@@ -39,9 +39,16 @@ than left in the code.** It resolves ties in the world's favour. Taking the deep
 writings instead changes `52` of the `1450` cells — exactly the `6` movable objects the ranking
 rests on — and moves the least-taxing total from `22` in `9` worlds to `23` in `2`, `G07` and
 `G18`. `G0` is `25` under both. `G18`, the cheapest world to write in, is `23` under both and so
-becomes joint-best on tax under the pessimistic reading, which weakens rather than supports the
-near-independence reported in section 5. Both quantities are computed by the module and pinned by
-tests; neither is presented as the only defensible one.
+becomes joint-best on tax under the pessimistic reading.
+
+**Section 5's central claim moves with it, and by more than the cell count suggests.** The rank
+correlation between what a world costs to write and what it charges in parallelism tax is
+`0.167418` under the optimistic tie-break — the near-independence the section reports — and
+`0.422211` under the pessimistic one, two and a half times larger and no longer fairly described
+as barely agreeing. The illustration inverts outright: `G19`, the most expensive world in the
+corpus to write in and joint-first on tax at rank `1` optimistically, falls to rank `22`
+pessimistically. Both quantities are computed by the module and pinned by tests; neither is
+presented as the only defensible one, and section 5 should be read with this figure beside it.
 
 Both halves are needed. `min_depth` alone is a property of the mathematics; `free_depth` alone is a
 property of the notation; only the difference belongs to the pairing, which is what the founding
@@ -216,7 +223,11 @@ to the card's first question.
 are still the circle; it is written at depth `7` and can be written at depth `5`. `12` worlds charge
 nothing for that, `12` charge `1` — and `G0` charges `2`, alone among the `25`.
 
-### 5. Cost rank against tax rank: they barely agree
+### 5. Cost rank against tax rank: they barely agree — under one tie-break
+
+**Read this section with the tie-break disclosure above.** The `0.167418` below assumes ties for a
+world's cheapest writing are resolved toward the shallowest. Resolved the other way the same
+correlation is `0.422211`, and the `G19` row in the table is the one that moves most.
 
 Spearman rank correlation over the `25` worlds between the number of brackets a world spends writing
 the corpus and the parallelism tax it charges: **`0.167`**. On the movable subcorpus alone the

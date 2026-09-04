@@ -700,6 +700,11 @@ TIEBREAK_SENSITIVE_OBJECTS = (
 )
 PESSIMISTIC_BEST_TAX = 23
 PESSIMISTIC_BEST_WORLDS = ("G07", "G18")
+#: The cost-versus-tax correlation under each tie-break.  The optimistic figure is the one
+#: section 5 of the reports quotes; the pessimistic one is two and a half times larger, which
+#: is why the choice is disclosed rather than left in the code.
+CORRELATION_OPTIMISTIC = 0.167418
+CORRELATION_PESSIMISTIC = 0.422211
 
 
 def test_the_tax_tie_break_is_a_choice_and_its_sensitivity_is_pinned_not_latent():
@@ -744,3 +749,37 @@ def test_the_tax_tie_break_is_a_choice_and_its_sensitivity_is_pinned_not_latent(
     # The conventional grammar is unmoved by the choice; the winner is not.
     assert optimistic[CONTROL.id] == pessimistic[CONTROL.id] == CONTROL_TAX_TOTAL
     assert optimistic["G18"] == pessimistic["G18"] == PESSIMISTIC_BEST_TAX
+
+
+def test_the_tie_break_moves_the_cost_versus_parallelism_correlation_by_more_than_the_cells_suggest():
+    """52 changed cells of 1450 sounds small; the headline correlation moves two and a half times.
+
+    Section 5 of both reports says cost rank and tax rank barely agree, and quotes ``0.167``.  That
+    figure assumes ties for a world's cheapest writing resolve toward the shallowest.  Resolved the
+    other way the same correlation is ``0.422``, which is a modest but real positive relationship and
+    is no longer fairly described as barely agreeing.
+
+    The illustration inverts with it: ``G19`` is the most expensive world in the corpus to write in
+    and is joint-first on tax under the optimistic reading -- the vivid case the section is built on
+    -- and falls to twenty-second under the pessimistic one.  Both figures are asserted here so that
+    a reader of section 5 cannot be given only the flattering one.
+    """
+    cells = tuple(grid(CORPUS)["cells"].values())
+    worlds = sorted({cell["grammar"] for cell in cells})
+
+    def totals(key):
+        return [sum(c[key] for c in cells if c["grammar"] == w) for w in worlds]
+
+    cost = totals("min_cost")
+    assert spearman(cost, totals("tax")) == pytest.approx(CORRELATION_OPTIMISTIC, abs=5e-7)
+    assert spearman(cost, totals("tax_pessimistic")) == pytest.approx(CORRELATION_PESSIMISTIC, abs=5e-7)
+
+    # The correlation the reports quote must be the optimistic one, or section 5 is quoting a
+    # number the module does not compute.
+    assert rank_correlation()["full_corpus"] == pytest.approx(CORRELATION_OPTIMISTIC, abs=5e-7)
+
+    # G19: joint-first on tax one way, near-last the other.
+    optimistic = dict(zip(worlds, totals("tax")))
+    pessimistic = dict(zip(worlds, totals("tax_pessimistic")))
+    assert optimistic["G19"] == min(optimistic.values())
+    assert pessimistic["G19"] > min(pessimistic.values())
