@@ -45,14 +45,33 @@ Case studies record the **equivalence-preserving** mode, where `R1(x) == R2(x)` 
 - [Record schema and admission gate](../case_studies/RECORD_SCHEMA.md)
 - [UltrafastSecp256k1 intake](../case_studies/ultrafast_secp256k1/README.md)
 
+## Direction A and Direction B — the distinction that organises everything here
+
+```text
+Direction A   fixed token string        ->  what does it MEAN under each grammar?     0001-0033
+Direction B   fixed mathematical object ->  what does it COST to WRITE there?         0034 onward
+```
+
+Only Direction B answers the founding question. Direction A built the instruments — parser, grammar registry, domain-aware equivalence, null model, reachability, associativity — and its results are sound, but it asks what a *string* becomes rather than what *mathematics* costs. **New work belongs in Direction B unless there is a stated reason otherwise.**
+
+- [Experiment 0034 report](../experiments/0034_notational_cost/REPORT.md): the notational cost of 58 named formulas — conventional `G0` ranks 11th of 25, 45.3% dearer than the cheapest, and per-formula routing would cost 3 brackets against a single convention's 29.
+- [Experiment 0035 report](../experiments/0035_alternative_mathematics/REPORT.md): the standard objects in each world — `a*x*x + b*x + c` is our quadratic in 13 worlds and a factored cubic with roots `0, −b, −c` in the other 12.
+- [Experiment 0036 report](../experiments/0036_trigonometry_worlds/REPORT.md): sine and the trigonometric identities — the Pythagorean identity survives in exactly the 13 worlds where `*` precedes `+`, and `G0` is top-three across eight identities.
+
+Direction A's later instrument work, kept because Direction B depends on it:
+
+- [Experiment 0033 report](../experiments/0033_region_model/REPORT.md): the Region model and the decode obligation, for transformations that change the input encoding.
+- [Experiment 0027 findings](../experiments/0027_rediscovery_feasibility/FINDINGS.md): why a search complete under one set of rewrite rules is blind to representation change.
+
 ## Reading order
 
 For an external reader, the shortest honest path through this repository is:
 
-1. [README.md](../README.md) for the research object and the two modes;
-2. the **Working Theses** section of [ROADMAP.md](../ROADMAP.md), which states what each result is worth and names the prior art — several striking-looking results are marked there as folklore, tautology, or trivial-by-counting;
-3. [grammar-space-structure.md](grammar-space-structure.md) for the structural picture in one place;
-4. the individual experiment reports for the measurements.
+1. [README.md](../README.md) — **the founding question first**, then the Direction A / Direction B split. Skipping this is how a reader ends up extending the finished direction;
+2. the **Working Theses** section of [ROADMAP.md](../ROADMAP.md), which states what each result is worth and names the prior art — several striking-looking results are marked there as folklore, tautology, or trivial-by-counting — followed by the standing caveat that every negative result carries the scope of the representation it was measured in;
+3. the Direction B reports above (0034, 0035, 0036) for what the founding question has actually produced;
+4. [grammar-space-structure.md](grammar-space-structure.md) for the Direction A structural picture in one place;
+5. the individual experiment reports for the measurements.
 
 Experiment reports are written in Georgian for project communication; the methodology, structural theory, publication, and case-study documents are in English. That split is deliberate and is recorded in ROADMAP Phase 13.
 
