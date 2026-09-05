@@ -508,6 +508,30 @@ The mandate is accepted and the language is no longer frozen at Generation 1. Bu
 
 **The discipline that does not relax.** Every extension states, at the point where its answer is read, what it can now express that it could not before and what it still cannot. An enumeration is a claim about what exists (0047 demonstrated that twice at its own expense), and a larger registry makes the null model *harder*, not easier: with `k` operators a corpus entry using `j < k` of them distinguishes only `j!` orderings, so a rising count across a widening registry is the registry widening and nothing else until it is stratified.
 
+### Measure the emitted flow, not the translation — set by the owner, 2026-09-05
+
+> **A compiler translates once and the program runs a million times. A measurement that includes the translation is measuring the wrong thing.**
+
+Three of the manager's own figures were wrong for this reason and are corrected here, because the correction is the rule:
+
+1. **The Cartesian-against-polar crossover.** The probe charged a conversion per OPERATION and put the crossover at four to eight operations. With the representation chosen at compile time, conversion is paid once at the program boundary: polar wins on multiplications from **two operations per crossing**, and the ratio is `4n` against `n + 4` — asymptotically **four times fewer multiplications, never crossing back.** The quantity that decides is operations per boundary crossing, not chain length.
+
+2. **The throughput headline.** "One function through 25 lenses is 0.33 s, so a million functions is 7.5 hours on twelve cores" is **compilation** time. It answers how fast the atlas can be BUILT, not how fast the mathematics RUNS, and those were conflated.
+
+3. **A redundancy measured and then ignored.** The same probe found that 5,000 lens applications produce only 1,072 distinct trees — **78.6% of the SymPy calls are redundant** — and the un-deduplicated figure was still published as the headline.
+
+**What this means for what the project measures.** Brackets are a *human reading* cost: a reader pays them on every read, so 0034, 0037 and 0042 are right to charge them per use. CPU flow is a different axis and it is paid differently — the tree is emitted once and executed many times, so what matters is the **emitted dataflow graph**:
+
+```text
+operation counts   what the machine actually issues
+depth              the critical path, which is what an out-of-order CPU pays
+peak live values   register pressure, against a fixed budget
+```
+
+The project **already measures all three** — `operation_cost`, 0041's `depth`, 0044's `peak_live` — and all three are taken on the tree, which IS the dataflow graph. Nothing has to be rebuilt. What was wrong was the reporting order: a notation measure was put first where a flow measure belonged, and translation cost was folded into comparisons it does not belong in.
+
+**The standing rule.** Any figure offered as a cost of *computation* excludes translation and is taken on the emitted graph. Any figure offered as a cost of *notation* includes everything a reader pays, every time. A measurement must say which of the two it is, in the same sentence as the number.
+
 ### Let the system find the wall — set by the owner, 2026-09-05
 
 > **Do not impose a limit in advance. Sweep the parameter until the measurement shows where the limit is.**
