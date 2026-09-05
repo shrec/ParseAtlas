@@ -639,6 +639,24 @@ Exit gate: numerical checks never replace symbolic/domain reasoning.
 
 ## Phase 11: Performance Engine
 
+**Available hardware, noted 2026-09-05 so that it is on the record rather than rediscovered.** The owner has a
+Sipeed Tang Nano 20K (Gowin GW2AR-18) available if it is ever wanted. Its role, if it is used, is narrow and
+already identified: an `F_p` probe running the 25 worlds in parallel as a DISCARDING pre-filter, feeding SymPy
+only the survivors. Experiment 0039's probe discarded 1,510,153 of 1,511,800 trees before SymPy ran, and 0022
+established `F_p` as a legitimate domain here, with the caveat that modular collapse can merge classes that
+differ over `Q` — which is harmless for a filter that may only exclude.
+
+What it is NOT for: symbolic algebra, which is 99.7% of current runtime and does not map to an FPGA; exact
+rationals, which need unbounded width; and the parser, which at 30,000 parses per second is not the bottleneck.
+
+**It is not started, and should not be.** The owner deferred the million-scale run, and the board only pays at
+that scale. The cheap steps come first and are pure Python: deduplicating trees before canonicalising (4.7x
+fewer SymPy calls, measured) and probe-first filtering (the probe is 500x faster than SymPy, measured). Those
+two together move a million functions from 7.5 hours on twelve cores into minutes. Hardware begins only when a
+profile shows the probe itself has become the bottleneck — measured, not assumed.
+
+
+
 - Keep the Python reference oracle as the correctness authority.
 - Benchmark parsing, canonicalization, property extraction, and evaluation separately.
 - Add a compiled engine only after data-model and semantic contracts stabilize.
