@@ -494,6 +494,20 @@ The discipline this imposes is not to weaken the negatives — they are measured
 - Expand one controlled dimension at a time; do not infer general laws from one expression.
 - Preserve an independent reference implementation before introducing a performance engine.
 
+### Expand wherever the research demands it — set by the owner, 2026-09-05
+
+> **Nothing constrains us. Expand in any direction the research requires.**
+
+The mandate is accepted and the language is no longer frozen at Generation 1. But three different things travel under the word "expand", they carry different risks, and conflating them is how a project loses the ability to say what it measured:
+
+1. **More operators in the same flat precedence model.** Exponentiation was this, and 0045 did it properly: 121 grammars, and the extension proved *conservative* over 1,294,698 cells before a single new result was read. Any further operator of this kind must clear the same bar — restricted to the old operator set it must reproduce the old parser exactly, cell by cell, or the new numbers are about a different language.
+
+2. **Syntax that the flat model cannot express.** Unary minus and implicit multiplication are this, and thesis T26 asserts they need tiered layers rather than a precedence slot. That assertion has never been tested; it is a claim about the model's reach and it should be measured, not assumed. This is where the precedence axis actually ends.
+
+3. **A change of representation, which is not a language extension at all.** Cartesian against polar, geodetic against ECEF: the object stops being a string and becomes `(inputs, state, operations, outputs)`. Value equality fails here by construction — one object has many encodings — and the obligation becomes the decode relation of T22. This is Phase 14, and no amount of new operators reaches it.
+
+**The discipline that does not relax.** Every extension states, at the point where its answer is read, what it can now express that it could not before and what it still cannot. An enumeration is a claim about what exists (0047 demonstrated that twice at its own expense), and a larger registry makes the null model *harder*, not easier: with `k` operators a corpus entry using `j < k` of them distinguishes only `j!` orderings, so a rising count across a widening registry is the registry widening and nothing else until it is stratified.
+
 ### Let the system find the wall — set by the owner, 2026-09-05
 
 > **Do not impose a limit in advance. Sweep the parameter until the measurement shows where the limit is.**
