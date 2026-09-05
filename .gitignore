@@ -15,5 +15,6 @@ CLAUDE.md
 
 # AIWorkHub self-hosting scratch, never research output
 .tmp-task-mcp-fix/
+.tmp-wiki-review/
 tools/aiworkhub/
 debug.log

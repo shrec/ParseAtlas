@@ -4,6 +4,9 @@ This directory contains the publication-facing documentation for ParseAtlas.
 
 ## Documents
 
+- **Project Wiki / პროექტის Wiki:** [English](wiki/README.md) · [ქართული](wiki/README.ka.md) — introduction, concepts, research and contributing / შესავალი, ცნებები, კვლევები და განვითარების წესი.
+- **Full research and prior-art audit / სრული კვლევითი აუდიტი:** [English](novelty-audit-2026-09-05.en.md) · [ქართული](novelty-audit-2026-09-05.ka.md) — dated literature assessment / დათარიღებული ლიტერატურული შეფასება.
+
 - [Research methodology](research-methodology.md): experimental protocol, evidence levels, and reproducibility requirements.
 - [Publication outline](publication-outline.md): a proposed structure for a future research paper.
 - [Roadmap completion audit](roadmap-audit.md) · [Roadmap-ის დასრულების აუდიტი](roadmap-audit.ka.md): which experiments bear on which phase, and what remains before the roadmap is finished. Every exit gate is marked UNVERIFIED unless a card discharged it — mapping an experiment to a phase is not the same as checking the gate.

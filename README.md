@@ -1,5 +1,11 @@
 # ParseAtlas
 
+## Start here / საიდან დავიწყოთ
+
+- **Project Wiki / პროექტის Wiki:** [English](docs/wiki/README.md) · [ქართული](docs/wiki/README.ka.md) — introduction, concepts, research and contributing / შესავალი, ცნებები, კვლევები და განვითარების წესი.
+- **Full research and prior-art audit / სრული კვლევითი აუდიტი:** [English](docs/novelty-audit-2026-09-05.en.md) · [ქართული](docs/novelty-audit-2026-09-05.ka.md).
+- [Installation and validation / დაყენება და შემოწმება](#installation-and-validation--დაყენება-და-შემოწმება).
+
 **Exploring mathematical behavior across alternative expression grammars and representations.**
 
 ParseAtlas is an experimental mathematics and computational research project.
@@ -80,6 +86,38 @@ E(G1), E(G2), ..., E(G24)
 where each `Gi` is one of the 24 precedence permutations.
 
 ---
+
+## Installation and validation / დაყენება და შემოწმება
+
+Use Python `>=3.11` and a virtual environment. Run from the repository root. Activation is unnecessary because every command names the environment executable.
+გამოიყენეთ Python `>=3.11` და ვირტუალური გარემო. გაუშვით რეპოზიტორიის ძირიდან. აქტივაცია საჭირო არ არის: ყველა ბრძანება გარემოს პროგრამას პირდაპირ მიუთითებს.
+
+PowerShell:
+
+```powershell
+python -m venv .venv
+& .\.venv\Scripts\python.exe -m pip install -e ".[test]"
+& .\.venv\Scripts\python.exe -m pip check
+& .\.venv\Scripts\parseatlas.exe --help
+& .\.venv\Scripts\python.exe -m pytest -q tests/test_parser.py
+# Full suite / სრული ნაკრები:
+& .\.venv\Scripts\python.exe -m pytest -q
+```
+
+POSIX:
+
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -e ".[test]"
+.venv/bin/python -m pip check
+.venv/bin/parseatlas --help
+.venv/bin/python -m pytest -q tests/test_parser.py
+# Full suite / სრული ნაკრები:
+.venv/bin/python -m pytest -q
+```
+
+The manifest allows `sympy>=1.13,<2` and `pytest>=8,<9`; these are dependency ranges, not an exact reproducibility lock. Some experiments require a compiler or platform capabilities. Record skips and failures explicitly; a focused parser run does not establish full-suite success.
+მანიფესტში დაშვებულია `sympy>=1.13,<2` და `pytest>=8,<9`; ეს დიაპაზონებია და არა ზუსტი ვერსიების ჩამკეტი. ზოგ ექსპერიმენტს კომპილატორი ან პლატფორმის შესაძლებლობები სჭირდება. გამოტოვებები და ჩავარდნები ცხადად ჩაიწეროს; პარსერის ცალკე ტესტი მთელი ნაკრების წარმატებას არ ადგენს.
 
 ## Important distinction
 
