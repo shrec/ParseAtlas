@@ -508,6 +508,22 @@ The mandate is accepted and the language is no longer frozen at Generation 1. Bu
 
 **The discipline that does not relax.** Every extension states, at the point where its answer is read, what it can now express that it could not before and what it still cannot. An enumeration is a claim about what exists (0047 demonstrated that twice at its own expense), and a larger registry makes the null model *harder*, not easier: with `k` operators a corpus entry using `j < k` of them distinguishes only `j!` orderings, so a rising count across a widening registry is the registry widening and nothing else until it is stratified.
 
+### Every gate needs a test that it can FIRE — three cards in a row failed this
+
+Not a principle anyone stated; a pattern the reviews found, three times, in the same week, and it is recorded so a fourth card does not repeat it.
+
+```text
+0045   agreement_audit       replacing its comparison with `if False:` left all 51 tests green
+0051   decode obligation     four separate ways of breaking it left all 42 tests green
+0053   correctness_audit     making it compare the output against itself left all 65 tests green
+```
+
+Every one of these is the gate its own card calls decisive. Every one had a test named for it. And in every case the test asserted only that the gate **returns its expected answer** — `conservative is True`, `exact_discharged == 24`, `all_match is True` — so a gate hardwired to that answer was invisible.
+
+0053's is the sharpest, because the test was literally called `test_a_deliberately_wrong_emission_is_caught_by_the_correctness_audit` and its docstring said "the audit must be able to fail; a check that cannot fail proves nothing" — and then it built a **correct** writing and asserted the audit passed.
+
+**The rule.** A test that a gate holds is not a test of the gate. Every decisive predicate carries a negative control that puts a case it must reject in front of it and asserts the rejection, and that control goes through the same path the published number goes through — 0051 needed two attempts because its first control tested the underlying function while the published number came from the audit above it. Where a corrupted input cannot be constructed because the check is self-consistent by design, the dependency is replaced for the duration of the test instead.
+
 ### Numerical equivalence is a third standard — set by the owner, 2026-09-05
 
 > **If the equation gives a different answer, what would be the point?**
