@@ -117,6 +117,24 @@ Nothing built so far is discarded; it is repointed.
 
 The equivalence-preserving search of Group F remains the long-range programme. The founding question above is the near-range one, and it comes first.
 
+**T33. The numeral axis is a third representation axis, and it moves a different ranking from the other two.** Everything before experiment 0054 charged `+ - * /` as abstract operations on abstract numbers. A machine does not: it works in a base, and the base decides which constants are exact, which multiplications are shifts, and where algebraic equivalence and numerical equivalence come apart.
+
+```text
+syntax        which tree a string becomes             the 25 worlds   0001-0053
+expression    which equivalent writing is chosen      direction B     0034, 0037
+numeral       how the numbers themselves are written  0054
+```
+
+Three findings, and the first two point in opposite directions.
+
+**It does not move the 25-world ranking, and that is structural rather than lucky.** Direction B fixes the intended tree and lets only the brackets vary, so the multiset of numeric literals is identical in all 25 columns and a base-aware arithmetic price is the same additive constant in each. `G18` at `42`, `G16` at `44`, `G0` at `45` in rank three tied with `G10`, before and after, at base `2` and at base `10`. **A router that reweights the 25 worlds for the base of the machine is reweighting nothing.**
+
+**It does move the corpus ranking by computation cost, and by how much depends on the base.** Over the `5565` pairs of the `106` written forms, a base-aware price reverses at most `515` of them in base `2` and `0` in six of the eleven swept bases, where the project's existing count is exactly right. The error is not a uniform bias; it is base-specific. `(a + b) / 2` costs `7` under the blind model and `2` on a binary machine.
+
+**Exactness and cheapness pull against each other.** Base `2` is the worst numeral world in the probe set for representing this project's constants — `1` of `6` distinct against base `10`'s `5` of `6` — and the only one that issues no general multiplication for them. Every corpus constant is exact exactly in the multiples of `30`, which is solved from the radical of the denominators' least common multiple rather than swept. **No single number expresses that trade, and a recommendation that optimises one side is choosing against the other.**
+
+And it locates the third standard. Algebraic and numerical equivalence come apart **at the literal, not at the operation**: the same `15` two-sided laws disagree `2` times in `120` on inputs a binary machine holds exactly and `65` times on inputs it rounds. Numerical equivalence is therefore not a tolerance to be chosen — it is a question about which numeral world the inputs came from. *OBSERVED — 0054, on a corpus of `49` constant occurrences taken from 0034, 0037 and 0051; the bound-free halves are the minimal exact base, the eight exactness signature classes, the fourteen ranking profiles and the complete crossing sets.*
+
 ---
 
 ## Current implementation status
