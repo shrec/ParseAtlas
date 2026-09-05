@@ -39,7 +39,8 @@ Translation is not the standard. **Agreement is.**
 2. **Every limitation appears in both.** The limits section is the part most likely to be dropped when a document is rewritten in a hurry, and it is the part an outside reader most needs.
 3. **Every correction propagates to both in the same commit.** A number corrected in one language and left standing in the other is worse than never having translated it, because it now carries the authority of a document that agrees with nothing.
 4. **Neither may carry a claim the other lacks.** If a sentence is worth asserting it is worth asserting twice; if it is not defensible in both, it is not defensible.
-5. **Technical terms stay in Latin script in the Georgian text** — `grammar`, `parse`, `manifest`, `round-trip`, `precedence` — because these are the terms the code and the English document use, and a Georgian reader who finds a translated coinage cannot search for it.
+5. **The agreement obligation is about DATA, and data is written inside backticks.** Every measurement, count and bound is written as `` `47` `` in both languages and must appear identically in both; the mechanical check compares the numeric tokens **inside backticked spans**, not the whole prose. A cardinal that is an English or Georgian *word* — "one and the same", "not a single", "in one paragraph", "four reading rules" — is written as a word, in each language's own idiom, and is not required to match across the two. This rule exists because a document was once returned for writing "not 1 citation. Not 1 author, not 1 year" in English, to make a whole-prose token check agree; the check was passing and the normative English had been degraded to make it pass. **A mechanical check that can be satisfied by making a document worse is being used wrongly.**
+6. **Technical terms stay in Latin script in the Georgian text** — `grammar`, `parse`, `manifest`, `round-trip`, `precedence` — because these are the terms the code and the English document use, and a Georgian reader who finds a translated coinage cannot search for it.
 
 ## Scope
 
@@ -49,4 +50,4 @@ Does not apply to: code comments, docstrings, commit messages, and test names, w
 
 ## Enforcement
 
-A card that produces a report produces both languages, and its acceptance check verifies that the numbers agree across the two. A card that corrects a number corrects it in both files or it is returned.
+A card that produces a report produces both languages, and its acceptance check verifies that the numbers agree across the two — **compared over backticked spans**, per rule 5, so that idiomatic prose in either language is never the thing the check punishes. A card that corrects a number corrects it in both files or it is returned.
