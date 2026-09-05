@@ -137,6 +137,16 @@ And it locates the third standard. Algebraic and numerical equivalence come apar
 
 ---
 
+**T34. Twenty-five native machines buy partial evaluation, not conventions — and the structural argument is stronger than the stopwatch.** The owner asked three times for `25` native parsers rather than lookup tables: each world its own state machine, emitting that world's dataflow directly, compiled once and executed a million times. Experiment 0056 built them. They agree with the table-driven parser on all `11000` checked cells, and on the parser question they buy nothing about conventions.
+
+Against the project's shipped parser they are faster — `1.094` and `1.139` times, medians over the `25` worlds — and they earn their generation back after `430` and `265` parses. **The fair control removes the entire effect.** Put only the binding-power lookup back into the same generated code, with one compilation shared by all `25` worlds, and the level-unrolled machine is resolvably **slower** at `0.946` to `0.959` over the `24` strict worlds while the partially-evaluated one is indistinguishable at `0.991` to `1.002`; the break-even is **never** in `66` of `75` pooled readings for the first and `40` of `75` for the second. What the native machines were beating was the shipped parser rebuilding its binding-power dictionary on every call.
+
+**The structural half settles it without a clock at all.** Normalise each machine's operator literals to their `(level, slot)` positions and the `24` strict machines emit **byte-identical source** — one program with four symbols permuted. There is no per-world code, so there is nothing for a per-world speed difference to come from, and any spread the stopwatch shows across those `24` is noise by construction. This is the strongest form the null model has taken in this project: not a baseline that happens to match, but a proof that the thing being compared does not vary.
+
+**What survives is the half that was always the subject.** The emitted graphs do differ — `1` to `10` distinct readings per named formula, up to `20` of a possible `24` on generated words, mean depth and mean peak-live anti-correlated at Spearman `-0.9719` — and at `-O2` the choice of world changes what `clang` issues, from `10` to `14` instructions on one statistical formula and from `159` to `211` on a `128`-operand word, with no noise floor on that sentence.
+
+**And the capability question was answered before it was measured, rather than manufactured.** An arbitrary tree rewrite reaches every tree, so one machine plus conversion has no capability gap and the question is cost. The obligation that is real is soundness: a bracket-blind conversion is wrong in `498` of `2750` cells, in all `25` worlds. *OBSERVED — 0056; the byte-identity of the `24` strict machines and the absence of a capability gap are STRUCTURAL.*
+
 ## Current implementation status
 
 The first executable vertical slice is now available under `src/parseatlas/`. It implements the Generation 1 grammar registry, custom binary-expression parser, SymPy-backed canonical analysis, domain-aware undefined metadata, JSON/Markdown CLI output, and tests for the initial `24 -> 8` finding. The generated result is recorded in [experiments/0001_affine_functions/REPORT.md](experiments/0001_affine_functions/REPORT.md).
