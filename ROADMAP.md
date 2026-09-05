@@ -534,6 +534,7 @@ Not a principle anyone stated; a pattern the reviews found, three times, in the 
 0045   agreement_audit       replacing its comparison with `if False:` left all 51 tests green
 0051   decode obligation     four separate ways of breaking it left all 42 tests green
 0053   correctness_audit     making it compare the output against itself left all 65 tests green
+0053   the same gate again   scoping it to the FIRST LEVEL ONLY left all 71 tests green, after the repair
 ```
 
 Every one of these is the gate its own card calls decisive. Every one had a test named for it. And in every case the test asserted only that the gate **returns its expected answer** — `conservative is True`, `exact_discharged == 24`, `all_match is True` — so a gate hardwired to that answer was invisible.
@@ -541,6 +542,20 @@ Every one of these is the gate its own card calls decisive. Every one had a test
 0053's is the sharpest, because the test was literally called `test_a_deliberately_wrong_emission_is_caught_by_the_correctness_audit` and its docstring said "the audit must be able to fail; a check that cannot fail proves nothing" — and then it built a **correct** writing and asserted the audit passed.
 
 **The rule.** A test that a gate holds is not a test of the gate. Every decisive predicate carries a negative control that puts a case it must reject in front of it and asserts the rejection, and that control goes through the same path the published number goes through — 0051 needed two attempts because its first control tested the underlying function while the published number came from the audit above it. Where a corrupted input cannot be constructed because the check is self-consistent by design, the dependency is replaced for the duration of the test instead.
+
+**And the control must be as WIDE as the published claim, not only as deep.** 0053's repaired control did put a wrong emission in front of the audit and did catch it — through one optimisation level, because the control called `correctness_audit(levels=(O0,), rows=2)`. The published claim is `336` checks per level and `1344` in all, at four levels. So scoping the gate to `per_level[:1]`, which blinds it to `-O2`, `-O2 -march=native -ffp-contract=fast` and `-O3 -ffast-math` — the last of these being the level the audit exists to cover — left every test green. A negative control that exercises one cell of a claim quantified over sixteen has tested one sixteenth of the gate. **The control's quantifier must match the claim's.**
+
+### Do not gate on a statistic you cannot bound — publish it with its spread
+
+Found by review on 0053, twice on the same test, and recorded because the second failure was a *repair* of the first.
+
+The card needed to justify its repetition count, so it asserted that the timing curve had stopped moving there. The first version asserted `consecutive_drift[-1] < consecutive_drift[0]` — a comparison of two noise-dominated quantities, which failed `3` of `5` re-runs. The repair asserted instead that the minimum drift past the chosen count falls below a declared `8%`, with the bound justified as "over `17` sweeps the worst value was `2.82%`, so the bound carries a margin of about `2.8` times".
+
+That justification is sound arithmetic on an unsound object. Re-derivation over `12` further sweeps reproduced the quoted figures closely — worst `2.609%`, median `0.246%` — and two of those twelve sweeps carried intermediate drifts of `63.56%` and `54.11%`. **The statistic is heavy-tailed, so a maximum over seventeen samples is not a bound; it is the largest thing seen so far.** Review then saw `8.53%` against the `8%` bound, on a run that was the second-fastest of five. The repair had replaced a test that fails half the time with a test that fails perhaps one run in five or ten, which is not a different kind of test.
+
+**The rule.** A test asserts what is deterministic about the code: that a chosen parameter is a point on the swept range, that it is not the range's last point, that the timed block grows with the parameter. A quantity whose distribution has a tail is **reported with its observed range and its median**, in the report, where a reader can see its shape — and an exceedance a reviewer actually observed is published alongside it. A number that cannot be asserted stably is data, not a gate.
+
+The corollary is small and worth stating: **an experiment report does not pin a whole-repository suite count.** 0053 quoted `1516 passed`; by the next review it was `1553`, because two concurrent cards had landed tests. A card's own file count is a property of the card; the repository's total is a property of the week.
 
 ### Numerical equivalence is a third standard — set by the owner, 2026-09-05
 
