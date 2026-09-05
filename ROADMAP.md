@@ -508,6 +508,33 @@ The mandate is accepted and the language is no longer frozen at Generation 1. Bu
 
 **The discipline that does not relax.** Every extension states, at the point where its answer is read, what it can now express that it could not before and what it still cannot. An enumeration is a claim about what exists (0047 demonstrated that twice at its own expense), and a larger registry makes the null model *harder*, not easier: with `k` operators a corpus entry using `j < k` of them distinguishes only `j!` orderings, so a rising count across a widening registry is the registry widening and nothing else until it is stratified.
 
+### Numerical equivalence is a third standard — set by the owner, 2026-09-05
+
+> **If the equation gives a different answer, what would be the point?**
+
+The project has always applied that principle in the semantic mode, where `case_studies/README.md` states it plainly: a speedup found by computing a different function is faster at doing something else. What it has never applied is the same principle to the case where two writings compute the SAME function algebraically and different answers in floating point.
+
+There are three standards and the project has been using the middle one throughout:
+
+```text
+textual        the same string                        rejected long ago, far too strict
+algebraic      the semantic key (F, D, U)             what every result in this repository uses
+numerical      the same answer under float evaluation NOT measured, and it does not follow
+```
+
+Algebraic equivalence does not imply numerical equivalence, and the gap is not small: `(a+b)+c` and `a+(b+c)` are the same object and different doubles, which is exactly why a conforming compiler is forbidden from reassociating them. **So every result in this repository about "equivalent writings" carries an unstated assumption that the reader evaluates exactly.** For a human reading notation that assumption is harmless. For a machine it is not, and that is the scope statement those results have been missing.
+
+**What already bears on it, and what does not.** Experiment 0012 is a numerical *sanity check* — it evaluates at sample points to confirm the project's own canonicalisation did not change the function, and its report says explicitly that this does not replace symbolic proof. 0025 cross-validates against an independent oracle. Neither asks the question above. Experiment 0051, in flight, is the first to touch it: it measures catastrophic cancellation between two algebraically equivalent geodetic writings in exact rational arithmetic against float.
+
+**The questions this line owes an answer to:**
+
+1. Over the corpus of equivalent writings the project already has, how many pairs actually agree under float evaluation, and at what tolerance? A pair that disagrees is two computations, not one written twice.
+2. What is the largest divergence, and which writing is the accurate one? "They differ" is not a result; "this one is right" is.
+3. Is there a writing that is cheaper, shallower and more frugal, and numerically worse? That is the case which decides whether the project's rankings are safe to act on.
+4. **Does the Pareto frontier of 0049 change when accuracy is a fifth axis?** Four axes gave 59 optimal points of 667. Accuracy could dominate all four, and a frontier that ignores it would be recommending representations that lose digits.
+
+The line is not a single card. Question 1 is a sweep over existing corpora, question 4 is an extension of 0049, and both wait until 0051 reports what the numerical axis actually looks like on a case built for it.
+
 ### Measure the emitted flow, not the translation — set by the owner, 2026-09-05
 
 > **A compiler translates once and the program runs a million times. A measurement that includes the translation is measuring the wrong thing.**
