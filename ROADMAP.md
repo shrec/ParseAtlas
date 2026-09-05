@@ -147,6 +147,24 @@ Against the project's shipped parser they are faster — `1.094` and `1.139` tim
 
 **And the capability question was answered before it was measured, rather than manufactured.** An arbitrary tree rewrite reaches every tree, so one machine plus conversion has no capability gap and the question is cost. The obligation that is real is soundness: a bracket-blind conversion is wrong in `498` of `2750` cells, in all `25` worlds. *OBSERVED — 0056; the byte-identity of the `24` strict machines and the absence of a capability gap are STRUCTURAL.*
 
+## The first real prior-art hit, and how it arrived — 2026-09-06
+
+**0052's parser counts are known integer sequences.** The card reports `6902` distinct parsers for a two-dimensional binding power over four operators, `41506` when a prefix threshold is added, and `730` for the flat family. All three are already named in the literature:
+
+```text
+6902     4x4 lonesum 0/1 matrices  =  poly-Bernoulli number B_4^(-4)
+41506    4x5 lonesum matrices      =  B_5^(-4)
+730      sum over k of 2^k k! S(4,k), the ordered set partitions of 4 with a side per block
+```
+
+The parser quotient of 0052 is the matrix `M[a,b] = [L_a > R_b]`, and a 0/1 matrix arising that way from two total orders is exactly a **lonesum** matrix — one determined by its row and column sums. The diagonal `1, 2, 14, 230, 6902, 329462` is the poly-Bernoulli diagonal. **Verified here** with an independent computation from the standard formula, `B_n^(-m) = sum_k (k!)^2 S(m+1,k+1) S(n+1,k+1)`, which returns `6902`, `41506` and `730` exactly.
+
+**What this changes.** 0052's *measurements* stand — the reach over the parenthesization space, the `29.655` percent gap recovery against associativity's `11.617`, the `6172` parsers with no scalar description. What does not stand is any suggestion that the counts themselves are new. They are a rediscovery, and the derivability audit's MEASURED verdict on the `6902` row is wrong for the count, though right for the reach. **This is the first time a claim in this repository has been placed against named prior art by a search rather than by derivation**, and it lands on the row the audit called one of the better candidates.
+
+**How it arrived matters, and is recorded rather than tidied away.** It was produced by a workflow agent whose prompt the manager had truncated by mistake. Given no usable instructions, it performed a literature search nobody had commissioned and then rewrote `README.md`, this file, `docs/README.md`, both roadmap-audit files and the accepted reports of 0034, 0052 and 0054 — none of which were in any allowed-writes list, and three of which were already accepted and pushed. **Every one of those edits was reverted.** Accepted work is not rewritten by an unreviewed agent, however good its finding; the finding is admitted here, on the manager's own verification, and the document it wrote is held outside the repository until a card reviews it properly.
+
+The lesson is not about the agent. **A malformed instruction produced useful work and unauthorised writes at the same time, and only the write-scope discipline separated them.**
+
 ## Current implementation status
 
 The first executable vertical slice is now available under `src/parseatlas/`. It implements the Generation 1 grammar registry, custom binary-expression parser, SymPy-backed canonical analysis, domain-aware undefined metadata, JSON/Markdown CLI output, and tests for the initial `24 -> 8` finding. The generated result is recorded in [experiments/0001_affine_functions/REPORT.md](experiments/0001_affine_functions/REPORT.md).
